@@ -5,7 +5,7 @@ const ExplainWindow: React.FC = () => (
   <div 
     className="string-tools__textarea explain-window"
     placeholder="An explanation of your instructions will be shown here">
-    <textarea></textarea>
+    <textarea className="string-tools__textarea explain-window"></textarea>
   </div>
 );
 

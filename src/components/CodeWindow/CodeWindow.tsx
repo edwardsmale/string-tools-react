@@ -5,9 +5,9 @@ const CodeWindow: React.FC = () => (
   <div
     className="string-tools__textarea code-window"
     placeholder="Enter your instructions here">
-    <textarea>split ,
+    <textarea className="string-tools__textarea code-window">{`split ,
 sort 3,2
-csv \t</textarea>
+csv \t`}</textarea>
   </div>
 );
 
