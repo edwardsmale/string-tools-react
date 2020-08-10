@@ -1,11 +1,18 @@
 import React from 'react';
 import './OutputPane.scss';
 
-class OutputPane extends React.Component {
+interface OutputPaneProps {
+  output: string;
+}
 
-  constructor(props: any) {
+interface OutputPaneState {
+
+}
+
+class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
+
+  constructor(props: OutputPaneProps) {
     super(props);
-    this.state = {};
   }
 
   render() {
@@ -13,7 +20,7 @@ class OutputPane extends React.Component {
       <div className="pane pane--right">
         <textarea 
           className="string-tools__textarea pane-textarea" 
-          placeholder="Output will appear here"></textarea>
+          placeholder="Output will appear here">{this.props.output}</textarea>
       </div>
     );
   }

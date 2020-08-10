@@ -1,15 +1,18 @@
 import React from 'react';
 import './CodeWindow.scss';
 
-class CodeWindow extends React.Component {
+interface CodeWindowProps {
+    code: string;
+}
 
-  constructor(props: any) {
+interface CodeWindowState {
+  
+}
+
+class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
+
+  constructor(props: CodeWindowProps) {
     super(props)
-    this.state = { text:
-`split ,
-sort 3,2
-csv \t`
-    };
   }
 
   render() {
@@ -19,7 +22,7 @@ csv \t`
       placeholder="Enter your instructions here">
       <textarea
         className="string-tools__textarea code-window"
-        value={this.state.text}></textarea>
+        value={this.props.code}></textarea>
     </div>
     );
   }  
