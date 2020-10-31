@@ -29,12 +29,19 @@ class App extends React.Component<AppProps, AppState> {
 
   handleInputPaneInput(input: string) {
     // Dummy implementation - just copy input to output pane.
-    this.setState({output: input});
+    //this.setState({output: input});
+
+    // TODO
+    // Update output
   }
 
   handleCodeWindowInput(code: string) {
     // Dummy implementation - just copy code to explanation pane.
-    this.setState({explanation: code});
+    //this.setState({explanation: code});
+
+    // TODO
+    // Update explanation
+    // Update output
   }
 
   render() {

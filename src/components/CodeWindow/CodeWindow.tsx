@@ -22,9 +22,13 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
   }
 
   handleChange(event: any) {
-    this.setState({value: event.target.value})
+    this.setState({
+      value: event.target.value}
+    );
     
-    this.props.onInput(event.target.value);
+    this.props.onInput(
+      event.target.value
+    );
   }
 
   render() {
