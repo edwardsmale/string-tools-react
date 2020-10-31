@@ -18,9 +18,9 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
   render() {
     return (
       <div 
-        className="string-tools__textarea explain-window"
+        className="explain-window"
         placeholder="An explanation of your instructions will be shown here">
-        <textarea className="string-tools__textarea explain-window">{this.props.explanation}</textarea>
+        <textarea className="string-tools__textarea" value={this.props.explanation}></textarea>
       </div>
     );
   }

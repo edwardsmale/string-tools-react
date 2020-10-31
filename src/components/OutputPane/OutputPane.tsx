@@ -20,7 +20,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       <div className="pane pane--right">
         <textarea 
           className="string-tools__textarea pane-textarea" 
-          placeholder="Output will appear here">{this.props.output}</textarea>
+          placeholder="Output will appear here"
+          value={this.props.output}></textarea>
       </div>
     );
   }

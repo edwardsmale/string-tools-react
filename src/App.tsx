@@ -6,13 +6,10 @@ import InputPane from './components/InputPane/InputPane';
 import OutputPane from './components/OutputPane/OutputPane';
 
 interface AppProps {
-
 }
 
 interface AppState {
-  code: string;
   explanation: string;
-  input: string;
   output: string;
 }
 
@@ -22,18 +19,22 @@ class App extends React.Component<AppProps, AppState> {
     super(props)
 
     this.state = {
-      code: `split ,
-sort 3,2
-csv \t`,
       explanation: "",
-      input: `1,W11111,Edward,Smale,Leighton Buzzard
-1,W11112,Edward,Smale,Sheffield
-2,W22222,Stephen,Smale,Sheffield
-3,W33333,Jo,Smale,Roehampton
-4,W44444,Jo,Burton,Barnes
-5,W55555,Edward,Burton,London`,
       output: ""
     }
+
+    this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
+    this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
+  }
+
+  handleInputPaneInput(input: string) {
+    // Dummy implementation - just copy input to output pane.
+    this.setState({output: input});
+  }
+
+  handleCodeWindowInput(code: string) {
+    // Dummy implementation - just copy code to explanation pane.
+    this.setState({explanation: code});
   }
 
   render() {
@@ -41,11 +42,11 @@ csv \t`,
       <div className="App">
         <div className="string-tools">
           <div className="string-tools__top_section">
-            <CodeWindow code={this.state.code} />
+            <CodeWindow onInput={this.handleCodeWindowInput} />
             <ExplainWindow explanation={this.state.explanation} />
           </div>
           <div className="panes-container">
-            <InputPane input={this.state.input} />
+            <InputPane onInput={this.handleInputPaneInput} />
             <OutputPane output={this.state.output} />
           </div>
         </div>

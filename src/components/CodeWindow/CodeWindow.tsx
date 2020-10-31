@@ -2,27 +2,39 @@ import React from 'react';
 import './CodeWindow.scss';
 
 interface CodeWindowProps {
-    code: string;
+  onInput(input: string): any;    
 }
 
 interface CodeWindowState {
-  
+  value: string;
 }
 
 class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
 
   constructor(props: CodeWindowProps) {
     super(props)
+
+    this.state = {
+      value: ""
+    };
+
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(event: any) {
+    this.setState({value: event.target.value})
+    
+    this.props.onInput(event.target.value);
   }
 
   render() {
     return (
-    <div
-      className="string-tools__textarea code-window"
-      placeholder="Enter your instructions here">
-      <textarea
-        className="string-tools__textarea code-window"
-        value={this.props.code}></textarea>
+    <div className="code-window"
+         placeholder="Enter your instructions here">
+      <textarea className="string-tools__textarea"
+                value={this.state.value}
+                onChange={this.handleChange}
+      ></textarea>
     </div>
     );
   }  
