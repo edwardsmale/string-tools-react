@@ -1,4 +1,3 @@
-import { isArray } from "util";
 import { TextUtilsService } from './text-utils.service';
 import { CommandParsingService } from './command-parsing.service';
 import { CommandTypesService } from './command-types.service';
@@ -41,7 +40,7 @@ export class CommandService {
 
                     for (let j = 0; j < currentValues.length; j++) {
 
-                        if (isArray(currentValues[j])) {
+                        if (Array.isArray(currentValues[j])) {
 
                             for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
                                 flattened.push(currentValues[j][k]);
@@ -61,7 +60,7 @@ export class CommandService {
 
                     for (let j = 0; j < currentValues.length; j++) {
 
-                        if (isArray(currentValues[j])) {
+                        if (Array.isArray(currentValues[j])) {
 
                             for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
                                 flattened.push(currentValues[j][k]);
@@ -153,7 +152,7 @@ export class CommandService {
 
             for (let i = 0; i < currentValues.length; i++) {
                 var value = currentValues[i];
-                if (isArray(value)) {
+                if (Array.isArray(value)) {
                     var arrayValue = value as string[];
                     for (let j = 0; j < arrayValue.length; j++) {
                         outputLines.push(arrayValue[j]);

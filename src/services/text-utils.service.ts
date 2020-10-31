@@ -1,5 +1,4 @@
-import { isArray } from "util";
-import { SortOrderIndices } from "../interfaces/SortOrderIndices";
+import { SortOrderIndex } from "../interfaces/SortOrderIndex";
 
 export class TextUtilsService {
 
@@ -38,7 +37,7 @@ export class TextUtilsService {
     }
 
     AsArray = (value: string | string[]): string[] => {
-        if (isArray(value)) {
+        if (Array.isArray(value)) {
             return (value as string[]);
         } else {
             return (value as string).split(/\s+/);
@@ -46,7 +45,7 @@ export class TextUtilsService {
     }
 
     AsScalar = (value: string | string[]): string => {
-        if (isArray(value)) {
+        if (Array.isArray(value)) {
             return (value as string[])[0];
         } else {
             return (value as string);
@@ -103,7 +102,7 @@ export class TextUtilsService {
 
     ParseSortOrderIndices = (para: string) => {
         var split = para.trim().split(",");
-        var result: SortOrderIndices[] = [];
+        var result: SortOrderIndex[] = [];
         for (let i = 0; i < split.length; i++) {
             let val = split[i].trim().replace(new RegExp("ending", "i"), "").toLowerCase();
             let asc = !val.includes("d");

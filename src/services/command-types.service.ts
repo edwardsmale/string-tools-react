@@ -1,4 +1,3 @@
-import { isArray } from "util";
 import { TextUtilsService } from './text-utils.service';
 import { SortService } from './sort.service';
 import { CommandType, CommandParameter, SortCommandType } from "../interfaces/CommandInterfaces";
@@ -363,7 +362,7 @@ export class CommandTypesService {
                             return { explanation: "Only include items which match the regex " + context.regex };
                         }
                     } else {
-                        if (isArray(value)) {
+                        if (Array.isArray(value)) {
                             if (negated) {
                                 return (value as string[]).filter(function (val: string) { return new RegExp(context.regex as string).test(val) === false; });
                             } else {
@@ -608,7 +607,7 @@ export class CommandTypesService {
                     return { explanation: "print " + para };
                 } else {
                     var result = para;
-                    var arrayValue = isArray(value) ? (value as string[]) : (["", value] as string[]);
+                    var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
 
                     // Replace $0 with the whole value.
                     result = result.replace(new RegExp("\\$0", "g"), arrayValue.join(""));

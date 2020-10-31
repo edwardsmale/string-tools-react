@@ -1,5 +1,5 @@
 import { TextUtilsService } from './text-utils.service'
-import { SortOrderIndices } from '../interfaces/SortOrderIndices';
+import { SortOrderIndex } from '../interfaces/SortOrderIndex';
 
 export class SortService {
 
@@ -14,7 +14,7 @@ export class SortService {
         });
     }
 
-    SortArrays = (values: string[][], indices: SortOrderIndices[]) => {
+    SortArrays = (values: string[][], indices: SortOrderIndex[]) => {
 
         if (indices.length === 0) {
             return values;
