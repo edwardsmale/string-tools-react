@@ -11,10 +11,6 @@ interface ExplainWindowState {
 
 class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowState> {
 
-  constructor(props: ExplainWindowProps) {
-    super(props);
-  }
-
   render() {
     return (
       <div 

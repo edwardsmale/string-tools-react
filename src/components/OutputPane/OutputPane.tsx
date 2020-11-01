@@ -11,10 +11,6 @@ interface OutputPaneState {
 
 class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
-  constructor(props: OutputPaneProps) {
-    super(props);
-  }
-
   render() {
     return (
       <div className="pane pane--right">
