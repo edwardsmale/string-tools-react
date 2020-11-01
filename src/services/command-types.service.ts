@@ -120,7 +120,7 @@ export class CommandTypesService {
                         }
                     }
                 }
-            }).bind(this)
+            })
         },
         {
             name: "split",
@@ -291,7 +291,7 @@ export class CommandTypesService {
                         }
                     }
                 }
-            }).bind(this)
+            })
         },
         {
             name: "at",
@@ -644,7 +644,7 @@ export class CommandTypesService {
                     }
                     return result;
                 }
-            }).bind(this)
+            })
         }
     ];
 }
