@@ -14,23 +14,29 @@ interface AppProps {
 }
 
 interface AppState {
+  code: string;
   explanation: string;
+  input: string;
   output: string;
 }
 
 class App extends React.Component<AppProps, AppState> {
 
-  input: string;
-
   constructor(props: AppProps) {
     super(props)
 
     this.state = {
+      code: `search Edward
+match`,
       explanation: "",
+      input:  `1,W11111,Edward,Smale,Leighton Buzzard
+1,W11112,Edward,Smale,Sheffield
+2,W22222,Stephen,Smale,Sheffield
+3,W33333,Jo,Smale,Roehampton
+4,W44444,Jo,Burton,Barnes
+5,W55555,Edward,Burton,London`,
       output: ""
-    }
-
-    this.input = "blah blah blah";
+    };
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
@@ -38,25 +44,15 @@ class App extends React.Component<AppProps, AppState> {
 
   handleInputPaneInput(input: string) {
     
-    this.input = input;
-
-    // TODO
-    // Update output
+    this.setState({input: input});
   }
 
   handleCodeWindowInput(code: string) {
-    // Dummy implementation - just copy code to explanation pane.
-    //this.setState({explanation: code});
-
-    // TODO
-    // Update explanation
-    // Update output
     
     const commandService = this.getCommandService();
 
-    const result = commandService.processCommands(code, this.input, false);
+    const result = commandService.processCommands(code, this.state.input, false);
 
-    this.setState({ output: result.join("\r\n")});
   }
 
   getCommandService(): CommandService {
@@ -73,11 +69,11 @@ class App extends React.Component<AppProps, AppState> {
       <div className="App">
         <div className="string-tools">
           <div className="string-tools__top_section">
-            <CodeWindow onInput={this.handleCodeWindowInput} />
+            <CodeWindow onInput={this.handleCodeWindowInput} value={this.state.code} />
             <ExplainWindow explanation={this.state.explanation} />
           </div>
           <div className="panes-container">
-            <InputPane onInput={this.handleInputPaneInput} />
+            <InputPane onInput={this.handleInputPaneInput} value={this.state.input} />
             <OutputPane output={this.state.output} />
           </div>
         </div>
