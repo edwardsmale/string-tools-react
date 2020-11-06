@@ -24,8 +24,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     );
   }
 
-  render () {
-  
+  render () {  
     return (
       <div className="pane pane--left">
         <textarea

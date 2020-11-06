@@ -18,18 +18,21 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
   }
 
   handleChange(event: any) {
-    this.props.onInput(event.target.value);
+    this.props.onInput(
+      event.target.value
+    );
   }
 
   render() {
     return (
-    <div className="code-window"
-         placeholder="Enter your instructions here">
-      <textarea
-        className="string-tools__textarea window-textarea"
-        onChange={this.handleChange}></textarea>
-        value={this.props.value}
-    </div>
+      <div className="code-window">
+        <textarea
+          className="string-tools__textarea window-textarea"
+          placeholder="Enter your instructions here"
+          onChange={this.handleChange}
+          value={this.props.value}
+        ></textarea>
+      </div>
     );
   }  
 }

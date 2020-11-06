@@ -25,21 +25,30 @@ class App extends React.Component<AppProps, AppState> {
   constructor(props: AppProps) {
     super(props)
 
-    this.state = {
-      code: `search Edward
-match`,
-      explanation: "",
-      input:  `1,W11111,Edward,Smale,Leighton Buzzard
+    const code = `search Edward
+match`;
+
+  const explanation = "";
+
+  const input = `1,W11111,Edward,Smale,Leighton Buzzard
 1,W11112,Edward,Smale,Sheffield
 2,W22222,Stephen,Smale,Sheffield
 3,W33333,Jo,Smale,Roehampton
 4,W44444,Jo,Burton,Barnes
-5,W55555,Edward,Burton,London`,
-      output: ""
+5,W55555,Edward,Burton,London`;
+
+    const output = this.executeCommands(input, code);
+
+    this.state = {
+      code: code,
+      explanation: explanation,
+      input: input,
+      output: output
     };
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
+    this.executeCommands = this.executeCommands.bind(this);
   }
 
   handleInputPaneInput(input: string) {
@@ -48,11 +57,21 @@ match`,
   }
 
   handleCodeWindowInput(code: string) {
-    
+        
+    this.setState({code: code, output: code});
+
+    let result = this.executeCommands(this.state.input, code);
+
+    this.setState({ output: result });
+  }
+
+  private executeCommands(input: string, code: string): string {
+
     const commandService = this.getCommandService();
 
-    const result = commandService.processCommands(code, this.state.input, false);
+    const result = commandService.processCommands(code, input,false);
 
+    return result.join("\r\n");
   }
 
   getCommandService(): CommandService {
