@@ -13,10 +13,10 @@ export class CommandService {
     }
 
     processCommands(codeValue: string, inputValue: string, explain: boolean): string[] {
-        var codeLines = this.textUtilsService.TextToLines(codeValue);
-        var lines = this.textUtilsService.TextToLines(inputValue);
+        let codeLines = this.textUtilsService.TextToLines(codeValue);
+        let lines = this.textUtilsService.TextToLines(inputValue);
 
-        var context: Context = {
+        let context: Context = {
             isTabDelimited: this.textUtilsService.IsTabDelimited(lines),
             regex: null,
             searchString: null,
@@ -27,7 +27,7 @@ export class CommandService {
 
         for (let i = 0; i < codeLines.length; i++) {
 
-            var parsedCommand = this.commandParsingService.ParseCodeLine(
+            let parsedCommand = this.commandParsingService.ParseCodeLine(
                 codeLines[i]
             );
 
@@ -135,15 +135,14 @@ export class CommandService {
             currentValues = newValues;
         }
 
-        var outputLines: string[] = [];
+        let outputLines: string[] = [];
 
         if (explain) {
             for (let i = 0; i < codeLines.length; i++) {
-                var parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
-                var commandType = parsedCommand.commandType;
-                var para = parsedCommand.para;
-                var negated = parsedCommand.negated;
-                var explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
+                let parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
+                let para = parsedCommand.para;
+                let negated = parsedCommand.negated;
+                let explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
                 outputLines.push(explanation.explanation);
             }
 

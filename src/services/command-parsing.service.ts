@@ -10,7 +10,7 @@ export class CommandParsingService {
   }
 
   ParseCodeLine = (codeLine: string): ParsedCommand => {
-    var codeLine = codeLine.trim();
+    codeLine = codeLine.trim();
     if (codeLine.length === 0) {
       return {
         commandType: this.commandTypesService.FindCommandType("noop"),

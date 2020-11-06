@@ -2,8 +2,6 @@ import { SortOrderIndex } from "../interfaces/SortOrderIndex";
 
 export class TextUtilsService {
 
-    constructor() { }
-
     // Global string replacement, which avoids:
     // - Using a regex, and having to escape certain characters
     // - Certain characters in the replacement string having special meanings.
