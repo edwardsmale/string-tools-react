@@ -19,6 +19,7 @@ $border-width: 0.0625rem;
   }
 
   &__textarea {
+    box-sizing: border-box;
     padding: 0.5rem;
     font-family: 'Inconsolata', monospace;
     font-size: 0.875rem;
@@ -27,6 +28,8 @@ $border-width: 0.0625rem;
     border: none;
     outline: none;
     resize: none;
+    width: 100%;
+    height: 100%;
   }
 }
 
@@ -59,11 +62,3 @@ $border-width: 0.0625rem;
       margin-right: $border-width;
   }
 }
-
-.string-tools__textarea {
-  border: none;
-  outline: none;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-} 

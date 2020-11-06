@@ -4,6 +4,11 @@ import CodeWindow from './components/CodeWindow/CodeWindow';
 import ExplainWindow from './components/ExplainWindow/ExplainWindow';
 import InputPane from './components/InputPane/InputPane';
 import OutputPane from './components/OutputPane/OutputPane';
+import { CommandParsingService } from './services/command-parsing.service';
+import { CommandTypesService } from './services/command-types.service';
+import { CommandService } from './services/command.service';
+import { SortService } from './services/sort.service';
+import { TextUtilsService } from './services/text-utils.service';
 
 interface AppProps {
 }
@@ -15,6 +20,8 @@ interface AppState {
 
 class App extends React.Component<AppProps, AppState> {
 
+  input: string;
+
   constructor(props: AppProps) {
     super(props)
 
@@ -23,13 +30,15 @@ class App extends React.Component<AppProps, AppState> {
       output: ""
     }
 
+    this.input = "blah blah blah";
+
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
   }
 
   handleInputPaneInput(input: string) {
-    // Dummy implementation - just copy input to output pane.
-    //this.setState({output: input});
+    
+    this.input = input;
 
     // TODO
     // Update output
@@ -42,6 +51,21 @@ class App extends React.Component<AppProps, AppState> {
     // TODO
     // Update explanation
     // Update output
+    
+    const commandService = this.getCommandService();
+
+    const result = commandService.processCommands(code, this.input, false);
+
+    this.setState({ output: result.join("\r\n")});
+  }
+
+  getCommandService(): CommandService {
+
+    let textUtilsService = new TextUtilsService();
+    let sortService = new SortService(textUtilsService);
+    let commandTypesService = new CommandTypesService(textUtilsService, sortService);
+    let commandParsingService = new CommandParsingService(textUtilsService, commandTypesService);
+    return new CommandService(textUtilsService, commandParsingService, commandTypesService);
   }
 
   render() {

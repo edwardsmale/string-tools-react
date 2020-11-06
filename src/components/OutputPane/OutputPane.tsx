@@ -14,10 +14,11 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
   render() {
     return (
       <div className="pane pane--right">
-        <textarea 
-          className="string-tools__textarea pane-textarea" 
+        <textarea
+          className="string-tools__textarea pane-textarea"
           placeholder="Output will appear here"
-          value={this.props.output}></textarea>
+          value={this.props.output}
+          readOnly></textarea>
       </div>
     );
   }

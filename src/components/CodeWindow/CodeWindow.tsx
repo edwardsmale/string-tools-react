@@ -35,10 +35,10 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
     return (
     <div className="code-window"
          placeholder="Enter your instructions here">
-      <textarea className="string-tools__textarea"
-                value={this.state.value}
-                onChange={this.handleChange}
-      ></textarea>
+      <textarea
+        className="string-tools__textarea window-textarea"
+        value={this.state.value}
+        onChange={this.handleChange}></textarea>
     </div>
     );
   }  
