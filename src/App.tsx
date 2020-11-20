@@ -61,15 +61,26 @@ match`;
     this.setState({code: code, output: code});
 
     let result = this.executeCommands(this.state.input, code);
+    let explanation = this.explainCommands(this.state.input, code);
 
-    this.setState({ output: result });
+    this.setState({ output: result, explanation: explanation });
   }
 
   private executeCommands(input: string, code: string): string {
 
+    return this.processCommands(input, code, false);
+  }
+
+  private explainCommands(input: string, code: string): string {
+
+    return this.processCommands(input, code, true);
+  }
+
+  private processCommands(input: string, code: string, explain: boolean): string {
+
     const commandService = this.getCommandService();
 
-    const result = commandService.processCommands(code, input,false);
+    const result = commandService.processCommands(code, input, explain);
 
     return result.join("\r\n");
   }
