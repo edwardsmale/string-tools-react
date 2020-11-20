@@ -22,6 +22,9 @@ interface AppState {
 
 class App extends React.Component<AppProps, AppState> {
 
+  inputPaneValue :string;
+  codeWindowValue :string;
+
   constructor(props: AppProps) {
     super(props)
 
@@ -39,6 +42,9 @@ match`;
 
     const output = this.executeCommands(input, code);
 
+    this.inputPaneValue = input;
+    this.codeWindowValue = code;
+
     this.state = {
       code: code,
       explanation: explanation,
@@ -53,15 +59,21 @@ match`;
 
   handleInputPaneInput(input: string) {
     
-    this.setState({input: input});
+    this.inputPaneValue = input;
+
+    let result = this.executeCommands(this.inputPaneValue, this.codeWindowValue);
+
+    this.setState({input: input, output: result});
   }
 
   handleCodeWindowInput(code: string) {
         
+    this.codeWindowValue = code;
+
     this.setState({code: code, output: code});
 
-    let result = this.executeCommands(this.state.input, code);
-    let explanation = this.explainCommands(this.state.input, code);
+    let result = this.executeCommands(this.inputPaneValue, code);
+    let explanation = this.explainCommands(this.inputPaneValue, code);
 
     this.setState({ output: result, explanation: explanation });
   }
