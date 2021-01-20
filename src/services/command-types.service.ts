@@ -609,6 +609,9 @@ export class CommandTypesService {
                     var result = para;
                     var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
 
+                    // Replace \t with tab.
+                    result = result.replace(/\\t/g, "\t");
+
                     // Replace $0 with the whole value.
                     result = result.replace(new RegExp("\\$0", "g"), arrayValue.join(""));
 
