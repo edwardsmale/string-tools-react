@@ -33,6 +33,11 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
           onChange={this.handleChange}
           value={this.props.value}
         ></textarea>
+        <textarea 
+          className="code-window__overlay string-tools__textarea window-textarea"
+          spellCheck={false}
+          value={this.props.value.replace(/^ {1}/gm, "▪").replace(/ {2}/g, " ▪",).replace(/▪ {1}/g, "▪▪",).replace(/[^▪\r\n]/g, " ").replace(/ {1}$/gm, "▪")}
+          readOnly={true}></textarea>
       </div>
     );
   }  

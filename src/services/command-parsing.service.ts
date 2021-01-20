@@ -18,12 +18,15 @@ export class CommandParsingService {
         negated: false
       };
     } else {
-      var codeLineSplit = codeLine.split(/\s+/);
-      var negated = codeLineSplit[0].includes("!");
-      var commandName = codeLineSplit[0].replace("!", "");
-      var commandType = this.commandTypesService.FindCommandType(commandName);
-      var para = codeLine.replace("!", "").replace(commandName, "").trim();
       
+      var commandString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(0,codeLine.indexOf(" ")) : codeLine;
+      var paraString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(codeLine.indexOf(" ") + 1) : "";
+
+      var negated = commandString.includes("!");
+      var commandName = commandString.replace("!", "");
+      var commandType = this.commandTypesService.FindCommandType(commandName);
+      var para = paraString;
+
       return {
         commandType: commandType,
         para: para,
