@@ -29,6 +29,7 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
         <textarea
           className="string-tools__textarea window-textarea"
           placeholder="Enter your instructions here"
+          spellCheck={false}
           onChange={this.handleChange}
           value={this.props.value}
         ></textarea>
