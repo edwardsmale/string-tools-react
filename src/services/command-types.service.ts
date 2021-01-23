@@ -51,7 +51,7 @@ export class CommandTypesService {
                 context.regex = para;
                 context.searchString = null;
                 if (explain) {
-                    return { explanation: "Sets the current regex to " + para };
+                    return { explanation: "Sets the current regex to '" + para + "'" };
                 } else {
                     return value;
                 }
@@ -71,7 +71,7 @@ export class CommandTypesService {
                 context.searchString = para;
                 context.regex = null;
                 if (explain) {
-                    return { explanation: "Sets the current search string to " + para };
+                    return { explanation: "Sets the current search string to '" + para + "'"};
                 } else {
                     return value;
                 }
