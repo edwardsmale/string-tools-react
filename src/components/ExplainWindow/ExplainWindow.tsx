@@ -15,7 +15,7 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
     return (
       <div className="explain-window">
         <textarea
-          className="string-tools__textarea window-textarea"
+          className="explain-window__textarea string-tools__textarea window-textarea"
           placeholder="An explanation of your instructions will be shown here"
           value={this.props.explanation}
           readOnly></textarea>

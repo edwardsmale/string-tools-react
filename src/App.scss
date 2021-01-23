@@ -80,6 +80,10 @@ $border-width: 0.0625rem;
 
 .explain-window {
   flex-grow: 1;
+
+  &__textarea {
+    color: darkred;
+  }
 }
 
 .panes-container {
