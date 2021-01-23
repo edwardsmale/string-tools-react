@@ -57,8 +57,24 @@ $border-width: 0.0625rem;
   margin-right: $border-width;
 
   &__overlay {
-    opacity: 50%;
-    color: lightgray;
+    padding-left: 0.6rem;
+    opacity: 90%;
+    color: powderblue;
+  }
+
+  &--has-dividing-lines {
+
+    .pane-textarea {
+      line-height: 1.5;
+    }
+
+    .output-pane__overlay {
+      padding-top: 0.0625rem;
+    }
+
+    .output-pane__value {
+      padding-top: 0.75rem;
+    }
   }
 }
 

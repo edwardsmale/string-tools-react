@@ -17,7 +17,7 @@ interface AppState {
   code: string;
   explanation: string;
   input: string;
-  output: string;
+  output: string[][];
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -73,7 +73,7 @@ match`;
         
     this.codeWindowValue = code;
 
-    this.setState({code: code, output: code});
+    this.setState({code: code, output: [[""]]});
 
     let result = this.executeCommands(this.inputPaneValue, code);
     let explanation = this.explainCommands(this.inputPaneValue, code);
@@ -81,23 +81,23 @@ match`;
     this.setState({ output: result, explanation: explanation });
   }
 
-  private executeCommands(input: string, code: string): string {
+  private executeCommands(input: string, code: string): string[][] {
 
     return this.processCommands(input, code, false);
   }
 
   private explainCommands(input: string, code: string): string {
 
-    return this.processCommands(input, code, true);
+    return this.processCommands(input, code, true).join("\n");
   }
 
-  private processCommands(input: string, code: string, explain: boolean): string {
+  private processCommands(input: string, code: string, explain: boolean): string[][] {
 
     const commandService = this.getCommandService();
 
     const result = commandService.processCommands(code, input, explain);
 
-    return result.join("\r\n");
+    return result;
   }
 
   getCommandService(): CommandService {

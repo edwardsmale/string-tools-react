@@ -12,7 +12,7 @@ export class CommandService {
         this.commandTypesService = commandTypesService;
     }
 
-    processCommands(codeValue: string, inputValue: string, explain: boolean): string[] {
+    processCommands(codeValue: string, inputValue: string, explain: boolean): string[][] {
         let codeLines = this.textUtilsService.TextToLines(codeValue);
         let lines = this.textUtilsService.TextToLines(inputValue);
 
@@ -135,33 +135,33 @@ export class CommandService {
             currentValues = newValues;
         }
 
-        let outputLines: string[] = [];
+        let output: string[][] = [];
 
         if (explain) {
+
             for (let i = 0; i < codeLines.length; i++) {
                 let parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
                 let para = parsedCommand.para;
                 let negated = parsedCommand.negated;
                 let explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
-                outputLines.push(explanation.explanation);
+                output.push([explanation.explanation]);
             }
 
-            return outputLines;
+            return output;
+
         } else {
 
             for (let i = 0; i < currentValues.length; i++) {
                 var value = currentValues[i];
                 if (Array.isArray(value)) {
                     var arrayValue = value as string[];
-                    for (let j = 0; j < arrayValue.length; j++) {
-                        outputLines.push(arrayValue[j]);
-                    }
+                    output.push(arrayValue);
                 } else {
-                    outputLines.push(value as string);
+                    output.push([value as string]);
                 }
             }
 
-            return outputLines;
+            return output;
         }
     }
 }
