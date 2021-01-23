@@ -51,7 +51,7 @@ export class CommandTypesService {
                 context.regex = para;
                 context.searchString = null;
                 if (explain) {
-                    return { explanation: "Sets the current regex to '" + para + "'" };
+                    return { explanation: "Sets the current regex to /" + para + "/" };
                 } else {
                     return value;
                 }
@@ -90,7 +90,7 @@ export class CommandTypesService {
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
                     if (context.regex) {
-                        return { explanation: "Replaces text matching the regex '" + context.regex + "' with '" + para + "'" };
+                        return { explanation: "Replaces text matching the regex /" + context.regex + "/ with '" + para + "'" };
                     } else if (context.searchString) {
                         return { explanation: "Replaces '" + context.searchString + "' with '" + para + "'" };
                     } else {
@@ -137,7 +137,7 @@ export class CommandTypesService {
 
                 if (!para && context.regex) {
                     if (explain) {
-                        return { explanation: "Split the text using the regex " + context.regex };
+                        return { explanation: "Split the text using the regex /" + context.regex + "/" };
                     } else {
                         return (value as string).split(new RegExp(context.regex));
                     }
@@ -368,9 +368,9 @@ export class CommandTypesService {
                 if (!searchString && context.regex) {
                     if (explain) {
                         if (negated) {
-                            return { explanation: "Only include items which don't match the regex " + context.regex };
+                            return { explanation: "Only include items which don't match the regex /" + context.regex + "/" };
                         } else {
-                            return { explanation: "Only include items which match the regex " + context.regex };
+                            return { explanation: "Only include items which match the regex /" + context.regex + "/" };
                         }
                     } else {
                         if (Array.isArray(value)) {
@@ -602,7 +602,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, true);
-                    return { explanation: "Output items separated with " + formattedDelimiter + " - doesn't escape " + formattedDelimiter + " in values" };
+                    return { explanation: "Output items separated with " + formattedDelimiter + " (" + formattedDelimiter + " in values not escaped)" };
                 } else {
                     return (value as string[]).join(delimiter);
                 }

@@ -183,7 +183,7 @@ export class TextUtilsService {
                 return delimiter + " character";
             }
             else {
-                return "match of the regex " + delimiter;
+                return "match of the regex /" + delimiter + "/";
             }
         };
 
