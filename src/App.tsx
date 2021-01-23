@@ -31,12 +31,17 @@ class App extends React.Component<AppProps, AppState> {
 
     this.textUtilsService = new TextUtilsService();
 
-    const code = `search Edward
-match`;
+    const code = `skip 1
+split
+print { accountRef: "$2", name: "$4, $3", city: "$5" }
+flat
+join ,
+enclose []`;
 
   const explanation = "";
 
-  const input = `1,W11111,Edward,Smale,Leighton Buzzard
+  const input = `Id,AccountRef,FirstName,LastName,City
+1,W11111,Edward,Smale,Leighton Buzzard
 1,W11112,Edward,Smale,Sheffield
 2,W22222,Stephen,Smale,Sheffield
 3,W33333,Jo,Smale,Roehampton
