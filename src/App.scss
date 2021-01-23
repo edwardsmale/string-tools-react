@@ -56,6 +56,10 @@ $border-width: 0.0625rem;
   width: 40%;
   margin-right: $border-width;
 
+  &__value {
+    color: rgb(1, 1, 82);
+  }
+
   &__overlay {
     padding-left: 0.6rem;
     opacity: 100%;
