@@ -84,7 +84,7 @@ export class TextUtilsService {
         let result: string;
 
         if (index >= 0) {
-            result = "index " + index;
+            result = "the item at index " + index;
         } else if (index === -1) {
             result = "the last item";
         } else {
@@ -95,6 +95,37 @@ export class TextUtilsService {
             return result;
         } else {
             return result + (ascending ? "" : " descending");
+        }
+    };
+
+    FormatList = (values: any[]): string => {
+
+        if (values.length === 0) {
+            return "";
+        }
+        else if (values.length === 1) {
+            return values[0];
+        }
+        else if (values.length === 2) {
+            return values[0] + " and " + values[1];
+        }
+        else {
+            let result: string = "";
+
+            for (let i = 0; i < values.length - 1; i++) {
+
+                result += values[i];
+
+                if (values.length > 2) {
+                    result += ",";
+                }
+
+                result += " ";
+            }
+
+            result += "and " + values[values.length - 1];
+
+            return result;
         }
     };
 

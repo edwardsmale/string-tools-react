@@ -308,17 +308,28 @@ export class CommandTypesService {
                 const indices = this.textUtilsService.ParseIntegers(para);
 
                 if (explain) {
-                    let positions: string[] = [];
 
-                    for (let i = 0; i < indices.length; i++) {
-                        if (!isNaN(indices[i])) {
-                            positions.push(
-                                this.textUtilsService.FormatIndex(indices[i], true)
-                            );
+                    if (indices.some((i) => i < 0)) {
+
+                        let formattedIndices: string[] = [];
+
+                        for (let i = 0; i < indices.length; i++) {
+
+                            var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
+
+                            formattedIndices.push(formattedIndex);
                         }
-                    }
 
-                    return { explanation: "Get the item" + (positions.length === 1 ? "" : "s") + " at position" + (positions.length === 1 ? "" : "s") + " " + positions.join(" ") };
+                        let positions = this.textUtilsService.FormatList(formattedIndices);
+
+                        return { explanation: "Gets " + positions };
+                    }
+                    else {
+
+                        let positions = this.textUtilsService.FormatList(indices);
+
+                        return { explanation: "Gets the items at indexes " + positions };
+                    }
                 } else {
 
                     let result = [];
