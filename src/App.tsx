@@ -24,9 +24,12 @@ class App extends React.Component<AppProps, AppState> {
 
   inputPaneValue :string;
   codeWindowValue :string;
+  textUtilsService: TextUtilsService;
 
   constructor(props: AppProps) {
     super(props)
+
+    this.textUtilsService = new TextUtilsService();
 
     const code = `search Edward
 match`;
@@ -99,11 +102,10 @@ match`;
 
   getCommandService(): CommandService {
 
-    let textUtilsService = new TextUtilsService();
-    let sortService = new SortService(textUtilsService);
-    let commandTypesService = new CommandTypesService(textUtilsService, sortService);
-    let commandParsingService = new CommandParsingService(textUtilsService, commandTypesService);
-    return new CommandService(textUtilsService, commandParsingService, commandTypesService);
+    let sortService = new SortService(this.textUtilsService);
+    let commandTypesService = new CommandTypesService(this.textUtilsService, sortService);
+    let commandParsingService = new CommandParsingService(this.textUtilsService, commandTypesService);
+    return new CommandService(this.textUtilsService, commandParsingService, commandTypesService);
   }
 
   render() {
@@ -111,7 +113,7 @@ match`;
       <div className="App">
         <div className="string-tools">
           <div className="string-tools__top_section">
-            <CodeWindow onInput={this.handleCodeWindowInput} value={this.state.code} />
+            <CodeWindow onInput={this.handleCodeWindowInput} textUtilsService={this.textUtilsService} value={this.state.code} />
             <ExplainWindow explanation={this.state.explanation} />
           </div>
           <div className="panes-container">

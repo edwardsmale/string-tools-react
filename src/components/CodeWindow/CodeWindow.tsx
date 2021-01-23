@@ -1,9 +1,11 @@
 import React from 'react';
+import { TextUtilsService } from '../../services/text-utils.service';
 import './CodeWindow.scss';
 
 interface CodeWindowProps {
   value: string;
   onInput(input: string): any;
+  textUtilsService: TextUtilsService;
 }
 
 interface CodeWindowState {
@@ -14,13 +16,46 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
   constructor(props: CodeWindowProps) {
     super(props)
 
+    this.textUtilsService = props.textUtilsService;
+
     this.handleChange = this.handleChange.bind(this);
+    this.getOverlayValue = this.getOverlayValue.bind(this);
   }
+
+  private textUtilsService: TextUtilsService;
 
   handleChange(event: any) {
     this.props.onInput(
       event.target.value
     );
+  }
+
+  getOverlayValue(codeValue: string) {
+
+    let codeLines = this.textUtilsService.TextToLines(codeValue);
+
+    let overlayLines = [];
+
+    for (let i = 0; i < codeLines.length; i++) {
+
+      let line = codeLines[i];
+
+      if (line.indexOf(" ") === -1) {
+        overlayLines.push(line);
+      }
+      else {
+        let command = line.substring(0, line.indexOf(" "));
+        let paras = line.substring(command.length + 1);
+
+        paras = paras.replace(/\s/gm, "▪")
+
+        let updatedLine = command + " " + paras.replace(/[^\s▪]/gm, " ");
+
+        overlayLines.push(updatedLine);
+      }
+    }
+
+    return overlayLines.join("\n");
   }
 
   render() {
@@ -36,7 +71,7 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
         <textarea 
           className="code-window__overlay string-tools__textarea window-textarea"
           spellCheck={false}
-          value={this.props.value.replace(/^ {1}/gm, "▪").replace(/ {2}/g, " ▪",).replace(/▪ {1}/g, "▪▪",).replace(/[^▪\r\n]/g, " ").replace(/ {1}$/gm, "▪")}
+          value={this.getOverlayValue(this.props.value)}
           readOnly={true}></textarea>
       </div>
     );
