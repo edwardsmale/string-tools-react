@@ -46,15 +46,19 @@ $border-width: 0.0625rem;
   margin-right: $border-width;
 
   &__overlay {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
     opacity: 50%;
     color: chartreuse;
-    background-color: transparent;
-    pointer-events: none; /* Ignore clicks on the overlay; let them bubble up to the code window text area. */
+  }
+}
+
+.output-pane {
+  position: relative;
+  width: 40%;
+  margin-right: $border-width;
+
+  &__overlay {
+    opacity: 50%;
+    color: lightgray;
   }
 }
 
@@ -64,6 +68,16 @@ $border-width: 0.0625rem;
 
 .panes-container {
   display: flex;
+}
+
+.textarea-overlay {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  pointer-events: none; /* Ignore clicks on the overlay; let them bubble up to the code window text area. */
 }
 
 .pane {

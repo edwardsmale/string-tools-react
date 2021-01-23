@@ -69,7 +69,7 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
           value={this.props.value}
         ></textarea>
         <textarea 
-          className="code-window__overlay string-tools__textarea window-textarea"
+          className="code-window__overlay textarea-overlay string-tools__textarea window-textarea"
           spellCheck={false}
           value={this.getOverlayValue(this.props.value)}
           readOnly={true}></textarea>

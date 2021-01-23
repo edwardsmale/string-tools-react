@@ -118,7 +118,7 @@ match`;
           </div>
           <div className="panes-container">
             <InputPane onInput={this.handleInputPaneInput} value={this.state.input} />
-            <OutputPane output={this.state.output} />
+            <OutputPane output={this.state.output} textUtilsService={this.textUtilsService} />
           </div>
         </div>
       </div>
