@@ -56,29 +56,30 @@ $border-width: 0.0625rem;
   width: 40%;
   margin-right: $border-width;
 
-  &__value {
+  &__text-item {
+
+    margin-bottom: 0.25rem;
+    padding-bottom: 0.25rem;
+    border-bottom: dashed 1px powderblue;
+    min-height: 1rem;
     color: rgb(1, 1, 82);
-  }
 
-  &__overlay {
-    padding-left: 0.6rem;
-    color: rgb(82, 214, 231);
-  }
-
-  &--has-dividing-lines {
-
-    .pane-textarea {
-      line-height: 1.5;
+    &:last-child {
+      border: none;
     }
 
-    .output-pane__overlay {
-      padding-top: 0.0625rem;
-    }
+    &--light div {
+      color: #008888;
+    } 
 
-    .output-pane__value {
-      padding-top: 0.75rem;
+    &--dark div {
+      color: #000044;
     }
   }
+}
+
+.output-value__text-item--light {
+  color: #008888;
 }
 
 .explain-window {

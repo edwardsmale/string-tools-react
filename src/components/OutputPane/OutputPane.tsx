@@ -4,7 +4,7 @@ import './OutputPane.scss';
 
 interface OutputPaneProps {
   output: string[][];
-  textUtilsService: TextUtilsService;
+  textUtilsService: TextUtilsService
 }
 
 interface OutputPaneState {
@@ -19,71 +19,67 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     this.textUtilsService = props.textUtilsService;
 
     this.getOutputValue = this.getOutputValue.bind(this);
-    this.getOverlayValue = this.getOverlayValue.bind(this);
+    this.anyArraysOfArrays = this.anyArraysOfArrays.bind(this);
   }
 
   private textUtilsService: TextUtilsService;
 
+  anyArraysOfArrays = (value: string[][]) => value.some((elem) => elem.length > 1);
+
   getOutputValue(value: string[][]) {
 
-    let outputLines = [];
+    let output = [];
+
+    let alt = false;
 
     for (let i = 0; i < value.length; i++) {
 
       let array = value[i];
 
+      let curr = [];
+  
       for (let j = 0; j < array.length; j++) {
 
-        outputLines.push(array[j]);
+          let lines = array[j].split(/\\n/);
+
+          let ele = (
+            <div key={`${Math.random()}`}>
+              {lines.map((line) => (
+                <div key={`${Math.random()}`} className="output-pane__text-item">{line}</div>
+              ))}
+            </div>
+          );
+
+          curr.push(ele);
       }
-    }
 
-    return outputLines.join("\n");
-  }
+      let className = "";
 
-  overlayHasDividingLines = (value: string[][]) => value.some((elem) => elem.length > 1);
+      if (this.anyArraysOfArrays(value)) {
 
-  getOverlayValue(value: string[][]) {
+        className = "output-pane__text-item " + (alt ? "output-pane__text-item--light" : "output-pane__text-item--dark");
 
-    let overlayLines = [];
-
-    let showDividingLines = this.overlayHasDividingLines(value);
-
-    if (showDividingLines) {
-
-      let dividingLine = "̶  ".repeat(20);
-
-      overlayLines.push(dividingLine);
-
-      for (let i = 0; i < value.length; i++) {
-
-        let array = value[i];
-
-        for (let j = 0; j < array.length - 1; j++) {
-
-          overlayLines.push("");
-        }
-
-        overlayLines.push(dividingLine);
+        alt = !alt;
       }
-    }
 
-    return overlayLines.join("\n");
+      output.push(
+        <div key={`${Math.random()}`} className={`${className}`}>
+        {curr.map((item) => (
+          <div key={`${Math.random()}`}>{item}</div>
+        ))}
+        </div>
+      )
+    }
+  
+    return output;
   }
 
   render() {
     return (
-      <div className={`output-pane pane pane--right ${this.overlayHasDividingLines(this.props.output) && "output-pane--has-dividing-lines"}`}>
-        <textarea
+      <div className="output-pane pane pane--right">
+        <div
           className="output-pane__value string-tools__textarea pane-textarea"
-          placeholder="Output will appear here"
-          value={this.getOutputValue(this.props.output)}
-          readOnly></textarea>
-        <textarea 
-          className="output-pane__overlay textarea-overlay string-tools__textarea pane-textarea"
-          spellCheck={false}
-          value={this.getOverlayValue(this.props.output)}
-          readOnly={true}></textarea>
+          placeholder="Output will appear here">{this.getOutputValue(this.props.output)}</div>
       </div>
     );
   }

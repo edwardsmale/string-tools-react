@@ -34,7 +34,7 @@ class App extends React.Component<AppProps, AppState> {
     const code = `skip 1
 split
 print { accountRef: "$2", name: "$4, $3", city: "$5" }
-flat
+flat 1
 join ,
 enclose []`;
 
@@ -102,7 +102,7 @@ enclose []`;
 
     const result = commandService.processCommands(code, input, explain);
 
-    return result;
+    return result; 
   }
 
   getCommandService(): CommandService {
