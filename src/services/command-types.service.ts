@@ -590,13 +590,13 @@ export class CommandTypesService {
             para: [
                 {
                     name: "delimiter",
-                    desc: "The delimiter to insert between items (default is tab)."
+                    desc: "The delimiter to insert between items."
                 }
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 value = this.textUtilsService.AsArray(value);
-                var defaultDelimiter = context.isTabDelimited ? "\t" : " ";
+                var defaultDelimiter = "";
                 para = para === "\\t" ? "\t" : para;
                 var delimiter = para || defaultDelimiter;
 
