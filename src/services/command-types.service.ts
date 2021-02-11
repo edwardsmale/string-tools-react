@@ -155,7 +155,7 @@ export class CommandTypesService {
                     var delimiter = para || defaultDelimiter;
 
                     if (explain) {
-                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false);
+                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false, true);
                         return { explanation: "Split the text on every " + formattedDelimiter };
                     } else {
 
@@ -515,7 +515,7 @@ export class CommandTypesService {
                     if (options.delimiter === ",") {
                         explanation += " in CSV format";
                     } else {
-                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(options.delimiter, true);
+                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(options.delimiter, true, false);
                         explanation += " separated with " + formattedDelimiter;
                     }
 
@@ -601,8 +601,9 @@ export class CommandTypesService {
                 var delimiter = para || defaultDelimiter;
 
                 if (explain) {
-                    var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, true);
-                    return { explanation: "Output items separated with " + formattedDelimiter + " (" + formattedDelimiter + " in values not escaped)" };
+                    var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, true, false);
+
+                    return { explanation: "Output items separated with " + formattedDelimiter };
                 } else {
                     return (value as string[]).join(delimiter);
                 }

@@ -167,28 +167,28 @@ export class TextUtilsService {
         return true;
     };
 
-    FormatDelimiter = (delimiter: string, pluralise: boolean) => {
+    FormatDelimiter = (delimiter: string, pluralise: boolean, isRegex: boolean) => {
 
-        var formatDelimiterSingular = (delimiter: string) => {
-            if (delimiter === "\t") {
-                return "tab";
-            }
-            else if (delimiter === " ") {
-                return "space";
-            }
-            else if (delimiter === ",") {
-                return "comma";
-            }
-            else if (delimiter.length === 1) {
-                return delimiter + " character";
-            }
-            else {
-                return "match of the regex /" + delimiter + "/";
-            }
-        };
-
-        var formattedDelimiter = formatDelimiterSingular(delimiter);
-
-        return pluralise ? formattedDelimiter + "s" : formattedDelimiter;
+        if (delimiter.indexOf(" ") !== -1) {
+            return delimiter.replace(/ /gm, "▪");
+        }
+        else if (delimiter === "\t") {
+            return "tab" + (pluralise ? "s" : "");
+        }
+        else if (delimiter === " ") {
+            return "space" + (pluralise ? "s" : "");
+        }
+        else if (delimiter === ",") {
+            return "comma" + (pluralise ? "s" : "");
+        }
+        else if (delimiter.length === 1) {
+            return delimiter + " character" + (pluralise ? "s" : "");
+        }
+        else if (isRegex) {
+            return "match of the regex /" + delimiter + "/";
+        }
+        else {
+            return delimiter;
+        }
     }
 }
