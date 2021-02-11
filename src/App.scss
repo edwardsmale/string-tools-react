@@ -72,11 +72,14 @@ body,
     overflow: auto;
   }
 
+  &__text-group {
+
+    margin-bottom: 0.125rem;
+    padding-bottom: 0.125rem;
+  }
+
   &__text-item {
 
-    margin-bottom: 0.25rem;
-    padding-bottom: 0.25rem;
-    border-bottom: dashed 1px powderblue;
     min-height: 1rem;
     white-space: pre;
     color: rgb(1, 1, 82);

@@ -19,12 +19,9 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     this.textUtilsService = props.textUtilsService;
 
     this.getOutputValue = this.getOutputValue.bind(this);
-    this.anyArraysOfArrays = this.anyArraysOfArrays.bind(this);
   }
 
   private textUtilsService: TextUtilsService;
-
-  anyArraysOfArrays = (value: string[][]) => value.some((elem) => elem.length > 1);
 
   getOutputValue(value: string[][]) {
 
@@ -43,7 +40,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           let lines = array[j].split(/\\n/);
 
           let ele = (
-            <div key={`${Math.random()}`}>
+            <div key={`${Math.random()}`} className="output-pane__text-group">
               {lines.map((line) => (
                 <div key={`${Math.random()}`} className="output-pane__text-item">{line}</div>
               ))}
@@ -53,14 +50,9 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           curr.push(ele);
       }
 
-      let className = "";
+      let className = "output-pane__text-item " + (alt ? "output-pane__text-item--light" : "output-pane__text-item--dark");
 
-      if (this.anyArraysOfArrays(value)) {
-
-        className = "output-pane__text-item " + (alt ? "output-pane__text-item--light" : "output-pane__text-item--dark");
-
-        alt = !alt;
-      }
+      alt = !alt;
 
       output.push(
         <div key={`${Math.random()}`} className={`${className}`}>
