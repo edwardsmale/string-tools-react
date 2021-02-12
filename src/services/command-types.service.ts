@@ -88,6 +88,9 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+                
+                para = this.textUtilsService.ReplaceBackslashTWithTab(para);
+
                 if (explain) {
                     if (context.regex) {
                         return { explanation: "Replaces text matching the regex /" + context.regex + "/ with '" + para + "'" };
@@ -597,7 +600,8 @@ export class CommandTypesService {
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 value = this.textUtilsService.AsArray(value);
                 var defaultDelimiter = "";
-                para = para === "\\t" ? "\t" : para;
+                para = this.textUtilsService.ReplaceBackslashTWithTab(para);
+                
                 var delimiter = para || defaultDelimiter;
 
                 if (explain) {
@@ -618,11 +622,9 @@ export class CommandTypesService {
                 if (explain) {
                     return { explanation: "print " + para };
                 } else {
+                    para = this.textUtilsService.ReplaceBackslashTWithTab(para);
                     var result = para;
                     var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
-
-                    // Replace \t with tab.
-                    result = result.replace(/\\t/g, "\t");
 
                     // Replace $0 with the whole value.
                     result = result.replace(new RegExp("\\$0", "g"), arrayValue.join(""));

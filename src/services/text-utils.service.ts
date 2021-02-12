@@ -14,6 +14,10 @@ export class TextUtilsService {
         return value.replace(new RegExp(regex, "g"), replacement);
     }
 
+    ReplaceBackslashTWithTab = (value: string) => {
+        return value.replace(/\\t/g, "\t");
+    }
+
     CompareCaseInsensitive = (value1: string, value2: string) => {
         return value1.localeCompare(value2, 'en', { 'sensitivity': 'base' });
     }
