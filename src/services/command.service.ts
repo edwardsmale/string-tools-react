@@ -22,7 +22,8 @@ export class CommandService {
                 isTabDelimited: this.textUtilsService.IsTabDelimited(lines),
                 regex: null,
                 searchString: null,
-                isColumnNumeric: null
+                isColumnNumeric: null,
+                headers: null
             };
 
             let currentValues: (string | string[])[] = lines;
@@ -95,7 +96,7 @@ export class CommandService {
                     }
                 } else {
 
-                    // Not flat|batch command.
+                    // Not flat command.
 
                     if (parsedCommand.commandType.name === "split") {
                         context.isColumnNumeric = [] as boolean[];
@@ -136,7 +137,25 @@ export class CommandService {
                             }
                         }
                         else {
-                            for (let j = 0; j < currentValues.length; j++) {
+
+                            let startJ = 0;
+
+                            if (commandType.name === "header") {
+
+                                context.headers = null;
+
+                                commandType.exec(
+                                    currentValues[0] as string,
+                                    parsedCommand.para,
+                                    parsedCommand.negated,
+                                    context,
+                                    explain
+                                );
+
+                                startJ = 1;
+                            }
+
+                            for (let j = startJ; j < currentValues.length; j++) {
 
                                 const newLineValue = commandType.exec(
                                     currentValues[j] as string,

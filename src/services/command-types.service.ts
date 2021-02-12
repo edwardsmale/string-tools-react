@@ -206,6 +206,8 @@ export class CommandTypesService {
                         return (value as string[]).sort();
                     }
                 } else {
+                    para = this.textUtilsService.ReplaceHeaderReferences(para, context.headers, true, "");
+                    
                     let indices = this.textUtilsService.ParseSortOrderIndices(para);
                     if (explain) {
                         let positions: string[] = [];
@@ -265,6 +267,26 @@ export class CommandTypesService {
             })
         },
         {
+            name: "header",
+            desc: "Treats the first array of items as a header row",
+            para: [ ],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+                
+                if (explain) {
+
+                    return { explanation: "Treat the first array of items as a header row.  Use $<column-name> to reference columns." };
+                } else {
+
+                    if (!context.headers) {
+                        context.headers = (value as string[]);
+                    }
+
+                    return (value as string[]);
+                } 
+            })
+        },
+        {
             name: "take",
             desc: "Takes the first N items and ignores the rest",
             para: [
@@ -307,6 +329,8 @@ export class CommandTypesService {
             ],
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                para = this.textUtilsService.ReplaceHeaderReferences(para, context.headers, true, "");
 
                 const indices = this.textUtilsService.ParseIntegers(para);
 
@@ -625,6 +649,9 @@ export class CommandTypesService {
                     para = this.textUtilsService.ReplaceBackslashTWithTab(para);
                     var result = para;
                     var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
+
+                    // Replace $<header> with $n.
+                    result = this.textUtilsService.ReplaceHeaderReferences(para, context.headers, false, "$");
 
                     // Replace $0 with the whole value.
                     result = result.replace(new RegExp("\\$0", "g"), arrayValue.join(""));

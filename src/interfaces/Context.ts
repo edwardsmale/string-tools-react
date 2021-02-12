@@ -3,4 +3,5 @@ export interface Context {
     regex: string | null;
     searchString: string | null;
     isColumnNumeric: boolean[] | null;
+    headers: string[] | null;
 }

@@ -152,6 +152,24 @@ export class TextUtilsService {
         return result;
     };
 
+    ReplaceHeaderReferences = (codeLine: string, headers: string[] | null, zeroBased: boolean, prefix: string) => {
+
+        let result = codeLine;
+
+        if (headers) {
+
+            for (let i = 0; i < headers.length; i++) {
+
+                const regex = new RegExp("\\$<" + headers[i] + ">", "g");
+                const replacement = prefix + (zeroBased ? i : i + 1)
+
+                result = result.replace(regex, replacement);
+            }
+        }
+
+        return result;
+    };
+
     IsTabDelimited = (lines: string[]) => {
 
         var countTabs = (line: string) => {
