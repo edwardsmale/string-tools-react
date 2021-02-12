@@ -61,8 +61,10 @@ enclose []`;
     };
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
+    this.handleCodeWindowSelect = this.handleCodeWindowSelect.bind(this);
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
     this.executeCommands = this.executeCommands.bind(this);
+    this.executeCode = this.executeCode.bind(this);
   }
 
   handleInputPaneInput(input: string) {
@@ -78,7 +80,35 @@ enclose []`;
         
     this.codeWindowValue = code;
 
-    this.setState({code: code, output: [[""]]});
+    this.setState({code: code});
+
+    this.executeCode(code);
+  }
+
+  handleCodeWindowSelect(code: string) {
+
+    let txtarea = document.getElementsByClassName("js-code-window-textarea")[0] as HTMLTextAreaElement;
+
+    let start = txtarea.selectionStart;
+    let finish = txtarea.selectionEnd;
+
+    if (finish - start > 0) {
+
+      let selectedCode = txtarea.value.substring(start, finish);
+
+      let returnCount = txtarea.value.substring(0, start).split(/\n/g).filter(i => i).length;
+
+      selectedCode = "\r\n".repeat(returnCount) + selectedCode;
+
+      this.executeCode(selectedCode);
+    }
+    else {
+
+      this.executeCode(code);
+    }
+  }
+
+  executeCode(code: string) {
 
     let result = this.executeCommands(this.inputPaneValue, code);
     let explanation = this.explainCommands(this.inputPaneValue, code);
@@ -118,7 +148,9 @@ enclose []`;
       <div className="App">
         <div className="string-tools">
           <div className="string-tools__top_section">
-            <CodeWindow onInput={this.handleCodeWindowInput} textUtilsService={this.textUtilsService} value={this.state.code} />
+            <CodeWindow onInput={this.handleCodeWindowInput}
+                        onSelect={this.handleCodeWindowSelect}
+                        textUtilsService={this.textUtilsService} value={this.state.code} />
             <ExplainWindow explanation={this.state.explanation} />
           </div>
           <div className="panes-container">

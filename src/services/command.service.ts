@@ -29,6 +29,10 @@ export class CommandService {
 
             for (let i = 0; i < codeLines.length; i++) {
 
+                if (!codeLines[i].trim()) {
+                    continue;
+                }
+
                 let parsedCommand = this.commandParsingService.ParseCodeLine(
                     codeLines[i]
                 );

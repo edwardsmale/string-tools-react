@@ -5,6 +5,7 @@ import './CodeWindow.scss';
 interface CodeWindowProps {
   value: string;
   onInput(input: string): any;
+  onSelect(event: any): any;
   textUtilsService: TextUtilsService;
 }
 
@@ -20,12 +21,19 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
 
     this.handleChange = this.handleChange.bind(this);
     this.getOverlayValue = this.getOverlayValue.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   private textUtilsService: TextUtilsService;
 
   handleChange(event: any) {
     this.props.onInput(
+      event.target.value
+    );
+  }
+
+  handleSelect(event: any) {
+    this.props.onSelect(
       event.target.value
     );
   }
@@ -62,10 +70,11 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
     return (
       <div className="code-window">
         <textarea
-          className="string-tools__textarea window-textarea"
+          className="string-tools__textarea window-textarea js-code-window-textarea"
           placeholder="Enter your instructions here"
           spellCheck={false}
           onChange={this.handleChange}
+          onSelect={this.handleSelect}
           value={this.props.value}
         ></textarea>
         <textarea 
