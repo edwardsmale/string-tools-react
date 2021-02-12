@@ -121,10 +121,10 @@ export class CommandService {
 
                         let commandType = parsedCommand.commandType as CommandType;
 
-                        for (let j = 0; j < currentValues.length; j++) {
+                        if (explain) {
 
                             const newLineValue = commandType.exec(
-                                currentValues[j] as string,
+                                "dummy value",
                                 parsedCommand.para,
                                 parsedCommand.negated,
                                 context,
@@ -133,6 +133,22 @@ export class CommandService {
 
                             if (newLineValue !== null) {
                                 newValues.push(newLineValue as string);
+                            }
+                        }
+                        else {
+                            for (let j = 0; j < currentValues.length; j++) {
+
+                                const newLineValue = commandType.exec(
+                                    currentValues[j] as string,
+                                    parsedCommand.para,
+                                    parsedCommand.negated,
+                                    context,
+                                    explain
+                                );
+
+                                if (newLineValue !== null) {
+                                    newValues.push(newLineValue as string);
+                                }
                             }
                         }
                     }
