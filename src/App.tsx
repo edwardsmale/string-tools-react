@@ -98,7 +98,7 @@ enclose []`;
 
       let returnCount = txtarea.value.substring(0, start).split(/\n/g).filter(i => i).length;
 
-      selectedCode = "\r\n".repeat(returnCount) + selectedCode;
+      selectedCode = "\n".repeat(returnCount) + selectedCode;
 
       this.executeCode(selectedCode);
     }
