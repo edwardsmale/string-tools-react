@@ -19,6 +19,8 @@ interface AppState {
   input: string;
   output: string[][];
   topSectionHeight: number;
+  codeWindowWidth: number;
+  draggedBorder: string | undefined;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -59,7 +61,9 @@ enclose []`;
       explanation: explanation,
       input: input,
       output: output,
-      topSectionHeight: 12
+      topSectionHeight: 12,
+      codeWindowWidth: 30,
+      draggedBorder: undefined
     };
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
@@ -67,7 +71,9 @@ enclose []`;
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
     this.executeCommands = this.executeCommands.bind(this);
     this.executeCode = this.executeCode.bind(this);
+    this.onDragStart = this.onDragStart.bind(this);
     this.onDragOver = this.onDragOver.bind(this);
+    this.onDragEnd = this.onDragEnd.bind(this);
   }
 
   handleInputPaneInput(input: string) {
@@ -146,22 +152,46 @@ enclose []`;
     return new CommandService(this.textUtilsService, commandParsingService, commandTypesService);
   }
 
-  onDragOver(e: any) {
-    
-    this.setState({ topSectionHeight: e.clientY / 16 });
+  onDragStart(e: React.DragEvent<HTMLDivElement>) {
+
+    this.setState({ 
+      draggedBorder: (e.target as HTMLDivElement).dataset.borderId
+    })
+  }
+
+  onDragEnd(e: React.DragEvent<HTMLDivElement>) {
+
+    this.setState({
+      draggedBorder: undefined
+    })
+  }
+
+  onDragOver(e: React.DragEvent<HTMLDivElement>) {
+
+    if (this.state.draggedBorder === "top-section-border") {
+      this.setState({ topSectionHeight: e.clientY / 16 });
+    }
+    else if (this.state.draggedBorder === "code-window-border") {
+      this.setState({ codeWindowWidth: e.clientX / 16 });
+    }
   }
 
   render() {
     return (
       <div className="App">
-        <div className="string-tools" onDragOver={this.onDragOver}>
+        <div className="string-tools" onDragOver={this.onDragOver} onDragEnd={this.onDragEnd}>
           <div className="string-tools__top-section" style={ { height: this.state.topSectionHeight + "rem" }}>
-            <CodeWindow onInput={this.handleCodeWindowInput}
-                        onSelect={this.handleCodeWindowSelect}
-                        textUtilsService={this.textUtilsService} value={this.state.code} />
-            <ExplainWindow explanation={this.state.explanation} />
+            <div className="string-tools__code-window-container" style={ { width: this.state.codeWindowWidth + "rem" }}>
+              <CodeWindow onInput={this.handleCodeWindowInput}
+                          onSelect={this.handleCodeWindowSelect}
+                          textUtilsService={this.textUtilsService} value={this.state.code} />
+            </div>
+            <div className="string-tools__code-window-border" draggable={true} onDragStart={this.onDragStart} data-border-id="code-window-border"></div>
+            <div className="string-tools__explain-window-container">
+              <ExplainWindow explanation={this.state.explanation} />
+            </div>
           </div>
-          <div className="string-tools__top-section-border" draggable={true}></div>
+          <div className="string-tools__top-section-border" draggable={true} onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
           <div className="panes-container">
             <InputPane onInput={this.handleInputPaneInput} value={this.state.input} />
             <OutputPane output={this.state.output} textUtilsService={this.textUtilsService} />

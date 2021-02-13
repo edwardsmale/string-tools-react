@@ -15,7 +15,6 @@ body,
 .string-tools {
   display: flex;
   flex-direction: column;
-  background-color: #dddddd;
   margin-left: auto;
   margin-right: auto;
   max-width: 120rem;
@@ -54,19 +53,53 @@ body,
   }
 }
 
-.code-window,
-.explain-window {
-  box-sizing: border-box;
+.string-tools {
+  &__code-window-container {
+
+    display: flex;
+    
+    box-sizing: border-box;
+
+    width: 40%;
+  }
+
+  &__code-window-border {
+
+    width: 1px;
+    height: 100%;
+    
+    border-left: 3px #fff solid;
+    border-right: 3px #fff solid;
+    background-color: #aaa;
+    cursor: ew-resize;
+  }
+
+  &__explain-window-container {
+
+    display: flex;
+    box-sizing: border-box;
+    
+    flex-grow: 1;
+  }
 }
 
 .code-window {
+
   position: relative;
-  width: 40%;
-  margin-right: $border-width;
+  width: 100%;
 
   &__overlay {
     opacity: 0.5;
     color: chartreuse;
+  }
+}
+
+.explain-window {
+
+  width: 100%;
+
+  &__textarea {
+    color: darkred;
   }
 }
 
@@ -108,14 +141,6 @@ body,
 
 .output-value__text-item--light {
   color: #008888;
-}
-
-.explain-window {
-  flex-grow: 1;
-
-  &__textarea {
-    color: darkred;
-  }
 }
 
 .panes-container {
