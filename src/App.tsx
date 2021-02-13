@@ -18,6 +18,7 @@ interface AppState {
   explanation: string;
   input: string;
   output: string[][];
+  topSectionHeight: number;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -57,7 +58,8 @@ enclose []`;
       code: code,
       explanation: explanation,
       input: input,
-      output: output
+      output: output,
+      topSectionHeight: 12
     };
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
@@ -65,6 +67,7 @@ enclose []`;
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
     this.executeCommands = this.executeCommands.bind(this);
     this.executeCode = this.executeCode.bind(this);
+    this.onDragOver = this.onDragOver.bind(this);
   }
 
   handleInputPaneInput(input: string) {
@@ -143,16 +146,22 @@ enclose []`;
     return new CommandService(this.textUtilsService, commandParsingService, commandTypesService);
   }
 
+  onDragOver(e: any) {
+    
+    this.setState({ topSectionHeight: e.clientY / 16 });
+  }
+
   render() {
     return (
       <div className="App">
-        <div className="string-tools">
-          <div className="string-tools__top_section">
+        <div className="string-tools" onDragOver={this.onDragOver}>
+          <div className="string-tools__top-section" style={ { height: this.state.topSectionHeight + "rem" }}>
             <CodeWindow onInput={this.handleCodeWindowInput}
                         onSelect={this.handleCodeWindowSelect}
                         textUtilsService={this.textUtilsService} value={this.state.code} />
             <ExplainWindow explanation={this.state.explanation} />
           </div>
+          <div className="string-tools__top-section-border" draggable={true}></div>
           <div className="panes-container">
             <InputPane onInput={this.handleInputPaneInput} value={this.state.input} />
             <OutputPane output={this.state.output} textUtilsService={this.textUtilsService} />

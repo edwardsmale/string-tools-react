@@ -23,10 +23,19 @@ body,
   padding-left: $border-width;
   padding-right: $border-width;
 
-  &__top_section {
+  &__top-section {
     display: flex;
     flex-direction: row;
-    height: 12rem;
+  }
+
+  &__top-section-border {
+
+    width: 100%;
+    height: 1px;
+    border-top: 3px #fff solid;
+    border-bottom: 3px #fff solid;
+    background-color: #aaa;
+    cursor: ns-resize;
   }
 
   &__textarea {
@@ -47,7 +56,6 @@ body,
 
 .code-window,
 .explain-window {
-  margin: 0 0 $border-width;
   box-sizing: border-box;
 }
 
