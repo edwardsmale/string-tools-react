@@ -103,10 +103,50 @@ body,
   }
 }
 
+.panes-container {
+  display: flex;
+  flex-grow: 1;
+}
+
+.string-tools {
+
+  &__input-pane-container {
+    
+    display: flex;
+    width: 50%;
+  }
+
+  &__input-pane-border {
+  
+    width: 1px;
+    height: 100%;
+    
+    border-left: 3px #fff solid;
+    border-right: 3px #fff solid;
+    background-color: #aaa;
+    cursor: ew-resize;
+  }
+
+  &__output-pane-container {
+
+    display: flex;
+
+    width: 50%;
+  }
+}
+
+.pane {
+  flex-grow: 1;
+  box-sizing: border-box;
+
+  &--left {
+      margin-right: $border-width;
+  }
+}
+
 .output-pane {
+
   position: relative;
-  width: 40%;
-  margin-right: $border-width;
 
   &__value {
 
@@ -143,11 +183,6 @@ body,
   color: #008888;
 }
 
-.panes-container {
-  display: flex;
-  flex-grow: 1;
-}
-
 .textarea-overlay {
   position: absolute;
   left: 0;
@@ -158,12 +193,3 @@ body,
   pointer-events: none; /* Ignore clicks on the overlay; let them bubble up to the code window text area. */
 }
 
-.pane {
-  width: 50%;
-  flex-grow: 1;
-  box-sizing: border-box;
-
-  &--left {
-      margin-right: $border-width;
-  }
-}

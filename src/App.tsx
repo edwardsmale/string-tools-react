@@ -20,6 +20,7 @@ interface AppState {
   output: string[][];
   topSectionHeight: number;
   codeWindowWidth: number;
+  inputPaneWidth: number;
   draggedBorder: string | undefined;
 }
 
@@ -63,6 +64,7 @@ enclose []`;
       output: output,
       topSectionHeight: 12,
       codeWindowWidth: 30,
+      inputPaneWidth: 50,
       draggedBorder: undefined
     };
 
@@ -174,6 +176,9 @@ enclose []`;
     else if (this.state.draggedBorder === "code-window-border") {
       this.setState({ codeWindowWidth: e.clientX / 16 });
     }
+    else if (this.state.draggedBorder === "input-pane-border") {
+      this.setState({ inputPaneWidth: e.clientX / 16 });
+    }
   }
 
   render() {
@@ -193,8 +198,13 @@ enclose []`;
           </div>
           <div className="string-tools__top-section-border" draggable={true} onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
           <div className="panes-container">
-            <InputPane onInput={this.handleInputPaneInput} value={this.state.input} />
-            <OutputPane output={this.state.output} textUtilsService={this.textUtilsService} />
+            <div className="string-tools__input-pane-container" style={ { width: this.state.inputPaneWidth + "rem" }}>
+              <InputPane onInput={this.handleInputPaneInput} value={this.state.input} />
+            </div>
+            <div className="string-tools__input-pane-border" draggable={true} onDragStart={this.onDragStart} data-border-id="input-pane-border"></div>
+            <div className="string-tools__output-pane-container">
+              <OutputPane output={this.state.output} textUtilsService={this.textUtilsService} />
+            </div>
           </div>
         </div>
       </div>
