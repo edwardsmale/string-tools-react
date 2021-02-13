@@ -1,4 +1,5 @@
 $border-width: 0.0625rem;
+$border-width-extra: 0.125rem;
 
 html,
 #root,
@@ -19,8 +20,6 @@ body,
   margin-right: auto;
   max-width: 120rem;
   box-sizing: border-box;  
-  padding-left: $border-width;
-  padding-right: $border-width;
 
   &__top-section {
     display: flex;
@@ -30,9 +29,9 @@ body,
   &__top-section-border {
 
     width: 100%;
-    height: 1px;
-    border-top: 3px #fff solid;
-    border-bottom: 3px #fff solid;
+    height: $border-width;
+    border-top: $border-width-extra #fff solid;
+    border-bottom: $border-width-extra #fff solid;
     background-color: #aaa;
     cursor: ns-resize;
   }
@@ -65,11 +64,11 @@ body,
 
   &__code-window-border {
 
-    width: 1px;
+    width: $border-width;
     height: 100%;
     
-    border-left: 3px #fff solid;
-    border-right: 3px #fff solid;
+    border-left: $border-width-extra #fff solid;
+    border-right: $border-width-extra #fff solid;
     background-color: #aaa;
     cursor: ew-resize;
   }
@@ -118,11 +117,11 @@ body,
 
   &__input-pane-border {
   
-    width: 1px;
+    width: $border-width;
     height: 100%;
     
-    border-left: 3px #fff solid;
-    border-right: 3px #fff solid;
+    border-left: $border-width-extra #fff solid;
+    border-right: $border-width-extra #fff solid;
     background-color: #aaa;
     cursor: ew-resize;
   }
@@ -138,10 +137,6 @@ body,
 .pane {
   flex-grow: 1;
   box-sizing: border-box;
-
-  &--left {
-      margin-right: $border-width;
-  }
 }
 
 .output-pane {
