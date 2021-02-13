@@ -26,7 +26,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
   render () {  
     return (
-      <div className="pane pane--left">
+      <div className="pane pane--left input-pane">
         <textarea
           className="string-tools__textarea pane-textarea"
           placeholder="Paste the text to process in here"

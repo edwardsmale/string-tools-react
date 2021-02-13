@@ -40,9 +40,9 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           let lines = array[j].split(/\\n/);
 
           let ele = (
-            <div key={`${Math.random()}`} className="output-pane__text-group">
+            <div key={`${Math.random()}`} className="output-pane__text-group textarea__text-group">
               {lines.map((line) => (
-                <div key={`${Math.random()}`} className="output-pane__text-item">{line}</div>
+                <div key={`${Math.random()}`} className="output-pane__text-item textarea__text-item">{line}</div>
               ))}
             </div>
           );
@@ -71,7 +71,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       <div className="output-pane pane pane--right">
         <div
           className="output-pane__value string-tools__textarea pane-textarea"
-          placeholder="Output will appear here">{this.getOutputValue(this.props.output)}</div>
+          >{this.getOutputValue(this.props.output)}</div>
       </div>
     );
   }

@@ -191,17 +191,17 @@ enclose []`;
                           onSelect={this.handleCodeWindowSelect}
                           textUtilsService={this.textUtilsService} value={this.state.code} />
             </div>
-            <div className="string-tools__code-window-border" draggable={true} onDragStart={this.onDragStart} data-border-id="code-window-border"></div>
+            <div className="string-tools__code-window-border" draggable onDragStart={this.onDragStart} data-border-id="code-window-border"></div>
             <div className="string-tools__explain-window-container">
-              <ExplainWindow explanation={this.state.explanation} />
+              <ExplainWindow explanation={this.state.explanation} textUtilsService={this.textUtilsService} />
             </div>
           </div>
-          <div className="string-tools__top-section-border" draggable={true} onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
+          <div className="string-tools__top-section-border" draggable onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
           <div className="panes-container">
             <div className="string-tools__input-pane-container" style={ { width: this.state.inputPaneWidth + "rem" }}>
               <InputPane onInput={this.handleInputPaneInput} value={this.state.input} />
             </div>
-            <div className="string-tools__input-pane-border" draggable={true} onDragStart={this.onDragStart} data-border-id="input-pane-border"></div>
+            <div className="string-tools__input-pane-border" draggable onDragStart={this.onDragStart} data-border-id="input-pane-border"></div>
             <div className="string-tools__output-pane-container">
               <OutputPane output={this.state.output} textUtilsService={this.textUtilsService} />
             </div>

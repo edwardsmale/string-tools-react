@@ -18,6 +18,10 @@ export class TextUtilsService {
         return value.replace(/\\t/g, "\t");
     }
 
+    SplitIntoLines = (value: string) => {
+        return value.split(/\r?\n/g);
+    }
+
     CompareCaseInsensitive = (value1: string, value2: string) => {
         return value1.localeCompare(value2, 'en', { 'sensitivity': 'base' });
     }

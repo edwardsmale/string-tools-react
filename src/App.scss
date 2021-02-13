@@ -30,6 +30,7 @@ body,
 
     width: 100%;
     height: $border-width;
+    min-height: $border-width;
     border-top: $border-width-extra #fff solid;
     border-bottom: $border-width-extra #fff solid;
     background-color: #aaa;
@@ -39,6 +40,9 @@ body,
   &__textarea {
     box-sizing: border-box;
     padding: 0.5rem;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
     font-family: 'Inconsolata', monospace;
     font-size: 0.875rem;
     line-height: 1.125rem;
@@ -53,18 +57,19 @@ body,
 }
 
 .string-tools {
+
   &__code-window-container {
 
     display: flex;
+    flex-shrink: 0;
     
     box-sizing: border-box;
-
-    width: 40%;
   }
 
   &__code-window-border {
 
     width: $border-width;
+    min-width: $border-width;
     height: 100%;
     
     border-left: $border-width-extra #fff solid;
@@ -77,15 +82,17 @@ body,
 
     display: flex;
     box-sizing: border-box;
-    
-    flex-grow: 1;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
   }
 }
 
 .code-window {
 
   position: relative;
-  width: 100%;
+  flex-basis: 100%;
+  overflow: hidden;
 
   &__overlay {
     opacity: 0.5;
@@ -95,9 +102,19 @@ body,
 
 .explain-window {
 
-  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 
   &__textarea {
+
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  &__text-item {
+
     color: darkred;
   }
 }
@@ -112,12 +129,13 @@ body,
   &__input-pane-container {
     
     display: flex;
-    width: 50%;
+    flex-shrink: 0;
   }
 
   &__input-pane-border {
   
     width: $border-width;
+    min-width: $border-width;
     height: 100%;
     
     border-left: $border-width-extra #fff solid;
@@ -129,14 +147,15 @@ body,
   &__output-pane-container {
 
     display: flex;
-
-    width: 50%;
   }
 }
 
 .pane {
-  flex-grow: 1;
   box-sizing: border-box;
+}
+
+.input-pane {
+  width: 100%;
 }
 
 .output-pane {
@@ -148,16 +167,8 @@ body,
     overflow: auto;
   }
 
-  &__text-group {
-
-    margin-bottom: 0.125rem;
-    padding-bottom: 0.125rem;
-  }
-
   &__text-item {
 
-    min-height: 1rem;
-    white-space: pre;
     color: rgb(1, 1, 82);
 
     &:last-child {
@@ -176,6 +187,25 @@ body,
 
 .output-value__text-item--light {
   color: #008888;
+}
+
+.textarea {
+
+  &__text-group {
+
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    margin-bottom: 0.125rem;
+    padding-bottom: 0.125rem;
+  }
+
+  &__text-item {
+
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+  }
 }
 
 .textarea-overlay {
