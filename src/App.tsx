@@ -52,8 +52,6 @@ enclose []`;
 4,W44444,Jo,Burton,Barnes
 5,W55555,Edward,Burton,London`;
 
-    const output = this.executeCommands(input, code);
-
     this.inputPaneValue = input;
     this.codeWindowValue = code;
 
@@ -61,7 +59,7 @@ enclose []`;
       code: code,
       explanation: explanation,
       input: input,
-      output: output,
+      output: [[]],
       topSectionHeight: 12,
       codeWindowWidth: 30,
       inputPaneWidth: 50,
@@ -76,6 +74,11 @@ enclose []`;
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragOver = this.onDragOver.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+  }
+
+  componentDidMount() {
+
+    this.executeCode(this.codeWindowValue);
   }
 
   handleInputPaneInput(input: string) {
