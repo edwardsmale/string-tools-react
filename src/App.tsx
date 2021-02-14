@@ -37,18 +37,18 @@ class App extends React.Component<AppProps, AppState> {
 
     const code = `split
 header
-sort $<LastName> desc
-print $2,$3,$4,$5`;
+sort $<Worth> desc
+print $2,$3,$4,$5,$6`;
 
   const explanation = "";
 
-  const input = `Id,AccountRef,FirstName,LastName,City
-1,W11111,Edward,Smale,Leighton Buzzard
-1,W11112,Edward,Smale,Sheffield
-2,W22222,Stephen,Smale,Sheffield
-3,W33333,Jo,Smale,Roehampton
-4,W44444,Jo,Burton,Barnes
-5,W55555,Edward,Burton,London`;
+  const input = `Id,AccountRef,FirstName,LastName,City,Worth
+1,W11111,Edward,Smale,Leighton Buzzard,999.99
+1,W11112,Edward,Smale,Sheffield,800.01
+2,W22222,Stephen,Smale,Sheffield,700.50
+3,W33333,Jo,Smale,Roehampton,1100.45
+4,W44444,Jo,Burton,Barnes,1200.32
+5,W55555,Edward,Burton,London,44.76`;
 
     this.inputPaneValue = input;
     this.codeWindowValue = code;

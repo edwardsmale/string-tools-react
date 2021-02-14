@@ -25,7 +25,7 @@ export class SortService {
 
         var index = indices[0].index;
 
-        var valuesAtIndex: string[] = [];
+        var valuesAtIndex: (string | number)[] = [];
 
         for (let i: number = 0; i < values.length; i++) {
 
@@ -36,7 +36,24 @@ export class SortService {
             }
         }
 
-        valuesAtIndex = valuesAtIndex.sort();
+        let isNumeric = this.textUtilsService.IsNumeric;
+
+        let numericValues = (valuesAtIndex as string[])
+            .filter(function (value: string) { return isNumeric(value); })
+            .map(function (value: string) { return parseFloat(value); })
+
+        if (numericValues.length === valuesAtIndex.length) {
+
+            numericValues = numericValues.sort(function(a, b) {
+                return a - b;
+            });
+
+            valuesAtIndex = numericValues;
+        }
+        else {
+
+            valuesAtIndex = valuesAtIndex.sort();
+        }
 
         if (!indices[0].ascending) {
             valuesAtIndex = valuesAtIndex.reverse();
@@ -52,7 +69,16 @@ export class SortService {
 
             for (let j: number = 0; j < values.length; j++) {
 
+                let match = false;
+                
                 if (values[j][index] === valuesAtIndex[i]) {
+                    match = true;
+                }
+                else if (parseFloat(values[j][index]) === (valuesAtIndex[i] as number)) {
+                    match = true;
+                }
+
+                if (match) {
                     arrayOfArrays[valuesAtIndex[i] as any].push(values[j]);
                 }
             }

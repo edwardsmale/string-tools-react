@@ -176,7 +176,7 @@ export class CommandTypesService {
                                 isColumnNumeric[i] = true;
                             }
 
-                            if (!this.textUtilsService.IsNumeric(splitValues[i])) {
+                            if (!this.textUtilsService.IsIntegral(splitValues[i])) {
                                 isColumnNumeric[i] = false;
                             }
                         }
@@ -208,7 +208,7 @@ export class CommandTypesService {
                 } else {
                     
                     let indices = this.textUtilsService.ParseSortOrderIndices(para, context.headers);
-                    
+
                     if (explain) {
                         let positions: string[] = [];
 
@@ -438,7 +438,7 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
-                    if (this.textUtilsService.IsNumeric(para)) {
+                    if (this.textUtilsService.IsIntegral(para)) {
                         return { explanation: "Convert into arrays of " + para + " items" };
                     } else {
                         return { explanation: "Flatten an array of arrays into one array" };

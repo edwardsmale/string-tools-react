@@ -34,12 +34,16 @@ export class TextUtilsService {
         return text.split(/\n/);
     }
 
-    IsNumeric = (value: string) => {
+    IsIntegral = (value: string) => {
         return /^-{0,1}\d+$/.test(value);
     }
 
     IsPositiveInteger = (value: string) => {
         return /^[1-9]\d*$/.test(value);
+    }
+
+    IsNumeric = (value: string) => {
+        return /^-{0,1}\d+(\.\d+)?$/.test(value);
     }
 
     AsArray = (value: string | string[]): string[] => {
