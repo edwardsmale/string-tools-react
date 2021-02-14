@@ -84,9 +84,9 @@ print $2,$3,$4,$5,$6`;
     
     this.inputPaneValue = input;
 
-    let result = this.executeCommands(this.inputPaneValue, this.codeWindowValue);
+    this.setState({input: input});
 
-    this.setState({input: input, output: result});
+    this.executeCode(this.codeWindowValue);
   }
 
   handleCodeWindowInput(code: string) {
