@@ -34,15 +34,10 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
     );
 
     return (
-      <div className="explain-window">
-        <div className="explain-window__textarea string-tools__textarea window-textarea textarea" 
+      <div key={`${Math.random()}`} className="explain-window">
+        <div key={`${Math.random()}`} className="explain-window__textarea string-tools__textarea window-textarea textarea" 
              style={ { overflow: "hidden" } }
              >{elements}</div>
-        {/* <textarea
-          className="explain-window__textarea string-tools__textarea window-textarea"
-          placeholder="An explanation of your instructions will be shown here"
-          value={this.props.explanation}
-          readOnly></textarea> */}
       </div>
     );
   }
