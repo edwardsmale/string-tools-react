@@ -23,7 +23,7 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
 
   render() {
 
-    let lines = this.textUtilsService.SplitIntoLines(this.props.explanation);
+    let lines = this.textUtilsService.TextToLines(this.props.explanation);
 
     let elements = (
       <div key={`${Math.random()}`} className="explain-window__text-group textarea__text-group">

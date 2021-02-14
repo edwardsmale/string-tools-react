@@ -18,20 +18,23 @@ export class TextUtilsService {
         return value.replace(/\\t/g, "\t");
     }
 
-    SplitIntoLines = (value: string) => {
-        return value.split(/\r?\n/g);
-    }
-
     CompareCaseInsensitive = (value1: string, value2: string) => {
         return value1.localeCompare(value2, 'en', { 'sensitivity': 'base' });
     }
 
-    LinesToText = (lines: string[]): string => {
-        return lines.join("\r\n");
+    TextToLines = (value: string) => {
+
+        value = value.replace(/\r\n/g, "\n");
+
+        if (value.endsWith("\n")) {
+            value = value.substring(0, value.length - 1);
+        }
+
+        return value.split(/\n/g);
     }
 
-    TextToLines = (text: string): string[] => {
-        return text.split(/\n/);
+    LinesToText = (lines: string[]): string => {
+        return lines.join("\r\n");
     }
 
     IsIntegral = (value: string) => {
