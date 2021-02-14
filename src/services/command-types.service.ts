@@ -168,21 +168,6 @@ export class CommandTypesService {
 
                         var splitValues = (value as string).split(new RegExp(delimiter));
 
-                        let isColumnNumeric: boolean[] = [];
-
-                        for (let i = 0; i < splitValues.length; i++) {
-
-                            if (context.isColumnNumeric === null || context.isColumnNumeric.length <= i) {
-                                isColumnNumeric[i] = true;
-                            }
-
-                            if (!this.textUtilsService.IsIntegral(splitValues[i])) {
-                                isColumnNumeric[i] = false;
-                            }
-                        }
-
-                        context.isColumnNumeric = isColumnNumeric;
-
                         return splitValues;
                     }
                 }

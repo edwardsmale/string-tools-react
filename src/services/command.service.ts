@@ -2,14 +2,16 @@ import { TextUtilsService } from './text-utils.service';
 import { CommandParsingService } from './command-parsing.service';
 import { CommandTypesService } from './command-types.service';
 import { Context } from "../interfaces/Context";
+import { ContextService } from './context.service';
 import { CommandType, Explanation } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
-    constructor(private textUtilsService: TextUtilsService, private commandParsingService: CommandParsingService, private commandTypesService: CommandTypesService) {
+    constructor(private textUtilsService: TextUtilsService, private commandParsingService: CommandParsingService, private commandTypesService: CommandTypesService, private contextService: ContextService) {
         this.textUtilsService = textUtilsService;
         this.commandParsingService = commandParsingService;
         this.commandTypesService = commandTypesService;
+        this.contextService = contextService;
     }
 
     processCommands(codeValue: string, inputValue: string, explain: boolean): string[][] {
@@ -22,7 +24,9 @@ export class CommandService {
                 isTabDelimited: this.textUtilsService.IsTabDelimited(lines),
                 regex: null,
                 searchString: null,
+                numberOfColumns: null,
                 isColumnNumeric: null,
+                isColumnIntegral: null,
                 headers: null
             };
 
@@ -153,6 +157,8 @@ export class CommandService {
                                 );
 
                                 startJ = 1;
+
+                                this.contextService.UpdateContextDataTypes(context, (currentValues.slice(1)) as string[][]);
                             }
 
                             for (let j = startJ; j < currentValues.length; j++) {
@@ -168,6 +174,11 @@ export class CommandService {
                                 if (newLineValue !== null) {
                                     newValues.push(newLineValue as string);
                                 }
+                            }
+
+                            if (commandType.name === "split") {
+
+                                this.contextService.UpdateContextDataTypes(context, newValues as string[][]);
                             }
                         }
                     }

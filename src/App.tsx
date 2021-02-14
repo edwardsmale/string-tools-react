@@ -7,6 +7,7 @@ import OutputPane from './components/OutputPane/OutputPane';
 import { CommandParsingService } from './services/command-parsing.service';
 import { CommandTypesService } from './services/command-types.service';
 import { CommandService } from './services/command.service';
+import { ContextService } from './services/context.service';
 import { SortService } from './services/sort.service';
 import { TextUtilsService } from './services/text-utils.service';
 
@@ -152,7 +153,14 @@ print $2,$3,$4,$5,$6`;
     let sortService = new SortService(this.textUtilsService);
     let commandTypesService = new CommandTypesService(this.textUtilsService, sortService);
     let commandParsingService = new CommandParsingService(this.textUtilsService, commandTypesService);
-    return new CommandService(this.textUtilsService, commandParsingService, commandTypesService);
+    let contextService = new ContextService(this.textUtilsService);
+    
+    return new CommandService(
+      this.textUtilsService,
+      commandParsingService, 
+      commandTypesService, 
+      contextService
+    );
   }
 
   onDragStart(e: React.DragEvent<HTMLDivElement>) {
