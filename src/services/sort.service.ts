@@ -1,5 +1,6 @@
 import { TextUtilsService } from './text-utils.service'
 import { SortOrderIndex } from '../interfaces/SortOrderIndex';
+import { Context } from '../interfaces/Context';
 
 export class SortService {
 
@@ -14,7 +15,7 @@ export class SortService {
         });
     }
 
-    SortArrays = (values: string[][], indices: SortOrderIndex[]) => {
+    SortArrays = (values: string[][], indices: SortOrderIndex[], context: Context) => {
 
         if (indices.length === 0) {
             return values;
@@ -36,19 +37,10 @@ export class SortService {
             }
         }
 
-        let isNumeric = this.textUtilsService.IsNumeric;
+        if (context.isColumnNumeric && context.isColumnNumeric[index]) {
 
-        let numericValues = (valuesAtIndex as string[])
-            .filter(function (value: string) { return isNumeric(value); })
-            .map(function (value: string) { return parseFloat(value); })
-
-        if (numericValues.length === valuesAtIndex.length) {
-
-            numericValues = numericValues.sort(function(a, b) {
-                return a - b;
-            });
-
-            valuesAtIndex = numericValues;
+            valuesAtIndex = (valuesAtIndex as string[]).map(function (val) { return parseFloat(val); });
+            valuesAtIndex = (valuesAtIndex as number[]).sort(function(a, b) { return a - b; });
         }
         else {
 
@@ -70,7 +62,7 @@ export class SortService {
             for (let j: number = 0; j < values.length; j++) {
 
                 let match = false;
-                
+
                 if (values[j][index] === valuesAtIndex[i]) {
                     match = true;
                 }
@@ -89,7 +81,9 @@ export class SortService {
         for (let i = 0; i < valuesAtIndex.length; i++) {
 
             arrayOfArrays[valuesAtIndex[i] as any] = this.SortArrays(
-                arrayOfArrays[valuesAtIndex[i] as any], newIndices
+                arrayOfArrays[valuesAtIndex[i] as any],
+                newIndices,
+                context
             );
         }
 

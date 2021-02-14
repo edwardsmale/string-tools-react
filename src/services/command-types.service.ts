@@ -214,7 +214,11 @@ export class CommandTypesService {
                             }
                         }
 
-                        return this.sortService.SortArrays(value as string[][], indices);
+                        return this.sortService.SortArrays(
+                            value as string[][], 
+                            indices,
+                            context
+                        );
                     }
                 }
             })
