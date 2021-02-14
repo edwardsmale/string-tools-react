@@ -137,13 +137,14 @@ export class TextUtilsService {
         }
     };
 
-    ParseSortOrderIndices = (para: string) => {
+    ParseSortOrderIndices = (para: string, headers: string[] | null) => {
         var split = para.trim().split(",");
         var result: SortOrderIndex[] = [];
         for (let i = 0; i < split.length; i++) {
             let val = split[i].trim().replace(new RegExp("ending", "i"), "").toLowerCase();
-            let asc = !val.includes("d");
+            let asc = !val.toLowerCase().endsWith("desc");
             let int = parseInt(split[i], 10);
+            
             if (!isNaN(int)) {
 
                 result.push({
@@ -151,6 +152,24 @@ export class TextUtilsService {
                     ascending: asc,
                     description: this.FormatIndex(int, asc)
                 });
+            } 
+            else if (headers) {
+
+                let match = /\$<(.*?)>/.exec(split[i]);
+
+                if (match) {
+
+                    let int = headers.indexOf(match[1]);
+
+                    if (int) {
+
+                        result.push({
+                            index: int,
+                            ascending: asc,
+                            description: match[1] + (asc ? "" : " descending")
+                        });
+                    }
+                }
             }
         }
         return result;

@@ -35,12 +35,10 @@ class App extends React.Component<AppProps, AppState> {
 
     this.textUtilsService = new TextUtilsService();
 
-    const code = `skip 1
-split
-print { accountRef: "$2", name: "$4, $3", city: "$5" }
-flat 1
-join ,
-enclose []`;
+    const code = `split
+header
+sort $<LastName> desc
+print $2,$3,$4,$5`;
 
   const explanation = "";
 

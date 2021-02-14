@@ -206,9 +206,9 @@ export class CommandTypesService {
                         return (value as string[]).sort();
                     }
                 } else {
-                    para = this.textUtilsService.ReplaceHeaderReferences(para, context.headers, true, "");
                     
-                    let indices = this.textUtilsService.ParseSortOrderIndices(para);
+                    let indices = this.textUtilsService.ParseSortOrderIndices(para, context.headers);
+                    
                     if (explain) {
                         let positions: string[] = [];
 
@@ -273,14 +273,14 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
+                if (!context.headers) {
+                    context.headers = (value as string[]);
+                }
+
                 if (explain) {
 
                     return { explanation: "Treat the first array of items as a header row.  Use $<column-name> to reference columns." };
                 } else {
-
-                    if (!context.headers) {
-                        context.headers = (value as string[]);
-                    }
 
                     return (value as string[]);
                 } 
