@@ -57,7 +57,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       output.push(
         <div key={`${Math.random()}`} className={`${className}`}>
         {curr.map((item) => (
-          <div key={`${Math.random()}`}>{item}</div>
+          item
         ))}
         </div>
       )
