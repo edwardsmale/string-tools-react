@@ -15,6 +15,21 @@ export class SortService {
         });
     }
 
+    SortArray = (values: string[]) => {
+
+        let that = this;
+
+        if (values.every(that.textUtilsService.IsNumeric)) {
+
+            let numbers = (values as string[]).map(parseFloat);
+
+            return numbers.sort(function(a, b) { return a - b; }).map(function (num) { return num.toString(); });
+        }
+        else {
+            return values.sort();
+        }
+    }
+
     SortArrays = (values: string[][], indices: SortOrderIndex[], context: Context) => {
 
         if (indices.length === 0) {

@@ -184,16 +184,36 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string[] | string[][], para: string, negated: boolean, context: Context, explain: boolean) => {
-                if (!para) {
+
+                let indices = this.textUtilsService.ParseSortOrderIndices(para, context.headers);
+
+                let descending = para.toLowerCase().indexOf("desc") !== -1;
+
+                if (!indices.length) {
                     if (explain) {
-                        return { explanation: "Sorts the items" };
+                        if (descending) {
+                            return { explanation: "Sorts the items in descending order" };
+                        }
+                        else {
+                            return { explanation: "Sorts the items in ascending order" };
+                        }
                     } else {
-                        return (value as string[]).sort();
+                        let sortedValues : string[];
+
+                        if (value.length === 1 && Array.isArray(value[0])) {
+                            sortedValues = this.sortService.SortArray(value[0] as string[]);
+                        } else {
+                            sortedValues = this.sortService.SortArray(value as string[]);
+                        }
+
+                        if (descending) {
+                            sortedValues = sortedValues.reverse();
+                        }
+
+                        return [sortedValues];
                     }
                 } else {
                     
-                    let indices = this.textUtilsService.ParseSortOrderIndices(para, context.headers);
-
                     if (explain) {
                         let positions: string[] = [];
 
