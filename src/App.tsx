@@ -82,7 +82,7 @@ print $2,$3,$4,$5,$6`;
 
   handleInputPaneInput(input: string) {
     
-    this.inputPaneValue = input;
+    this.inputPaneValue = input.replace(/\\n/g, String.fromCharCode(0));
 
     this.setState({input: input});
 

@@ -37,7 +37,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
   
       for (let j = 0; j < array.length; j++) {
 
-          let lines = array[j].split(/\\n/);
+          let lines = array[j].split(/\\n/).map(function(line) { return line.replace(new RegExp(String.fromCharCode(0), "g"), "\\n"); });
 
           let ele = (
             <div key={`${Math.random()}`} className="output-pane__text-group textarea__text-group">
