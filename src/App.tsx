@@ -10,12 +10,14 @@ import { CommandService } from './services/command.service';
 import { ContextService } from './services/context.service';
 import { SortService } from './services/sort.service';
 import { TextUtilsService } from './services/text-utils.service';
+import { CodeCompressionService } from './services/code-compression.service';
 
 interface AppProps {
 }
 
 interface AppState {
   code: string;
+  compressedCode: string;
   explanation: string;
   input: string;
   output: string[][];
@@ -30,20 +32,15 @@ class App extends React.Component<AppProps, AppState> {
   inputPaneValue :string;
   codeWindowValue :string;
   textUtilsService: TextUtilsService;
+  codeCompressionService: CodeCompressionService;
 
   constructor(props: AppProps) {
     super(props)
 
     this.textUtilsService = new TextUtilsService();
+    this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
 
-    const code = `split
-header
-sort $<Worth> desc
-print $2,$3,$4,$5,$6`;
-
-  const explanation = "";
-
-  const input = `Id,AccountRef,FirstName,LastName,City,Worth
+    const input = `Id,AccountRef,FirstName,LastName,City,Worth
 1,W11111,Edward,Smale,Leighton Buzzard,999.99
 1,W11112,Edward,Smale,Sheffield,800.01
 2,W22222,Stephen,Smale,Sheffield,700.50
@@ -52,11 +49,20 @@ print $2,$3,$4,$5,$6`;
 5,W55555,Edward,Burton,London,44.76`;
 
     this.inputPaneValue = input;
-    this.codeWindowValue = code;
+    this.codeWindowValue = `split
+header
+sort $<Worth> desc
+print $2,$3,$4,$5,$6`;
+
+    if (window.location.hash) {
+      
+      this.UpdateCodeFromLocationHash();
+    }
 
     this.state = {
-      code: code,
-      explanation: explanation,
+      code: this.codeWindowValue,
+      compressedCode: this.codeCompressionService.CompressCode(this.codeWindowValue),
+      explanation: this.explainCommands(input, this.codeWindowValue),
       input: input,
       output: [[]],
       topSectionHeight: 12,
@@ -73,11 +79,32 @@ print $2,$3,$4,$5,$6`;
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragOver = this.onDragOver.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.LocationHashChanged = this.LocationHashChanged.bind(this);
+    this.UpdateCodeFromLocationHash = this.UpdateCodeFromLocationHash.bind(this);
+  }
+
+  UpdateCodeFromLocationHash() {
+
+    let compressedCode = window.location.hash.substr(1);
+
+    let code = this.codeCompressionService.DecompressCode(compressedCode);
+
+    this.codeWindowValue = code;
+    
+    this.setState({code: code});
+  }
+
+  LocationHashChanged() {
+
+    this.UpdateCodeFromLocationHash();
   }
 
   componentDidMount() {
+    window.addEventListener("hashchange", this.LocationHashChanged);
+  }
 
-    this.executeCode(this.codeWindowValue);
+  componentWillUnmount() {
+    window.removeEventListener("hashchange", this.LocationHashChanged);
   }
 
   handleInputPaneInput(input: string) {
@@ -92,6 +119,10 @@ print $2,$3,$4,$5,$6`;
   handleCodeWindowInput(code: string) {
         
     this.codeWindowValue = code;
+
+    let compressedCode = this.codeCompressionService.CompressCode(code);
+    
+    window.location.hash = "#" + compressedCode;
 
     this.setState({code: code});
 
@@ -125,7 +156,7 @@ print $2,$3,$4,$5,$6`;
 
     let result = this.executeCommands(this.inputPaneValue, code);
     let explanation = this.explainCommands(this.inputPaneValue, code);
-
+    
     this.setState({ output: result, explanation: explanation });
   }
 
