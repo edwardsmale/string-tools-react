@@ -364,7 +364,7 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                para = this.textUtilsService.ReplaceHeaderReferences(para, context.columnInfo.headers, true, "");
+                para = this.textUtilsService.ReplaceHeaderReferencesInIndexParameters(para, context.columnInfo.headers);
 
                 const indices = this.textUtilsService.ParseIntegers(para);
 
@@ -707,43 +707,23 @@ export class CommandTypesService {
                     var result = para;
                     var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
 
-                    // Replace headers with $n.
-                    result = this.textUtilsService.ReplaceHeaderReferences(para, context.columnInfo.headers, false, "$");
+                    // Replace headers
+                    result = this.textUtilsService.ReplaceHeaderReferencesInString(para, context.columnInfo.headers);
 
-                    // Replace $0 with the whole value.
+                    // Replace $0 with the whole value
                     result = result.replace(new RegExp("\\$0", "g"), arrayValue.join(""));
 
-                    // Replace $1..$9 with the value at index 1..9.
-                    for (let i = 1; i <= 9; i++) {
-                        if (i <= arrayValue.length) {
-                            result = result.replace(new RegExp("\\$" + i, "g"), arrayValue[i - 1]);
+                    // Replace $[n]
+                    
+                    if (context.columnInfo.headers) {
+                        for (let i = 0; i < context.columnInfo.headers.length; i++) {
+                            result = result.replace(new RegExp("\\$\\[" + i + "\\]", "g"), arrayValue[i]);
+                        }
+                        for (let i = 0; i < context.columnInfo.headers.length; i++) {
+                            result = result.replace(new RegExp("\\$\\[-" + i + "\\]", "g"), arrayValue[arrayValue.length - i]);
                         }
                     }
-                    // Replace $-1..$-9 with the value -1..-9 from the end.
-                    for (let i = 1; i <= 9; i++) {
-                        if (arrayValue.length - i >= 0) {
-                            result = result.replace(
-                                new RegExp("\\$-" + i, "g"),
-                                arrayValue[arrayValue.length - i]
-                            );
-                        }
-                    }
-                    // Replace $A..$Z and $a..$z with the value at index 10..35.
-                    for (let i = 0; i < 26; i++) {
-                        if (i + 10 < arrayValue.length) {
-                            result = result.replace(
-                                new RegExp(
-                                    "\\$[" +
-                                    String.fromCharCode(i + 65) +
-                                    String.fromCharCode(i + 97) +
-                                    "]",
-                                    "g"
-                                ),
-                                arrayValue[i + 10]
-                            );
-                        }
-                    }
-
+                    
                     context.newColumnInfo.headers = [];
                     return result;
                 }

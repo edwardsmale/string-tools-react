@@ -212,7 +212,30 @@ export class TextUtilsService {
         });
     };
 
-    ReplaceHeaderReferences = (codeLine: string, headers: string[] | null, zeroBased: boolean, prefix: string) => {
+    ReplaceHeaderReferencesInIndexParameters = (codeLine: string, headers: string[] | null) => {
+
+        let result = codeLine;
+
+        if (Array.isArray(headers)) {
+
+            let headersOrderedByLength = this.GetHeadersOrderedByLength(headers);
+
+            for (let i = 0; i < headersOrderedByLength.length; i++) {
+
+                let header = headersOrderedByLength[i].header;
+                let index = headersOrderedByLength[i].index;
+
+                result = result.replace(
+                    new RegExp(header, "g"), 
+                    index.toString()
+                );
+            }
+        }
+
+        return result;
+    };
+
+    ReplaceHeaderReferencesInString = (codeLine: string, headers: string[] | null) => {
 
         let result = codeLine;
 
@@ -226,7 +249,7 @@ export class TextUtilsService {
                 let index = headersOrderedByLength[i].index;
 
                 const regex = new RegExp("\\$" + header, "g");
-                const replacement = prefix + (zeroBased ? index : index + 1)
+                const replacement = "$[" + index + "]";
 
                 result = result.replace(regex, replacement);
             }
