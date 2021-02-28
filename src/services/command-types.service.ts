@@ -243,6 +243,31 @@ export class CommandTypesService {
                 }
             })
         },
+        {   
+            name: "distinct",
+            desc: "Deletes any duplicate items",
+            para: [],
+            isArrayBased: true,
+            exec: ((value: string[] | string[][], para: string, negated: boolean, context: Context, explain: boolean) => {
+                if (explain) {
+                    return { explanation: "Delete duplicates" };
+                }
+                else {
+                
+                    let input = value as string[];
+                    let result: string[] = [];
+
+                    for (let i = 0; i < input.length; i++) {
+
+                        if (!result.includes(input[i])) {
+                            result.push(input[i]);
+                        }
+                    }
+
+                    return [result];
+                }
+            })
+        },
         {
             name: "skip",
             desc: "Skips the first N items",

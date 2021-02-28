@@ -109,7 +109,7 @@ export class CommandService {
                             newValues = newLineValue as string[];
                         }
                     }
-                    else if (parsedCommand.commandType.name === "sort") {
+                    else if (parsedCommand.commandType.name === "sort" || parsedCommand.commandType.name === "distinct") {
 
                         const flattenedValues = this.FlattenValues(currentValues);
 
