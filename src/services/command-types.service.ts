@@ -175,7 +175,7 @@ export class CommandTypesService {
         },
         {
             name: "sort",
-            desc: "Sorts items",
+            desc: "Sorts the items",
             para: [
                 {
                     name: "index",
@@ -192,10 +192,10 @@ export class CommandTypesService {
                 if (!indices.length) {
                     if (explain) {
                         if (descending) {
-                            return { explanation: "Sorts the items in descending order" };
+                            return { explanation: "Sort the items in descending order" };
                         }
                         else {
-                            return { explanation: "Sorts the items in ascending order" };
+                            return { explanation: "Sort the items in ascending order" };
                         }
                     } else {
                         let sortedValues : string[];

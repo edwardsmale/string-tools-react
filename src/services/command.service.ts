@@ -47,22 +47,9 @@ export class CommandService {
                 if (parsedCommand.commandType.name === "flat") {
 
                     if (!parsedCommand.para || !this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
-                        let flattened: string[] = [];
 
-                        for (let j = 0; j < currentValues.length; j++) {
+                        newValues[0] = this.FlattenValues(currentValues);
 
-                            if (Array.isArray(currentValues[j])) {
-
-                                for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
-                                    flattened.push(currentValues[j][k]);
-                                }
-
-                            } else {
-                                flattened.push(currentValues[j] as string);
-                            }
-                        }
-
-                        newValues[0] = flattened;
                     } else {
                         let batchSize = parseInt(parsedCommand.para, 10);
                         let batches = [];
@@ -108,7 +95,7 @@ export class CommandService {
 
                     // Iterate through the lines and apply the command.
 
-                    if ((parsedCommand.commandType.isArrayBased && !Array.isArray(currentValues[0])) || parsedCommand.commandType.name === "sort") {
+                    if ((parsedCommand.commandType.isArrayBased && !Array.isArray(currentValues[0]))) {
 
                         const newLineValue = parsedCommand.commandType.exec(
                             currentValues as string[],
@@ -121,7 +108,23 @@ export class CommandService {
                         if (newLineValue !== null) {
                             newValues = newLineValue as string[];
                         }
+                    }
+                    else if (parsedCommand.commandType.name === "sort") {
 
+                        const flattenedValues = this.FlattenValues(currentValues);
+
+                        const newLineValue = parsedCommand.commandType.exec(
+                            flattenedValues,
+                            parsedCommand.para,
+                            parsedCommand.negated,
+                            context,
+                            explain
+                        );
+
+                        if (newLineValue !== null) {
+                            newValues = newLineValue as string[];
+                        }
+                        
                     } else {
 
                         let commandType = parsedCommand.commandType as CommandType;
@@ -222,5 +225,25 @@ export class CommandService {
 
             return output;
         }
+    }
+
+    private FlattenValues(currentValues: (string | string[])[]) {
+
+        let flattened: string[] = [];
+
+        for (let j = 0; j < currentValues.length; j++) {
+
+            if (Array.isArray(currentValues[j])) {
+
+                for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
+                    flattened.push(currentValues[j][k]);
+                }
+
+            } else {
+                flattened.push(currentValues[j] as string);
+            }
+        }
+
+        return flattened;
     }
 }
