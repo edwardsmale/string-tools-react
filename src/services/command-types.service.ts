@@ -353,12 +353,12 @@ export class CommandTypesService {
             })
         },
         {
-            name: "at",
+            name: "select",
             desc: "Takes items at certain indices.",
             para: [
                 {
                     name: "Column Indices",
-                    desc: "Zero-based. Nnegatives count back from the end."
+                    desc: "Zero-based. Negatives count back from the end."
                 }
             ],
             isArrayBased: true,
