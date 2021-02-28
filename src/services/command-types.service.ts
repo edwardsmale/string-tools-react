@@ -364,7 +364,7 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                para = this.textUtilsService.ReplaceHeaderReferencesInIndexParameters(para, context.columnInfo.headers);
+                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
 
                 const indices = this.textUtilsService.ParseIntegers(para);
 
@@ -707,11 +707,25 @@ export class CommandTypesService {
                     var result = para;
                     var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
 
-                    // Replace headers
-                    result = this.textUtilsService.ReplaceHeaderReferencesInString(para, context.columnInfo.headers);
+                    // Replace $header
 
-                    // Replace $0 with the whole value
-                    result = result.replace(new RegExp("\\$0", "g"), arrayValue.join(""));
+                    if (Array.isArray(context.columnInfo.headers)) {
+
+                        const headersOrderedByLength = this.textUtilsService.GetHeadersOrderedByLength(
+                            context.columnInfo.headers
+                        );
+
+                        for (let i = 0; i < headersOrderedByLength.length; i++) {
+
+                            let header = headersOrderedByLength[i].header;
+                            let index = headersOrderedByLength[i].index;
+
+                            const regex = new RegExp("\\$" + header, "g");
+                            const replacement = arrayValue[index];
+
+                            result = result.replace(regex, replacement);
+                        }
+                    }
 
                     // Replace $[n]
                     
