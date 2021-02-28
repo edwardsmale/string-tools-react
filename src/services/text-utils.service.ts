@@ -225,7 +225,7 @@ export class TextUtilsService {
                 let header = headersOrderedByLength[i].header;
                 let index = headersOrderedByLength[i].index;
 
-                const regex = new RegExp(header, "g");
+                const regex = new RegExp("\\$" + header, "g");
                 const replacement = prefix + (zeroBased ? index : index + 1)
 
                 result = result.replace(regex, replacement);
