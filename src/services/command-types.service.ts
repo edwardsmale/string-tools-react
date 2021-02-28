@@ -185,7 +185,7 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string[] | string[][], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                let indices = this.textUtilsService.ParseSortOrderIndices(para, context.headers);
+                let indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
 
                 let descending = para.toLowerCase().indexOf("desc") !== -1;
 
@@ -307,13 +307,13 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                if (!context.headers) {
-                    context.headers = (value as string[]);
+                if (!context.columnInfo.headers) {
+                    context.columnInfo.headers = (value as string[]);
                 }
 
                 if (explain) {
 
-                    return { explanation: "Treat the first array of items as a header row.  Use $<column-name> to reference columns." };
+                    return { explanation: "Treat the first array of items as a header row" };
                 } else {
 
                     return (value as string[]);
@@ -364,13 +364,17 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                para = this.textUtilsService.ReplaceHeaderReferences(para, context.headers, true, "");
+                para = this.textUtilsService.ReplaceHeaderReferences(para, context.columnInfo.headers, true, "");
 
                 const indices = this.textUtilsService.ParseIntegers(para);
 
                 if (explain) {
 
-                    if (indices.some((i) => i < 0)) {
+                    if (indices.some((i) => isNaN(i))) {
+
+                        return { explanation: "Get the specified columns" };
+                    }
+                    else if (indices.some((i) => i < 0)) {
 
                         let formattedIndices: string[] = [];
 
@@ -383,19 +387,29 @@ export class CommandTypesService {
 
                         let positions = this.textUtilsService.FormatList(formattedIndices);
 
-                        return { explanation: "Gets " + positions };
+                        return { explanation: "Get " + positions };
                     }
                     else {
 
                         let positions = this.textUtilsService.FormatList(indices);
 
-                        return { explanation: "Gets the items at indexes " + positions };
+                        if (positions.length > 1) {
+
+                            return { explanation: "Get the items at indexes " + positions };
+                        }
+                        else {
+                            return { explanation: "Get the items at index " + positions };
+                        }
                     }
                 } else {
 
                     let result = [];
 
+                    context.newColumnInfo.headers = [];
+                    context.newColumnInfo.numberOfColumns = 0;
+
                     for (let i = 0; i < indices.length; i++) {
+
                         var index = indices[i];
 
                         if (index < 0) {
@@ -404,11 +418,16 @@ export class CommandTypesService {
 
                         if (index >= 0 && index < value.length) {
                             result.push(value[index]);
+
+                            if (context.columnInfo.headers) {
+                                context.newColumnInfo.headers.push(context.columnInfo.headers[index]);
+                            }
+
+                            context.newColumnInfo.numberOfColumns++;
                         }
                     }
 
                     return result;
-
                 }
             })
         },
@@ -519,6 +538,7 @@ export class CommandTypesService {
                 if (explain) {
                     return { explanation: "Output the items in tab-separated format" };
                 } else {
+                    context.newColumnInfo.headers = [];
                     value = this.textUtilsService.AsArray(value);
                     return (value as string[]).join("\t");
                 }
@@ -606,6 +626,7 @@ export class CommandTypesService {
                     return { explanation: explanation };
 
                 } else {
+                    context.newColumnInfo.headers = [];
 
                     var toDelimitedString = (value: string[], options: any) => {
                         var result = [];
@@ -667,6 +688,8 @@ export class CommandTypesService {
 
                     return { explanation: "Output items separated with " + formattedDelimiter };
                 } else {
+
+                    context.newColumnInfo.headers = [];
                     return (value as string[]).join(delimiter);
                 }
             })
@@ -684,8 +707,8 @@ export class CommandTypesService {
                     var result = para;
                     var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
 
-                    // Replace $<header> with $n.
-                    result = this.textUtilsService.ReplaceHeaderReferences(para, context.headers, false, "$");
+                    // Replace headers with $n.
+                    result = this.textUtilsService.ReplaceHeaderReferences(para, context.columnInfo.headers, false, "$");
 
                     // Replace $0 with the whole value.
                     result = result.replace(new RegExp("\\$0", "g"), arrayValue.join(""));
@@ -720,6 +743,8 @@ export class CommandTypesService {
                             );
                         }
                     }
+
+                    context.newColumnInfo.headers = [];
                     return result;
                 }
             })

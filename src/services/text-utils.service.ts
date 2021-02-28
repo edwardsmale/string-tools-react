@@ -67,14 +67,8 @@ export class TextUtilsService {
 
     ParseIntegers = (para: string): number[] => {
         var split = para.trim().split(",");
-        var integers = [];
-        for (let i = 0; i < split.length; i++) {
-            let int = parseInt(split[i], 10);
-            if (!isNaN(int)) {
-                integers.push(int);
-            }
-        }
-        return integers;
+
+        return split.map(function (val) { return parseInt(val.trim(), 10); })
     };
 
     ToOrdinal = (n: number): string => {
@@ -149,13 +143,27 @@ export class TextUtilsService {
     };
 
     ParseSortOrderIndices = (para: string, headers: string[] | null) => {
+
         var split = para.trim().split(",");
         var result: SortOrderIndex[] = [];
+
         for (let i = 0; i < split.length; i++) {
-            let val = split[i].trim().replace(new RegExp("ending", "i"), "").toLowerCase();
-            let asc = !val.toLowerCase().endsWith("desc");
-            let int = parseInt(split[i], 10);
+
+            let val = split[i].trim();
+            let asc = !val.toLowerCase().endsWith("desc") && !val.toLowerCase().endsWith("descending");
+
+            if (!val) {
+                continue;
+            }
             
+            val = val
+                .replace(/\s+asc$/, "")
+                .replace(/\s+ascending$/, "")
+                .replace(/\s+descending$/, "")
+                .replace(/\s+desc$/, "");
+
+            let int = parseInt(split[i], 10);
+
             if (!isNaN(int)) {
 
                 result.push({
@@ -164,38 +172,61 @@ export class TextUtilsService {
                     description: this.FormatIndex(int, asc)
                 });
             } 
-            else if (headers) {
+            else if (Array.isArray(headers) && headers.includes(val)) {
 
-                let match = /\$<(.*?)>/.exec(split[i]);
-
-                if (match) {
-
-                    let int = headers.indexOf(match[1]);
-
-                    if (int) {
-
-                        result.push({
-                            index: int,
-                            ascending: asc,
-                            description: match[1] + (asc ? "" : " descending")
-                        });
-                    }
-                }
+                result.push({
+                    index: headers.indexOf(val),
+                    ascending: asc,
+                    description: val + (asc ? "" : " descending")
+                });
+            }
+            else {
+                result.push({
+                    index: -1,
+                    ascending: asc,
+                    description: val + (asc ? "" : " descending")
+                });
             }
         }
+
         return result;
+    };
+
+    GetHeadersOrderedByLength = (headers: string[]) => {
+
+        return headers.map(function (header, index) { 
+
+            return {
+                header: header,
+                index: index
+            };
+        }).sort(function (a, b) {
+
+            return b.header.length - a.header.length;
+        }).map(function (header) {
+
+            return {
+                header: header.header,
+                index: header.index
+            };
+        });
     };
 
     ReplaceHeaderReferences = (codeLine: string, headers: string[] | null, zeroBased: boolean, prefix: string) => {
 
         let result = codeLine;
 
-        if (headers) {
+        if (Array.isArray(headers)) {
 
-            for (let i = 0; i < headers.length; i++) {
+            let headersOrderedByLength = this.GetHeadersOrderedByLength(headers);
 
-                const regex = new RegExp("\\$<" + headers[i] + ">", "g");
-                const replacement = prefix + (zeroBased ? i : i + 1)
+            for (let i = 0; i < headersOrderedByLength.length; i++) {
+
+                let header = headersOrderedByLength[i].header;
+                let index = headersOrderedByLength[i].index;
+
+                const regex = new RegExp(header, "g");
+                const replacement = prefix + (zeroBased ? index : index + 1)
 
                 result = result.replace(regex, replacement);
             }

@@ -24,10 +24,18 @@ export class CommandService {
                 isTabDelimited: this.textUtilsService.IsTabDelimited(lines),
                 regex: null,
                 searchString: null,
-                numberOfColumns: null,
-                isColumnNumeric: null,
-                isColumnIntegral: null,
-                headers: null
+                columnInfo: {
+                    numberOfColumns: null,
+                    isColumnNumeric: null,
+                    isColumnIntegral: null,
+                    headers: null
+                },
+                newColumnInfo: {
+                    numberOfColumns: null,
+                    isColumnNumeric: null,
+                    isColumnIntegral: null,
+                    headers: null
+                }
             };
 
             let currentValues: (string | string[])[] = lines;
@@ -42,6 +50,8 @@ export class CommandService {
                     codeLines[i]
                 );
 
+                let newValues: (string | string[])[] = [];
+
                 if (explain) {
 
                     let commandType = parsedCommand.commandType as CommandType;
@@ -49,17 +59,15 @@ export class CommandService {
                         "dummy value",
                         parsedCommand.para,
                         parsedCommand.negated,
-                        context,
+                        context,                      
                         explain
                     );
 
                     if (newLineValue !== null) {
-                        currentValues.push(newLineValue as string);
+                        newValues.push(newLineValue as string);
                     }
                 }
                 else {
-
-                    let newValues: (string | string[])[] = [];
 
                     if (parsedCommand.commandType.name === "flat") {
 
@@ -107,7 +115,7 @@ export class CommandService {
                         // Not flat command.
 
                         if (parsedCommand.commandType.name === "split") {
-                            context.isColumnNumeric = [] as boolean[];
+                            context.columnInfo.isColumnNumeric = [] as boolean[];
                         }
 
                         // Iterate through the lines and apply the command.
@@ -118,7 +126,7 @@ export class CommandService {
                                 currentValues as string[],
                                 parsedCommand.para,
                                 parsedCommand.negated,
-                                context,
+                                context,  
                                 explain
                             );
 
@@ -128,9 +136,9 @@ export class CommandService {
                         }
                         else if (parsedCommand.commandType.name === "sort") {
 
-                            var containsIndices = this.textUtilsService.ContainsSortOrderIndices(parsedCommand.para, context.headers);
+                            var hasIndices = this.textUtilsService.ContainsSortOrderIndices(parsedCommand.para, context.columnInfo.headers);
 
-                            if (!containsIndices) {
+                            if (!hasIndices) {
 
                                 const flattenedValues = this.FlattenValues(currentValues);
 
@@ -138,7 +146,7 @@ export class CommandService {
                                     flattenedValues,
                                     parsedCommand.para,
                                     parsedCommand.negated,
-                                    context,
+                                    context,     
                                     explain
                                 );
 
@@ -152,7 +160,7 @@ export class CommandService {
                                     currentValues as string[],
                                     parsedCommand.para,
                                     parsedCommand.negated,
-                                    context,
+                                    context,  
                                     explain
                                 );
         
@@ -185,7 +193,7 @@ export class CommandService {
 
                             if (commandType.name === "header") {
 
-                                context.headers = null;
+                                context.columnInfo.headers = null;
 
                                 commandType.exec(
                                     currentValues[0] as string,
@@ -215,14 +223,24 @@ export class CommandService {
                                 }
                             }
 
-                            if (commandType.name === "split") {
+                            if (commandType.name === "split" || commandType.name === "select") {
 
                                 this.contextService.UpdateContextDataTypes(context, newValues as string[][]);
                             }
                         }
                     }
+                }
 
-                    currentValues = newValues;
+                currentValues = newValues;
+
+                if (context.newColumnInfo.headers !== null) {
+
+                    context.columnInfo.headers = context.newColumnInfo.headers;
+                }
+
+                if (context.newColumnInfo.numberOfColumns !== null) {
+
+                    context.columnInfo.numberOfColumns = context.newColumnInfo.numberOfColumns;
                 }
             }
 
@@ -234,7 +252,7 @@ export class CommandService {
                     let parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
                     let para = parsedCommand.para;
                     let negated = parsedCommand.negated;
-                    let explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
+                    let explanation = parsedCommand.commandType.exec(lines, para, negated, context, context, true) as Explanation;
                     output.push([explanation.explanation]);
                 }
 

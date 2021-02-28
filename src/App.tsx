@@ -51,7 +51,7 @@ class App extends React.Component<AppProps, AppState> {
     this.inputPaneValue = input;
     this.codeWindowValue = `split
 header
-sort $<Worth> desc
+sort Worth desc
 print $2,$3,$4,$5,$6`;
 
     if (window.location.hash) {
