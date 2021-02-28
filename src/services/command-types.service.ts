@@ -195,7 +195,7 @@ export class CommandTypesService {
                             return { explanation: "Sort the items in descending order" };
                         }
                         else {
-                            return { explanation: "Sort the items in ascending order" };
+                            return { explanation: "Sort the items" };
                         }
                     } else {
                         let sortedValues : string[];

@@ -42,78 +42,127 @@ export class CommandService {
                     codeLines[i]
                 );
 
-                let newValues: (string | string[])[] = [];
+                if (explain) {
 
-                if (parsedCommand.commandType.name === "flat") {
+                    let commandType = parsedCommand.commandType as CommandType;
+                    const newLineValue = commandType.exec(
+                        "dummy value",
+                        parsedCommand.para,
+                        parsedCommand.negated,
+                        context,
+                        explain
+                    );
 
-                    if (!parsedCommand.para || !this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
+                    if (newLineValue !== null) {
+                        currentValues.push(newLineValue as string);
+                    }
+                }
+                else {
 
-                        newValues[0] = this.FlattenValues(currentValues);
+                    let newValues: (string | string[])[] = [];
 
-                    } else {
-                        let batchSize = parseInt(parsedCommand.para, 10);
-                        let batches = [];
+                    if (parsedCommand.commandType.name === "flat") {
 
-                        let flattened: string[] = [];
+                        if (!parsedCommand.para || !this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
 
-                        for (let j = 0; j < currentValues.length; j++) {
+                            newValues[0] = this.FlattenValues(currentValues);
 
-                            if (Array.isArray(currentValues[j])) {
+                        } else {
+                            let batchSize = parseInt(parsedCommand.para, 10);
+                            let batches = [];
 
-                                for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
-                                    flattened.push(currentValues[j][k]);
+                            let flattened: string[] = [];
+
+                            for (let j = 0; j < currentValues.length; j++) {
+
+                                if (Array.isArray(currentValues[j])) {
+
+                                    for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
+                                        flattened.push(currentValues[j][k]);
+
+                                        if (flattened.length === batchSize) {
+                                            batches.push(flattened);
+                                            flattened = [];
+                                        }
+                                    }
+
+                                } else {
+                                    flattened.push(currentValues[j] as string);
 
                                     if (flattened.length === batchSize) {
                                         batches.push(flattened);
                                         flattened = [];
                                     }
                                 }
+                            }
 
-                            } else {
-                                flattened.push(currentValues[j] as string);
+                            if (flattened.length) {
+                                batches.push(flattened);
+                            }
 
-                                if (flattened.length === batchSize) {
-                                    batches.push(flattened);
-                                    flattened = [];
+                            newValues = batches;
+                        }
+                    } else {
+
+                        // Not flat command.
+
+                        if (parsedCommand.commandType.name === "split") {
+                            context.isColumnNumeric = [] as boolean[];
+                        }
+
+                        // Iterate through the lines and apply the command.
+
+                        if ((parsedCommand.commandType.isArrayBased && !Array.isArray(currentValues[0]))) {
+
+                            const newLineValue = parsedCommand.commandType.exec(
+                                currentValues as string[],
+                                parsedCommand.para,
+                                parsedCommand.negated,
+                                context,
+                                explain
+                            );
+
+                            if (newLineValue !== null) {
+                                newValues = newLineValue as string[];
+                            }
+                        }
+                        else if (parsedCommand.commandType.name === "sort") {
+
+                            var containsIndices = this.textUtilsService.ContainsSortOrderIndices(parsedCommand.para, context.headers);
+
+                            if (!containsIndices) {
+
+                                const flattenedValues = this.FlattenValues(currentValues);
+
+                                const newLineValue = parsedCommand.commandType.exec(
+                                    flattenedValues,
+                                    parsedCommand.para,
+                                    parsedCommand.negated,
+                                    context,
+                                    explain
+                                );
+
+                                if (newLineValue !== null) {
+                                    newValues = newLineValue as string[];
+                                }
+                            }
+                            else {
+                                
+                                const newLineValue = parsedCommand.commandType.exec(
+                                    currentValues as string[],
+                                    parsedCommand.para,
+                                    parsedCommand.negated,
+                                    context,
+                                    explain
+                                );
+        
+                                if (newLineValue !== null) {
+                                    newValues = newLineValue as string[];
                                 }
                             }
                         }
+                        else if (parsedCommand.commandType.name === "distinct") {
 
-                        if (flattened.length) {
-                            batches.push(flattened);
-                        }
-
-                        newValues = batches;
-                    }
-                } else {
-
-                    // Not flat command.
-
-                    if (parsedCommand.commandType.name === "split") {
-                        context.isColumnNumeric = [] as boolean[];
-                    }
-
-                    // Iterate through the lines and apply the command.
-
-                    if ((parsedCommand.commandType.isArrayBased && !Array.isArray(currentValues[0]))) {
-
-                        const newLineValue = parsedCommand.commandType.exec(
-                            currentValues as string[],
-                            parsedCommand.para,
-                            parsedCommand.negated,
-                            context,
-                            explain
-                        );
-
-                        if (newLineValue !== null) {
-                            newValues = newLineValue as string[];
-                        }
-                    }
-                    else if (parsedCommand.commandType.name === "sort") {
-
-                        var indices = this.textUtilsService.ParseSortOrderIndices(parsedCommand.para, context.headers);
-
-                        if (!indices.length) {
                             const flattenedValues = this.FlattenValues(currentValues);
 
                             const newLineValue = parsedCommand.commandType.exec(
@@ -127,57 +176,10 @@ export class CommandService {
                             if (newLineValue !== null) {
                                 newValues = newLineValue as string[];
                             }
-                        }
-                        else {
                             
-                            const newLineValue = parsedCommand.commandType.exec(
-                                currentValues as string[],
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                context,
-                                explain
-                            );
-    
-                            if (newLineValue !== null) {
-                                newValues = newLineValue as string[];
-                            }
-                        }
-                    }
-                    else if (parsedCommand.commandType.name === "distinct") {
+                        } else {
 
-                        const flattenedValues = this.FlattenValues(currentValues);
-
-                        const newLineValue = parsedCommand.commandType.exec(
-                            flattenedValues,
-                            parsedCommand.para,
-                            parsedCommand.negated,
-                            context,
-                            explain
-                        );
-
-                        if (newLineValue !== null) {
-                            newValues = newLineValue as string[];
-                        }
-                        
-                    } else {
-
-                        let commandType = parsedCommand.commandType as CommandType;
-
-                        if (explain) {
-
-                            const newLineValue = commandType.exec(
-                                "dummy value",
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                context,
-                                explain
-                            );
-
-                            if (newLineValue !== null) {
-                                newValues.push(newLineValue as string);
-                            }
-                        }
-                        else {
+                            let commandType = parsedCommand.commandType as CommandType;
 
                             let startJ = 0;
 
@@ -219,9 +221,9 @@ export class CommandService {
                             }
                         }
                     }
-                }
 
-                currentValues = newValues;
+                    currentValues = newValues;
+                }
             }
 
             let output: string[][] = [];

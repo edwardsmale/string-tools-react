@@ -144,6 +144,10 @@ export class TextUtilsService {
         }
     };
 
+    ContainsSortOrderIndices = (para: string, headers: string[] | null) => {
+        return !!this.ParseSortOrderIndices(para, headers).length;
+    };
+
     ParseSortOrderIndices = (para: string, headers: string[] | null) => {
         var split = para.trim().split(",");
         var result: SortOrderIndex[] = [];
