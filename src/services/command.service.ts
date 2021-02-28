@@ -109,7 +109,41 @@ export class CommandService {
                             newValues = newLineValue as string[];
                         }
                     }
-                    else if (parsedCommand.commandType.name === "sort" || parsedCommand.commandType.name === "distinct") {
+                    else if (parsedCommand.commandType.name === "sort") {
+
+                        var indices = this.textUtilsService.ParseSortOrderIndices(parsedCommand.para, context.headers);
+
+                        if (!indices.length) {
+                            const flattenedValues = this.FlattenValues(currentValues);
+
+                            const newLineValue = parsedCommand.commandType.exec(
+                                flattenedValues,
+                                parsedCommand.para,
+                                parsedCommand.negated,
+                                context,
+                                explain
+                            );
+
+                            if (newLineValue !== null) {
+                                newValues = newLineValue as string[];
+                            }
+                        }
+                        else {
+                            
+                            const newLineValue = parsedCommand.commandType.exec(
+                                currentValues as string[],
+                                parsedCommand.para,
+                                parsedCommand.negated,
+                                context,
+                                explain
+                            );
+    
+                            if (newLineValue !== null) {
+                                newValues = newLineValue as string[];
+                            }
+                        }
+                    }
+                    else if (parsedCommand.commandType.name === "distinct") {
 
                         const flattenedValues = this.FlattenValues(currentValues);
 
