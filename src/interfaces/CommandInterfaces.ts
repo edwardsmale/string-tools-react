@@ -19,7 +19,7 @@ export interface CommandType
     desc: string;
     para: CommandParameter[];
     isArrayBased: boolean;
-    exec: (value: string | (string | string)[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | string[][] | null;
+    exec: (value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | (string | string[])[] | null;
 }
 
 export interface SortCommandType
@@ -28,7 +28,7 @@ export interface SortCommandType
     desc: string;
     para: CommandParameter[];
     isArrayBased: boolean;
-    exec: (value: string[] | string[][], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | string[][];
+    exec: (value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | (string | string[])[];
 }
 
 export interface Explanation

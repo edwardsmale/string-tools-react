@@ -2,11 +2,13 @@ import { TextUtilsService } from './text-utils.service';
 import { SortService } from './sort.service';
 import { CommandType, CommandParameter, SortCommandType } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
+import { ContextService } from './context.service';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService) {
         this.textUtilsService = textUtilsService;
+        this.contextService = contextService;
         this.sortService = sortService;
     }
 
@@ -153,7 +155,7 @@ export class CommandTypesService {
                     }
                 }
                 else {
-                    var defaultDelimiter = context.isTabDelimited ? "\t" : ",";
+                    var defaultDelimiter = ",";
                     para = para === "\\t" ? "\t" : para;
                     var delimiter = para || defaultDelimiter;
 
@@ -183,7 +185,7 @@ export class CommandTypesService {
                 }
             ],
             isArrayBased: false,
-            exec: ((value: string[] | string[][], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 let indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
 
@@ -248,7 +250,7 @@ export class CommandTypesService {
             desc: "Deletes any duplicate items",
             para: [],
             isArrayBased: true,
-            exec: ((value: string[] | string[][], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
                     return { explanation: "Delete duplicates" };
                 }
@@ -353,8 +355,57 @@ export class CommandTypesService {
             })
         },
         {
+            name: "with",
+            desc: "Selects which parts of the results to operate on",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
+
+                const indices = this.textUtilsService.ParseIntegers(para);
+
+                if (explain) {
+                    if (indices.some((i) => isNaN(i))) {
+
+                        return { explanation: "With the specified columns" };
+                    }
+                    else if (indices.some((i) => i < 0)) {
+
+                        let formattedIndices: string[] = [];
+
+                        for (let i = 0; i < indices.length; i++) {
+
+                            var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
+
+                            formattedIndices.push(formattedIndex);
+                        }
+
+                        let positions = this.textUtilsService.FormatList(formattedIndices);
+
+                        return { explanation: "With the columns " + positions };
+                    }
+                    else {
+
+                        let positions = this.textUtilsService.FormatList(indices);
+
+                        if (indices.length > 1) {
+
+                            return { explanation: "With the items at indexes " + positions };
+                        }
+                        else {
+                            return { explanation: "With the items at index " + positions };
+                        }
+                    }
+                } else {
+
+                    return value;
+                }
+            })
+        },
+        {
             name: "select",
-            desc: "Takes items at certain indices.",
+            desc: "Returns values at selected indices.",
             para: [
                 {
                     name: "Column Indices",
@@ -362,7 +413,7 @@ export class CommandTypesService {
                 }
             ],
             isArrayBased: true,
-            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
 
@@ -393,7 +444,7 @@ export class CommandTypesService {
 
                         let positions = this.textUtilsService.FormatList(indices);
 
-                        if (positions.length > 1) {
+                        if (indices.length > 1) {
 
                             return { explanation: "Get the items at indexes " + positions };
                         }
@@ -403,7 +454,7 @@ export class CommandTypesService {
                     }
                 } else {
 
-                    let result = [];
+                    let result: string[] = [];
 
                     context.newColumnInfo.headers = [];
                     context.newColumnInfo.numberOfColumns = 0;
@@ -413,7 +464,7 @@ export class CommandTypesService {
                         var index = indices[i];
 
                         if (index < 0) {
-                            index = value.length + index;
+                            index += value.length;
                         }
 
                         if (index >= 0 && index < value.length) {

@@ -47,4 +47,37 @@ export class ContextService {
         context.isColumnIntegral = isColumnIntegral;
         context.isColumnNumeric = isColumnNumeric;
     }
+
+    CreateContext(): Context {
+
+        return {
+            regex: null,
+            searchString: null,
+            columnInfo: {
+                numberOfColumns: null,
+                isColumnNumeric: null,
+                isColumnIntegral: null,
+                headers: null
+            },
+            newColumnInfo: {
+                numberOfColumns: null,
+                isColumnNumeric: null,
+                isColumnIntegral: null,
+                headers: null
+            },
+            withIndices: null
+        };
+    }
+
+    CloneContext(context: Context): Context {
+
+        return {
+
+            regex: context.regex,
+            searchString: context.searchString,
+            columnInfo: {...context.columnInfo },
+            newColumnInfo: {...context.newColumnInfo },
+            withIndices: context.withIndices ? [...context.withIndices] : null
+        };
+    }
 }

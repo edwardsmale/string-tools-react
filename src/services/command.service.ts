@@ -14,29 +14,10 @@ export class CommandService {
         this.contextService = contextService;
     }
 
-    processCommands(codeValue: string, inputValue: string, explain: boolean): string[][] {
+    processCommands(codeValue: string, lines: (string | string[])[], explain: boolean, context: Context): string[][] {
 
-        try {
+        //try {
             let codeLines = this.textUtilsService.TextToLines(codeValue);
-            let lines = this.textUtilsService.TextToLines(inputValue);
-
-            let context: Context = {
-                isTabDelimited: this.textUtilsService.IsTabDelimited(lines),
-                regex: null,
-                searchString: null,
-                columnInfo: {
-                    numberOfColumns: null,
-                    isColumnNumeric: null,
-                    isColumnIntegral: null,
-                    headers: null
-                },
-                newColumnInfo: {
-                    numberOfColumns: null,
-                    isColumnNumeric: null,
-                    isColumnIntegral: null,
-                    headers: null
-                }
-            };
 
             let currentValues: (string | string[])[] = lines;
 
@@ -55,21 +36,95 @@ export class CommandService {
                 if (explain) {
 
                     let commandType = parsedCommand.commandType as CommandType;
-                    const newLineValue = commandType.exec(
-                        "dummy value",
-                        parsedCommand.para,
-                        parsedCommand.negated,
-                        context,                      
-                        explain
-                    );
 
-                    if (newLineValue !== null) {
-                        newValues.push(newLineValue as string);
+                    if (commandType.name === "with") {
+
+                        newValues.push("with (explanation TODO)");
+                    }
+                    else {
+
+                        const newLineValue = commandType.exec(
+                            "dummy value",
+                            parsedCommand.para,
+                            parsedCommand.negated,
+                            context,                      
+                            explain
+                        );
+
+                        if (newLineValue !== null) {
+                            newValues.push(newLineValue as string);
+                        }
                     }
                 }
                 else {
 
-                    if (parsedCommand.commandType.name === "flat") {
+                    if (parsedCommand.commandType.name === "with") {
+
+                        if (Array.isArray(currentValues)) {
+
+                            let subCommands = [];
+
+                            let j = i + 1;
+
+                            while (j < codeLines.length && codeLines[j].startsWith("  ")) {
+
+                                subCommands.push(codeLines[j].replace("  ", ""));
+
+                                j++;
+                            }
+
+                            const subCode = subCommands.join("\n");
+
+                            const subPara = this.textUtilsService.ReplaceHeadersWithIndexes(
+                                parsedCommand.para,
+                                context.columnInfo.headers
+                            );
+
+                            const indices = this.textUtilsService.ParseIntegers(subPara);
+
+                            let subContext = this.contextService.CloneContext(context);
+
+                            let subValues: (string | string[])[] = [];
+                            
+                            for (let j = 0; j < currentValues.length; j++) {
+
+                                let selectedVal = this.commandTypesService.FindCommandType("select").exec(
+                                    currentValues[j],
+                                    parsedCommand.para,
+                                    parsedCommand.negated,
+                                    subContext,
+                                    false
+                                );
+
+                                if (typeof selectedVal === "string" || Array.isArray(selectedVal)) {
+                                    subValues.push(selectedVal as string | string[]);
+                                }
+                            }
+
+                            let subResult = this.processCommands(subCode, subValues, false, subContext);
+
+                            for (let j = 0; j < currentValues.length; j++) {
+
+                                let resultRow: string[] = [];
+                                let subIndex = 0;
+
+                                for (let k = 0; k < currentValues[j].length; k++) {
+
+                                    if (indices.includes(k)) {
+                                        resultRow.push(subResult[j][subIndex++]);
+                                    }
+                                    else {
+                                        resultRow.push(currentValues[j][k]);
+                                    }
+                                }
+
+                                newValues.push(resultRow);
+                            }
+
+                            i = j - 1;
+                        }
+                    }
+                    else if (parsedCommand.commandType.name === "flat") {
 
                         if (!parsedCommand.para || !this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
 
@@ -252,7 +307,7 @@ export class CommandService {
                     let parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
                     let para = parsedCommand.para;
                     let negated = parsedCommand.negated;
-                    let explanation = parsedCommand.commandType.exec(lines, para, negated, context, context, true) as Explanation;
+                    let explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
                     output.push([explanation.explanation]);
                 }
 
@@ -272,13 +327,13 @@ export class CommandService {
 
                 return output;
             }
-        } catch (ex) {
+        // } catch (ex) {
 
-            let output:string[][] = [];
-            output.push([ex.toString()]);
+        //     let output:string[][] = [];
+        //     output.push([ex.toString()]);
 
-            return output;
-        }
+        //     return output;
+        // }
     }
 
     private FlattenValues(currentValues: (string | string[])[]) {

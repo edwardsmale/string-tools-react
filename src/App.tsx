@@ -33,12 +33,14 @@ class App extends React.Component<AppProps, AppState> {
   codeWindowValue :string;
   textUtilsService: TextUtilsService;
   codeCompressionService: CodeCompressionService;
+  contextService: ContextService;
 
   constructor(props: AppProps) {
     super(props)
 
     this.textUtilsService = new TextUtilsService();
     this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
+    this.contextService = new ContextService(this.textUtilsService);
 
     const input = `Id,AccountRef,FirstName,LastName,City,Worth
 1,W11111,Edward,Smale,Leighton Buzzard,999.99
@@ -50,9 +52,12 @@ class App extends React.Component<AppProps, AppState> {
 
     this.inputPaneValue = input;
     this.codeWindowValue = `split
-header
-sort Worth desc
-print $2,$3,$4,$5,$6`;
+select 0,1,2,3
+with 1
+  search W
+  replace Q
+csv
+`;
 
     if (window.location.hash) {
       
@@ -174,7 +179,11 @@ print $2,$3,$4,$5,$6`;
 
     const commandService = this.getCommandService();
 
-    const result = commandService.processCommands(code, input, explain);
+    let lines = this.textUtilsService.TextToLines(input);
+
+    let context = this.contextService.CreateContext();
+
+    const result = commandService.processCommands(code, lines, explain, context);
 
     return result; 
   }
@@ -182,7 +191,7 @@ print $2,$3,$4,$5,$6`;
   getCommandService(): CommandService {
 
     let sortService = new SortService(this.textUtilsService);
-    let commandTypesService = new CommandTypesService(this.textUtilsService, sortService);
+    let commandTypesService = new CommandTypesService(this.textUtilsService, sortService, this.contextService);
     let commandParsingService = new CommandParsingService(this.textUtilsService, commandTypesService);
     let contextService = new ContextService(this.textUtilsService);
     
