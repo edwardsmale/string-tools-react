@@ -278,4 +278,34 @@ export class TextUtilsService {
             return delimiter;
         }
     }
+
+    GetLeadingWhitespace = (value: string): string => {
+
+        if (value.indexOf("Edward") !== -1) {
+            debugger;
+        }
+
+        const leadingWhitespaceMatch = value.match(/^(\s+)/);
+
+        if (leadingWhitespaceMatch) {
+
+            return leadingWhitespaceMatch[1];
+        }
+        else {
+            return "";
+        }
+    }
+
+    GetTrailingWhitespace = (value: string): string => {
+
+        const trailingWhitespaceMatch = value.match(/(\s+)$/);
+
+        if (trailingWhitespaceMatch) {
+
+            return trailingWhitespaceMatch[1];
+        }
+        else {
+            return "";
+        }
+    }
 }

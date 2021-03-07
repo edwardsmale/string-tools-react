@@ -11,6 +11,9 @@ import { ContextService } from './services/context.service';
 import { SortService } from './services/sort.service';
 import { TextUtilsService } from './services/text-utils.service';
 import { CodeCompressionService } from './services/code-compression.service';
+import { CamelCommand } from './services/commands/camel-command';
+import { PascalCommand } from './services/commands/pascal-command';
+import { KebabCommand } from './services/commands/kebab-command';
 
 interface AppProps {
 }
@@ -42,13 +45,20 @@ class App extends React.Component<AppProps, AppState> {
     this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
     this.contextService = new ContextService(this.textUtilsService);
 
-    const input = `Id,AccountRef,FirstName,LastName,City,Worth
-1,W11111,Edward,Smale,Leighton Buzzard,999.99
-1,W11112,Edward,Smale,Sheffield,800.01
-2,W22222,Stephen,Smale,Sheffield,700.50
-3,W33333,Jo,Smale,Roehampton,1100.45
-4,W44444,Jo,Burton,Barnes,1200.32
-5,W55555,Edward,Burton,London,44.76`;
+//     const input = `Id,AccountRef,FirstName,LastName,City,Worth
+// 1,W11111,Edward,Smale,Leighton Buzzard,999.99
+// 1,W11112,Edward,Smale,Sheffield,800.01
+// 2,W22222,Stephen,Smale,Sheffield,700.50
+// 3,W33333,Jo,Smale,Roehampton,1100.45
+// 4,W44444,Jo,Burton,Barnes,1200.32
+// 5,W55555,Edward,Burton,London,44.76`;
+
+const input = `Name VARCHAR(100) NOT NULL,
+Brand VARCHAR(100) NOT NULL,
+Colour VARCHAR(100) NULL,
+BasePrice MONEY NOT NULL,
+RRP MONEY NULL
+`;
 
     this.inputPaneValue = input;
     this.codeWindowValue = `split
@@ -191,9 +201,24 @@ csv
   getCommandService(): CommandService {
 
     let sortService = new SortService(this.textUtilsService);
-    let commandTypesService = new CommandTypesService(this.textUtilsService, sortService, this.contextService);
-    let commandParsingService = new CommandParsingService(this.textUtilsService, commandTypesService);
-    let contextService = new ContextService(this.textUtilsService);
+
+    let commandTypesService = new CommandTypesService(
+      this.textUtilsService,
+      sortService,
+      this.contextService,
+      new CamelCommand(this.textUtilsService),
+      new PascalCommand(this.textUtilsService),
+      new KebabCommand(this.textUtilsService)
+    );
+
+    let commandParsingService = new CommandParsingService(
+      this.textUtilsService,
+      commandTypesService
+    );
+
+    let contextService = new ContextService(
+      this.textUtilsService
+    );
     
     return new CommandService(
       this.textUtilsService,

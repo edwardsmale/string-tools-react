@@ -16,7 +16,7 @@ export class CommandService {
 
     processCommands(codeValue: string, lines: (string | string[])[], explain: boolean, context: Context): string[][] {
 
-        //try {
+        try {
             let codeLines = this.textUtilsService.TextToLines(codeValue);
 
             let currentValues: (string | string[])[] = lines;
@@ -327,13 +327,13 @@ export class CommandService {
 
                 return output;
             }
-        // } catch (ex) {
+        } catch (ex) {
 
-        //     let output:string[][] = [];
-        //     output.push([ex.toString()]);
+            let output:string[][] = [];
+            output.push([ex.toString()]);
 
-        //     return output;
-        // }
+            return output;
+        }
     }
 
     private FlattenValues(currentValues: (string | string[])[]) {

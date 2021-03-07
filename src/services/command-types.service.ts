@@ -3,13 +3,19 @@ import { SortService } from './sort.service';
 import { CommandType, CommandParameter, SortCommandType } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
+import { CamelCommand } from './commands/camel-command';
+import { PascalCommand } from './commands/pascal-command';
+import { KebabCommand } from './commands/kebab-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand) {
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
         this.sortService = sortService;
+        this.camelCommand = camelCommand;
+        this.pascalCommand = pascalCommand;
+        this.kebabCommand = kebabCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -351,6 +357,66 @@ export class CommandTypesService {
                             return (value as string[]).slice(-n);
                         }
                     }
+                }
+            })
+        },
+        {
+            name: "camel",
+            desc: "Camel-cases the item(s)",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.camelCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.camelCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.camelCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "pascal",
+            desc: "Pascal-cases the item(s)",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.pascalCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.pascalCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.pascalCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "kebab",
+            desc: "Kebab-cases the item(s)",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.kebabCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.kebabCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.kebabCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -780,13 +846,11 @@ export class CommandTypesService {
 
                     // Replace $[n]
                     
-                    if (context.columnInfo.headers) {
-                        for (let i = 0; i < context.columnInfo.headers.length; i++) {
-                            result = result.replace(new RegExp("\\$\\[" + i + "\\]", "g"), arrayValue[i]);
-                        }
-                        for (let i = 0; i < context.columnInfo.headers.length; i++) {
-                            result = result.replace(new RegExp("\\$\\[-" + i + "\\]", "g"), arrayValue[arrayValue.length - i]);
-                        }
+                    for (let i = 0; i < arrayValue.length; i++) {
+                        result = result.replace(new RegExp("\\$\\[" + i + "\\]", "g"), arrayValue[i]);
+                    }
+                    for (let i = 0; i < arrayValue.length; i++) {
+                        result = result.replace(new RegExp("\\$\\[-" + i + "\\]", "g"), arrayValue[arrayValue.length - i]);
                     }
                     
                     context.newColumnInfo.headers = [];
