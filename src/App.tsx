@@ -69,10 +69,6 @@ with 1
 csv
 `;
 
-    if (window.location.hash) {
-      
-      this.UpdateCodeFromLocationHash();
-    }
 
     this.state = {
       code: this.codeWindowValue,
@@ -116,6 +112,11 @@ csv
 
   componentDidMount() {
     window.addEventListener("hashchange", this.LocationHashChanged);
+    
+    if (window.location.hash) {
+      
+      this.UpdateCodeFromLocationHash();
+    }
   }
 
   componentWillUnmount() {
