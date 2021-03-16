@@ -31,36 +31,21 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     for (let i = 0; i < value.length; i++) {
 
-      let array = value[i];
+      const className = (alt ? "output-pane__text-group--light" : "output-pane__text-group--dark");
 
-      let curr = [];
-  
-      for (let j = 0; j < array.length; j++) {
+      for (let j = 0; j < value[i].length; j++) {
 
-          let lines = array[j].split(/\\n/).map(function(line) { return line.replace(new RegExp(String.fromCharCode(0), "g"), "\\n"); });
+          const text = value[i][j]
+            .replace(/\\n/g, "\n")
+            .replace(new RegExp(String.fromCharCode(0), "g"), "\\n")
+            .replace(/\n$/, "\n\n");
 
-          let ele = (
-            <div key={`${Math.random()}`} className="output-pane__text-group textarea__text-group">
-              {lines.map((line) => (
-                <div key={`${Math.random()}`} className="output-pane__text-item textarea__text-item">{line}</div>
-              ))}
-            </div>
-          );
-
-          curr.push(ele);
+          output.push(
+            <div key={`${Math.random()}`} className={`${className}`}>{text}</div>
+          )
       }
 
-      let className = "output-pane__text-item " + (alt ? "output-pane__text-item--light" : "output-pane__text-item--dark");
-
       alt = !alt;
-
-      output.push(
-        <div key={`${Math.random()}`} className={`${className}`}>
-        {curr.map((item) => (
-          item
-        ))}
-        </div>
-      )
     }
   
     return output;

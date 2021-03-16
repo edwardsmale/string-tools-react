@@ -167,20 +167,23 @@ body,
     overflow: auto;
   }
 
+  &__text-group {
+
+    &--light {
+      color: #008888;
+    } 
+
+    &--dark {
+      color: #000044;
+    }
+  }
+
   &__text-item {
 
     color: rgb(1, 1, 82);
 
     &:last-child {
       border: none;
-    }
-
-    &--light div {
-      color: #008888;
-    } 
-
-    &--dark div {
-      color: #000044;
     }
   }
 }
@@ -191,19 +194,11 @@ body,
 
 .textarea {
 
-  &__text-group {
 
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-    margin-bottom: 0.125rem;
-    padding-bottom: 0.125rem;
-  }
 
   &__text-item {
 
     min-width: 0;
-    min-height: 0;
     overflow: hidden;
   }
 }
@@ -217,4 +212,3 @@ body,
   background-color: transparent;
   pointer-events: none; /* Ignore clicks on the overlay; let them bubble up to the code window text area. */
 }
-
