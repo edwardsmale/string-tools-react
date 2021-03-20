@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.scss';
+import Popup from './components/Popup/Popup';
 import CodeWindow from './components/CodeWindow/CodeWindow';
 import ExplainWindow from './components/ExplainWindow/ExplainWindow';
 import InputPane from './components/InputPane/InputPane';
@@ -14,6 +15,7 @@ import { CodeCompressionService } from './services/code-compression.service';
 import { CamelCommand } from './services/commands/camel-command';
 import { PascalCommand } from './services/commands/pascal-command';
 import { KebabCommand } from './services/commands/kebab-command';
+import HelpPopupContent from './components/HelpPopupContent/HelpPopupContent';
 
 interface AppProps {
 }
@@ -28,6 +30,7 @@ interface AppState {
   codeWindowWidth: number;
   inputPaneWidth: number;
   draggedBorder: string | undefined;
+  isHelpPopupVisible: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -37,6 +40,7 @@ class App extends React.Component<AppProps, AppState> {
   textUtilsService: TextUtilsService;
   codeCompressionService: CodeCompressionService;
   contextService: ContextService;
+  commandTypesService: CommandTypesService;
 
   constructor(props: AppProps) {
     super(props)
@@ -44,31 +48,30 @@ class App extends React.Component<AppProps, AppState> {
     this.textUtilsService = new TextUtilsService();
     this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
     this.contextService = new ContextService(this.textUtilsService);
+    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService));
 
-//     const input = `Id,AccountRef,FirstName,LastName,City,Worth
-// 1,W11111,Edward,Smale,Leighton Buzzard,999.99
-// 1,W11112,Edward,Smale,Sheffield,800.01
-// 2,W22222,Stephen,Smale,Sheffield,700.50
-// 3,W33333,Jo,Smale,Roehampton,1100.45
-// 4,W44444,Jo,Burton,Barnes,1200.32
-// 5,W55555,Edward,Burton,London,44.76`;
+    const input = `Id,AccountRef,FirstName,LastName,City,Worth
+1,W11111,Edward,Smale,Leighton Buzzard,999.99
+1,W11112,Edward,Smale,Sheffield,800.01
+2,W22222,Stephen,Smale,Sheffield,700.50
+3,W33333,Jo,Smale,Roehampton,1100.45
+4,W44444,Jo,Burton,Barnes,1200.32
+5,W55555,Edward,Burton,London,44.76`;
 
-const input = `Name VARCHAR(100) NOT NULL,
-Brand VARCHAR(100) NOT NULL,
-Colour VARCHAR(100) NULL,
-BasePrice MONEY NOT NULL,
-RRP MONEY NULL
-`;
+// const input = `Name VARCHAR(100) NOT NULL,
+// Brand VARCHAR(100) NOT NULL,
+// Colour VARCHAR(100) NULL,
+// BasePrice MONEY NOT NULL,
+// RRP MONEY NULL
+// `;
 
     this.inputPaneValue = input;
-    this.codeWindowValue = `split
-select 0,1,2,3
-with 1
-  search W
-  replace Q
+    this.codeWindowValue = `split ,
+header
+select AccountRef,LastName,FirstName,Worth
+sort Worth desc
 csv
 `;
-
 
     this.state = {
       code: this.codeWindowValue,
@@ -79,7 +82,8 @@ csv
       topSectionHeight: 12,
       codeWindowWidth: 30,
       inputPaneWidth: 50,
-      draggedBorder: undefined
+      draggedBorder: undefined,
+      isHelpPopupVisible: true
     };
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
@@ -92,6 +96,8 @@ csv
     this.onDragEnd = this.onDragEnd.bind(this);
     this.LocationHashChanged = this.LocationHashChanged.bind(this);
     this.UpdateCodeFromLocationHash = this.UpdateCodeFromLocationHash.bind(this);
+    this.openHelpPopup = this.openHelpPopup.bind(this);
+    this.closeHelpPopup = this.closeHelpPopup.bind(this);
   }
 
   UpdateCodeFromLocationHash() {
@@ -117,6 +123,8 @@ csv
       
       this.UpdateCodeFromLocationHash();
     }
+
+    this.executeCode(this.codeWindowValue);
   }
 
   componentWillUnmount() {
@@ -201,20 +209,9 @@ csv
 
   getCommandService(): CommandService {
 
-    let sortService = new SortService(this.textUtilsService);
-
-    let commandTypesService = new CommandTypesService(
-      this.textUtilsService,
-      sortService,
-      this.contextService,
-      new CamelCommand(this.textUtilsService),
-      new PascalCommand(this.textUtilsService),
-      new KebabCommand(this.textUtilsService)
-    );
-
     let commandParsingService = new CommandParsingService(
       this.textUtilsService,
-      commandTypesService
+      this.commandTypesService
     );
 
     let contextService = new ContextService(
@@ -224,7 +221,7 @@ csv
     return new CommandService(
       this.textUtilsService,
       commandParsingService, 
-      commandTypesService, 
+      this.commandTypesService, 
       contextService
     );
   }
@@ -256,10 +253,32 @@ csv
     }
   }
 
+  openHelpPopup() {
+    this.setState({ isHelpPopupVisible: true });
+  }
+
+  closeHelpPopup() {
+    this.setState({ isHelpPopupVisible: false });
+  }
+
   render() {
     return (
-      <div className="App">
-        <div className="string-tools" onDragOver={this.onDragOver} onDragEnd={this.onDragEnd}>
+      <div className="App">        
+        <div className={`${this.state.isHelpPopupVisible ? "" : "u-hidden"}`}>
+          <Popup            
+            onClose={this.closeHelpPopup}
+            title="Help"
+            init_left={-21}
+            init_top={2}
+            init_right={-1}
+            init_bottom={-10}>
+              <HelpPopupContent commandTypesService={this.commandTypesService} />
+          </Popup>
+        </div>
+        <div className="string-tools" 
+             onDragOver={this.onDragOver} 
+             onDragEnd={this.onDragEnd}>
+             <div className="code-window__help-link" onClick={this.openHelpPopup}>help</div>
           <div className="string-tools__top-section" style={ { height: this.state.topSectionHeight + "rem" }}>
             <div className="string-tools__code-window-container" style={ { width: this.state.codeWindowWidth + "rem" }}>
               <CodeWindow onInput={this.handleCodeWindowInput}

@@ -7,10 +7,15 @@ body,
 .App, 
 .string-tools {
   height: 100%;
+  overflow-x: hidden;
 }
 
 .h1 {
   text-align: center;
+}
+
+.u-hidden {
+  display: none;
 }
   
 .string-tools {
@@ -60,6 +65,7 @@ body,
 
   &__code-window-container {
 
+    position: relative;
     display: flex;
     flex-shrink: 0;
     
@@ -97,6 +103,17 @@ body,
   &__overlay {
     opacity: 0.5;
     color: chartreuse;
+  }
+
+  &__help-link {
+    position: absolute;
+    top: 0.625rem;
+    right: 1.75rem;
+    border-bottom: dotted 1px lightblue;
+    cursor: pointer;
+    color: cadetblue;
+    font-family: monospace;
+    z-index: 1;
   }
 }
 
