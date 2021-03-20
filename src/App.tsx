@@ -15,6 +15,8 @@ import { CodeCompressionService } from './services/code-compression.service';
 import { CamelCommand } from './services/commands/camel-command';
 import { PascalCommand } from './services/commands/pascal-command';
 import { KebabCommand } from './services/commands/kebab-command';
+import { UpperCommand } from './services/commands/upper-command';
+import { LowerCommand } from './services/commands/lower-command';
 import HelpPopupContent from './components/HelpPopupContent/HelpPopupContent';
 
 interface AppProps {
@@ -48,7 +50,7 @@ class App extends React.Component<AppProps, AppState> {
     this.textUtilsService = new TextUtilsService();
     this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
     this.contextService = new ContextService(this.textUtilsService);
-    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService));
+    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService), new UpperCommand(this.textUtilsService), new LowerCommand(this.textUtilsService));
 
     const input = `Id,AccountRef,FirstName,LastName,City,Worth
 1,W11111,Edward,Smale,Leighton Buzzard,999.99

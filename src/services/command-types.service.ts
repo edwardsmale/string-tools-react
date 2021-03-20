@@ -6,16 +6,19 @@ import { ContextService } from './context.service';
 import { CamelCommand } from './commands/camel-command';
 import { PascalCommand } from './commands/pascal-command';
 import { KebabCommand } from './commands/kebab-command';
+import { UpperCommand } from './commands/upper-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand) {
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
         this.sortService = sortService;
         this.camelCommand = camelCommand;
         this.pascalCommand = pascalCommand;
         this.kebabCommand = kebabCommand;
+        this.upperCommand = upperCommand;
+        this.lowerCommand = lowerCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -417,6 +420,46 @@ export class CommandTypesService {
                 }
                 else {
                     return this.kebabCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "upper",
+            desc: "Upper-cases the item(s)",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.upperCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.upperCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.upperCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "lower",
+            desc: "Lower-cases the item(s)",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.lowerCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.lowerCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.lowerCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
