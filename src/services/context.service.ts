@@ -44,8 +44,8 @@ export class ContextService {
             }
         }
 
-        context.columnInfo.isColumnIntegral = isColumnIntegral;
-        context.columnInfo.isColumnNumeric = isColumnNumeric;
+        context.newColumnInfo.isColumnIntegral = isColumnIntegral;
+        context.newColumnInfo.isColumnNumeric = isColumnNumeric;
     }
 
     CreateContext(): Context {

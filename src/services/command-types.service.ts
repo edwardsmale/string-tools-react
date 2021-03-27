@@ -318,8 +318,8 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                if (!context.columnInfo.headers) {
-                    context.columnInfo.headers = (value as string[]);
+                if (!context.newColumnInfo.headers) {
+                    context.newColumnInfo.headers = (value as string[]);
                 }
 
                 if (explain) {

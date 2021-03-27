@@ -21,6 +21,8 @@ export class CommandService {
 
             let currentValues: (string | string[])[] = lines;
 
+            context.newColumnInfo = {...context.columnInfo };
+
             for (let i = 0; i < codeLines.length; i++) {
 
                 if (!codeLines[i].trim()) {
@@ -248,7 +250,7 @@ export class CommandService {
 
                             if (commandType.name === "header") {
 
-                                context.columnInfo.headers = null;
+                                context.newColumnInfo.headers = null;
 
                                 commandType.exec(
                                     currentValues[0] as string,
@@ -288,15 +290,7 @@ export class CommandService {
 
                 currentValues = newValues;
 
-                if (context.newColumnInfo.headers !== null) {
-
-                    context.columnInfo.headers = context.newColumnInfo.headers;
-                }
-
-                if (context.newColumnInfo.numberOfColumns !== null) {
-
-                    context.columnInfo.numberOfColumns = context.newColumnInfo.numberOfColumns;
-                }
+                context.columnInfo = { ...context.newColumnInfo};
             }
 
             let output: string[][] = [];
