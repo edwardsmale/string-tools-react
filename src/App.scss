@@ -164,6 +164,7 @@ body,
   &__output-pane-container {
 
     display: flex;
+    flex-basis: 100%;
   }
 }
 
@@ -178,6 +179,7 @@ body,
 .output-pane {
 
   position: relative;
+  flex-basis: 100%;
 
   &__value {
 
@@ -202,6 +204,18 @@ body,
     &:last-child {
       border: none;
     }
+  }
+
+  &__overlay {
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    opacity: 0.4;
+    color: #444;
   }
 }
 

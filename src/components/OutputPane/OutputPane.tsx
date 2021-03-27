@@ -51,12 +51,37 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     return output;
   }
 
+  getOverlayValue(value: string[][]) : string {
+
+    let output = "";
+
+    for (let i = 0; i < value.length; i++) {
+
+      for (let j = 0; j < value[i].length; j++) {
+
+          const text = value[i][j]
+            .replace(/\\n/g, "\n")
+            .replace(new RegExp(String.fromCharCode(0), "g"), "\\n");
+
+          output += text + "\n";
+      }
+    }
+  
+    return output;
+  }
+
   render() {
     return (
       <div className="output-pane pane pane--right">
         <div
-          className="output-pane__value string-tools__textarea pane-textarea"
-          >{this.getOutputValue(this.props.output)}</div>
+          className="output-pane__value string-tools__textarea pane-textarea">
+            <textarea 
+              spellCheck={false}
+              className="output-pane__overlay string-tools__textarea"
+              readOnly={true}
+              value={this.getOverlayValue(this.props.output)}></textarea>
+            {this.getOutputValue(this.props.output)}
+          </div>
       </div>
     );
   }
