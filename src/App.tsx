@@ -82,7 +82,7 @@ csv
       input: input,
       output: [[]],
       topSectionHeight: 12,
-      codeWindowWidth: 30,
+      codeWindowWidth: 45,
       inputPaneWidth: 50,
       draggedBorder: undefined,
       isHelpPopupVisible: true
