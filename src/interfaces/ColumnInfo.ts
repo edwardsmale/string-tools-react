@@ -1,5 +1,5 @@
 export interface ColumnInfo {
-    numberOfColumns: number | null;
+    numberOfColumns: number;
     isColumnNumeric: boolean[] | null;
     isColumnIntegral: boolean[] | null;
     headers: string[] | null;

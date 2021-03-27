@@ -171,10 +171,6 @@ export class CommandService {
 
                         // Not flat command.
 
-                        if (parsedCommand.commandType.name === "split") {
-                            context.columnInfo.isColumnNumeric = [] as boolean[];
-                        }
-
                         // Iterate through the lines and apply the command.
 
                         if ((parsedCommand.commandType.isArrayBased && !Array.isArray(currentValues[0]))) {
@@ -261,8 +257,6 @@ export class CommandService {
                                 );
 
                                 startJ = 1;
-
-                                this.contextService.UpdateContextDataTypes(context, (currentValues.slice(1)) as string[][]);
                             }
 
                             for (let j = startJ; j < currentValues.length; j++) {
@@ -279,14 +273,11 @@ export class CommandService {
                                     newValues.push(newLineValue as string);
                                 }
                             }
-
-                            if (commandType.name === "split" || commandType.name === "select") {
-
-                                this.contextService.UpdateContextDataTypes(context, newValues as string[][]);
-                            }
                         }
                     }
                 }
+                
+                this.contextService.UpdateContextDataTypes(context, newValues);
 
                 currentValues = newValues;
 
