@@ -59,6 +59,34 @@ body,
     width: 100%;
     height: 100%;
   }
+
+  &__popup-links {
+
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    top: 0.625rem;
+    right: 1rem;
+    width: 6.5rem;
+    z-index: 1;
+  }
+}
+
+.popup-links {
+
+  &__link {
+    
+    border-bottom: dotted 1px rgb(228, 239, 245);
+    cursor: pointer;
+    color: cadetblue;
+    font-family: monospace;
+  }
+
+  &__separator {
+
+    margin: 0 0.25rem;
+    color: #AAD;
+  }
 }
 
 .string-tools {
@@ -103,17 +131,6 @@ body,
   &__overlay {
     opacity: 0.5;
     color: chartreuse;
-  }
-
-  &__help-link {
-    position: absolute;
-    top: 0.625rem;
-    right: 1.75rem;
-    border-bottom: dotted 1px lightblue;
-    cursor: pointer;
-    color: cadetblue;
-    font-family: monospace;
-    z-index: 1;
   }
 }
 

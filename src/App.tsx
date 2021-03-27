@@ -18,6 +18,8 @@ import { KebabCommand } from './services/commands/kebab-command';
 import { UpperCommand } from './services/commands/upper-command';
 import { LowerCommand } from './services/commands/lower-command';
 import HelpPopupContent from './components/HelpPopupContent/HelpPopupContent';
+import ContextPopupContent from './components/ContextPopupContent/ContextPopupContent';
+import { Context } from './interfaces/Context';
 
 interface AppProps {
 }
@@ -28,11 +30,13 @@ interface AppState {
   explanation: string;
   input: string;
   output: string[][];
+  context: Context;
   topSectionHeight: number;
   codeWindowWidth: number;
   inputPaneWidth: number;
   draggedBorder: string | undefined;
   isHelpPopupVisible: boolean;
+  isContextPopupVisible: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -81,11 +85,13 @@ csv
       explanation: this.explainCommands(input, this.codeWindowValue),
       input: input,
       output: [[]],
+      context: this.contextService.CreateContext(),
       topSectionHeight: 12,
       codeWindowWidth: 45,
       inputPaneWidth: 50,
       draggedBorder: undefined,
-      isHelpPopupVisible: true
+      isHelpPopupVisible: false,
+      isContextPopupVisible: false
     };
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
@@ -100,6 +106,8 @@ csv
     this.UpdateCodeFromLocationHash = this.UpdateCodeFromLocationHash.bind(this);
     this.openHelpPopup = this.openHelpPopup.bind(this);
     this.closeHelpPopup = this.closeHelpPopup.bind(this);
+    this.openContextPopup = this.openContextPopup.bind(this);
+    this.closeContextPopup = this.closeContextPopup.bind(this);
   }
 
   UpdateCodeFromLocationHash() {
@@ -206,6 +214,10 @@ csv
 
     const result = commandService.processCommands(code, lines, explain, context);
 
+    if (!explain) {
+      this.setState({ context: context });
+    }
+
     return result; 
   }
 
@@ -263,6 +275,14 @@ csv
     this.setState({ isHelpPopupVisible: false });
   }
 
+  openContextPopup() {
+    this.setState({ isContextPopupVisible: true });
+  }
+
+  closeContextPopup() {
+    this.setState({ isContextPopupVisible: false });
+  }
+
   render() {
     return (
       <div className="App">        
@@ -276,11 +296,26 @@ csv
             init_bottom={-10}>
               <HelpPopupContent commandTypesService={this.commandTypesService} />
           </Popup>
+        </div>      
+        <div className={`${this.state.isContextPopupVisible ? "" : "u-hidden"}`}>
+          <Popup            
+            onClose={this.closeContextPopup}
+            title="Context"
+            init_left={-41}
+            init_top={2}
+            init_right={-23}
+            init_bottom={18}>
+              <ContextPopupContent context={this.state.context} />
+          </Popup>
         </div>
         <div className="string-tools" 
              onDragOver={this.onDragOver} 
              onDragEnd={this.onDragEnd}>
-             <div className="code-window__help-link" onClick={this.openHelpPopup}>help</div>
+             <div className="string-tools__popup-links popup-links">
+              <div className="popup-links__link popup-links__context-link" onClick={this.openContextPopup}>context</div>
+              <div className="popup-links__separator">|</div>
+              <div className="popup-links__link popup-links__help-link" onClick={this.openHelpPopup}>help</div>
+            </div>
           <div className="string-tools__top-section" style={ { height: this.state.topSectionHeight + "rem" }}>
             <div className="string-tools__code-window-container" style={ { width: this.state.codeWindowWidth + "rem" }}>
               <CodeWindow onInput={this.handleCodeWindowInput}

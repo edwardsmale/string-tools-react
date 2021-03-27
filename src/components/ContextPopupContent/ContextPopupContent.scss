@@ -1,0 +1,26 @@
+.ContextPopupContent {
+
+    font-size: 0.75rem;
+    
+    &__Key {
+
+        font-weight: bold;
+        color: #444;
+    }
+    
+    &__Value {
+
+        color: #000;
+    }
+    
+    &__Separator {
+    
+        height: 0.25rem;
+        border-bottom: dotted 1px black;
+    }
+    
+    &__PostSeparator {
+    
+        height: 0.25rem;
+    }
+}
