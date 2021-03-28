@@ -1,24 +1,27 @@
 $border-width: 0.0625rem;
-$border-width-extra: 0.0625rem;
 
 html,
 #root,
 body, 
 .App, 
 .string-tools {
+
   height: 100%;
   overflow-x: hidden;
 }
 
 .h1 {
+
   text-align: center;
 }
 
 .u-hidden {
+
   display: none;
 }
   
 .string-tools {
+
   display: flex;
   flex-direction: column;
   margin-left: auto;
@@ -27,6 +30,7 @@ body,
   box-sizing: border-box;  
 
   &__top-section {
+
     display: flex;
     flex-direction: row;
   }
@@ -36,13 +40,14 @@ body,
     width: 100%;
     height: $border-width;
     min-height: $border-width;
-    border-top: $border-width-extra #fff solid;
-    border-bottom: $border-width-extra #fff solid;
+    border-top: $border-width #fff solid;
+    border-bottom: $border-width #fff solid;
     background-color: #aaa;
     cursor: ns-resize;
   }
 
   &__textarea {
+
     box-sizing: border-box;
     padding: 0.5rem;
     min-width: 0;
@@ -106,8 +111,8 @@ body,
     min-width: $border-width;
     height: 100%;
     
-    border-left: $border-width-extra #fff solid;
-    border-right: $border-width-extra #fff solid;
+    border-left: $border-width #fff solid;
+    border-right: $border-width #fff solid;
     background-color: #aaa;
     cursor: ew-resize;
   }
@@ -123,6 +128,7 @@ body,
 }
 
 .panes-container {
+
   display: flex;
   flex-grow: 1;
 }
@@ -141,8 +147,8 @@ body,
     min-width: $border-width;
     height: 100%;
     
-    border-left: $border-width-extra #fff solid;
-    border-right: $border-width-extra #fff solid;
+    border-left: $border-width #fff solid;
+    border-right: $border-width #fff solid;
     background-color: #aaa;
     cursor: ew-resize;
   }
@@ -155,23 +161,12 @@ body,
 }
 
 .pane {
+
   box-sizing: border-box;
 }
 
-.output-value__text-item--light {
-  color: #008888;
-}
-
-.textarea {
-
-  &__text-item {
-
-    min-width: 0;
-    overflow: hidden;
-  }
-}
-
 .textarea-overlay {
+  
   position: absolute;
   left: 0;
   top: 0;
