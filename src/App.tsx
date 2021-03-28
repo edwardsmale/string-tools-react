@@ -95,6 +95,8 @@ csv
       isContextPopupVisible: false
     };
 
+    this.executeCodeTimeout = null;
+
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
     this.handleCodeWindowSelect = this.handleCodeWindowSelect.bind(this);
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
@@ -113,9 +115,9 @@ csv
 
   UpdateCodeFromLocationHash() {
 
-    let compressedCode = window.location.hash.substr(1);
+    const compressedCode = window.location.hash.substr(1);
 
-    let code = this.codeCompressionService.DecompressCode(compressedCode);
+    const code = this.codeCompressionService.DecompressCode(compressedCode);
 
     this.codeWindowValue = code;
     
@@ -160,8 +162,6 @@ csv
     window.location.hash = "#" + compressedCode;
 
     this.setState({code: code});
-
-    this.executeCode(code);
   }
 
   handleCodeWindowSelect(code: string) {
@@ -187,12 +187,24 @@ csv
     }
   }
 
+  private executeCodeTimeout: NodeJS.Timeout | null;
+
   executeCode(code: string) {
 
-    let result = this.executeCommands(this.inputPaneValue, code);
-    let explanation = this.explainCommands(this.inputPaneValue, code);
-    
-    this.setState({ output: result, explanation: explanation });
+    if (this.executeCodeTimeout) {
+      clearTimeout(this.executeCodeTimeout);
+    }
+
+    const that = this;
+
+    this.executeCodeTimeout = setTimeout(function () {
+
+      const result = that.executeCommands(that.inputPaneValue, code);
+      const explanation = that.explainCommands(that.inputPaneValue, code);
+      
+      that.setState({ output: result, explanation: explanation });
+    },
+    700);
   }
 
   private executeCommands(input: string, code: string): string[][] {

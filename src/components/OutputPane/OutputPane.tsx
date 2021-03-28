@@ -8,7 +8,6 @@ interface OutputPaneProps {
 }
 
 interface OutputPaneState {
-
 }
 
 class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
