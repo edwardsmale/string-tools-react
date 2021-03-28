@@ -35,7 +35,7 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
 
     return (
       <div key={`${Math.random()}`} className="explain-window">
-        <div key={`${Math.random()}`} className="explain-window__textarea string-tools__textarea window-textarea textarea" 
+        <div key={`${Math.random()}`} className="textarea window-textarea textarea" 
              style={ { overflow: "hidden" } }
              >{elements}</div>
       </div>

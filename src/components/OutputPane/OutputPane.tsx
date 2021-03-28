@@ -76,13 +76,13 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     return (
       <div className="output-pane pane pane--right">
         <div
-          className="output-pane__value string-tools__textarea pane-textarea">
+          className="output-pane__value textarea pane-textarea">
             <textarea 
               spellCheck={false}
               autoComplete="off"
               autoCorrect="off"
               autoCapitalize="off"
-              className="output-pane__overlay string-tools__textarea"
+              className="output-pane__overlay textarea"
               onChange={this.noop}
               value={this.getOverlayValue(this.props.output)}></textarea>
             {this.getOutputValue(this.props.output)}

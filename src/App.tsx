@@ -1,5 +1,6 @@
 import React from 'react';
 import './App.scss';
+import './textarea.scss';
 import Popup from './components/Popup/Popup';
 import CodeWindow from './components/CodeWindow/CodeWindow';
 import ExplainWindow from './components/ExplainWindow/ExplainWindow';
