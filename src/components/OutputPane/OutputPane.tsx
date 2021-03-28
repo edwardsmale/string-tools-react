@@ -36,15 +36,48 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     let hash = 0;
 
-    for (let i = 0; i < value.length; i++) {
+    let needReplace = false;
 
-      for (let j = 0; j < value[i].length; j++) {
+    let i = 0;
+    let j = 0;
+
+    while (i < value.length && !needReplace) {
+
+      if (value[i][j]) {
+
+        for (let k = 0; k < value[i][j].length; k++) {
+
+          const charCode = value[i][j].charCodeAt(k);
+
+          hash = (hash << 5) - hash + charCode;
+
+          needReplace = needReplace || charCode === 0;
+        }
+
+        needReplace = needReplace || (value[i][j].includes("\\n") || value[i][j].endsWith("\n"));
+      }
+
+      if (++j >= value[i].length) {
+
+        j = 0;
+        i++;
+      }
+    }
+
+    while (i < value.length) {
+
+      if (value[i][j]) {
 
         for (let k = 0; k < value[i][j].length; k++) {
 
           hash = (hash << 5) - hash + value[i][j].charCodeAt(k);
-          hash &= hash;
         }
+      }
+
+      if (++j >= value[i].length) {
+
+        j = 0;
+        i++;
       }
     }
 
@@ -55,16 +88,29 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     let output = [];
 
-    for (let i = 0; i < value.length; i++) {
+    if (needReplace) {
 
-      for (let j = 0; j < value[i].length; j++) {
+      for (let i = 0; i < value.length; i++) {
 
-          const text = value[i][j]
-            .replace(/\\n/g, "\n")
-            .replace(this.escapedNewlineRegex, "\\n")
-            .replace(/\n$/, "\n\n");
+        for (let j = 0; j < value[i].length; j++) {
 
-          output.push(<div>{text}</div>);
+            const text = value[i][j]
+              .replace(/\\n/g, "\n")
+              .replace(this.escapedNewlineRegex, "\\n")
+              .replace(/\n$/, "\n\n");
+
+            output.push(<div>{text}</div>);
+        }
+      }
+    }
+    else {
+
+      for (let i = 0; i < value.length; i++) {
+
+        for (let j = 0; j < value[i].length; j++) {
+
+            output.push(<div>{value[i][j]}</div>);
+        }
       }
     }
 
