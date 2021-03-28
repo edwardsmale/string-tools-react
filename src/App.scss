@@ -171,10 +171,12 @@ body,
   &__text-group {
 
     &--light {
+      min-height: 1.125rem;
       color: #008888;
     } 
 
     &--dark {
+      min-height: 1.125rem;
       color: #000044;
     }
   }
