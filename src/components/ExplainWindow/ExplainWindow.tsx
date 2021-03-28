@@ -26,18 +26,16 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
     let lines = this.textUtilsService.TextToLines(this.props.explanation);
 
     let elements = (
-      <div key={`${Math.random()}`} className="explain-window__text-group textarea__text-group">
+      <div key={`${Math.random()}`}>
         {lines.map((line) => (
-          <div key={`${Math.random()}`} className="explain-window__text-item textarea__text-item">{line}</div>
+          <div key={`${Math.random()}`} className="explain-window__text-item">{line}</div>
         ))}
       </div>
     );
 
     return (
       <div key={`${Math.random()}`} className="explain-window">
-        <div key={`${Math.random()}`} className="textarea window-textarea textarea" 
-             style={ { overflow: "hidden" } }
-             >{elements}</div>
+        <div key={`${Math.random()}`} className="textarea">{elements}</div>
       </div>
     );
   }
