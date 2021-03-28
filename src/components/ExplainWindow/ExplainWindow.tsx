@@ -8,7 +8,6 @@ interface ExplainWindowProps {
 }
 
 interface ExplainWindowState {
-
 }
 
 class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowState> {
@@ -23,19 +22,13 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
 
   render() {
 
-    let lines = this.textUtilsService.TextToLines(this.props.explanation);
-
-    let elements = (
-      <div key={`${Math.random()}`}>
-        {lines.map((line) => (
-          <div key={`${Math.random()}`}>{line}</div>
-        ))}
-      </div>
-    );
+    const lines = this.textUtilsService.TextToLines(this.props.explanation);
 
     return (
-      <div key={`${Math.random()}`} className="explain-window">
-        <div key={`${Math.random()}`} className="textarea">{elements}</div>
+      <div className="explain-window textarea">
+          {lines.map((line) => (
+            <div key={`${Math.random()}`}>{line}</div>
+          ))}
       </div>
     );
   }

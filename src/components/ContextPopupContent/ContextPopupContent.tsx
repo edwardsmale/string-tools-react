@@ -43,7 +43,7 @@ class ContextPopupContent extends React.Component<ContextPopupContentProps, Cont
             <td className="context-popup-content__value">
               <table cellPadding={1} cellSpacing={0}>
                 <tbody>
-                  {this.props.context.columnInfo.headers?.map((header, index) => (<tr><td className="context-popup-content__Header">{header}</td></tr>))}
+                  {this.props.context.columnInfo.headers?.map((header, index) => (<tr key={`${Math.random()}`}><td className="context-popup-content__Header">{header}</td></tr>))}
                 </tbody>
               </table>
               
