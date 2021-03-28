@@ -23,6 +23,9 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
   private textUtilsService: TextUtilsService;
 
+  private cachedValue: string;
+  private cachedOutputElement: JSX.Element;
+
   getOutputValue(value: string[][]) {
 
     let output = [];
@@ -34,6 +37,18 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       "output-pane__text-group--light"
     ];
 
+    let concat = "";
+
+    for (let i = 0; i < value.length; i++) {
+
+      concat += value[i].join("");
+    }
+
+    if (concat === this.cachedValue) {
+
+      return this.cachedOutputElement;
+    }
+
     for (let i = 0; i < value.length; i++) {
 
       for (let j = 0; j < value[i].length; j++) {
@@ -44,14 +59,22 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
             .replace(/\n$/, "\n\n");
 
           output.push(
-            <div key={`${Math.random()}`} className={`${classNames[alt]}`}>{text}</div>
+            <div className={`${classNames[alt]}`}>{text}</div>
           )
       }
 
       alt = 1 - alt;
     }
-  
-    return output;
+
+    this.cachedOutputElement = (
+      <div key={concat}>
+        {output}
+      </div>
+    );
+
+    this.cachedValue = concat;
+
+    return this.cachedOutputElement;
   }
 
   getOverlayValue(value: string[][]) : string {
