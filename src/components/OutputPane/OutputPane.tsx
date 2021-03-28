@@ -16,6 +16,9 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
   constructor(props: OutputPaneProps) {
     super(props)
 
+    this.cachedHash = 0;
+    this.cachedOutputElement = null;
+
     this.textUtilsService = props.textUtilsService;
 
     this.getOutputValue = this.getOutputValue.bind(this);
@@ -23,8 +26,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
   private textUtilsService: TextUtilsService;
 
-  private cachedValue: string;
-  private cachedOutputElement: JSX.Element;
+  private cachedHash: number;
+  private cachedOutputElement: JSX.Element | null;
 
   getOutputValue(value: string[][]) {
 
@@ -44,7 +47,15 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       concat += value[i].join("");
     }
 
-    if (concat === this.cachedValue) {
+    let hash = 0;
+
+    for (let i = 0; i < concat.length; i++) {
+      const char = concat.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash &= hash;
+    }
+
+    if (this.cachedOutputElement && hash === this.cachedHash) {
 
       return this.cachedOutputElement;
     }
@@ -67,12 +78,12 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     }
 
     this.cachedOutputElement = (
-      <div key={concat}>
+      <div key={hash}>
         {output}
       </div>
     );
 
-    this.cachedValue = concat;
+    this.cachedHash = hash;
 
     return this.cachedOutputElement;
   }
