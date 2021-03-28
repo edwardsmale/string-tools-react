@@ -28,7 +28,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     return (
       <div className="pane pane--left input-pane">
         <textarea
-          className="textarea pane-textarea"
+          className="textarea"
           spellCheck={false}
           autoComplete="off"
           autoCorrect="off"

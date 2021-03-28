@@ -27,11 +27,14 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     let output = [];
 
-    let alt = false;
+    let alt = 0;
+
+    const classNames = [
+      "output-pane__text-group--dark",
+      "output-pane__text-group--light"
+    ];
 
     for (let i = 0; i < value.length; i++) {
-
-      const className = (alt ? "output-pane__text-group--light" : "output-pane__text-group--dark");
 
       for (let j = 0; j < value[i].length; j++) {
 
@@ -41,11 +44,11 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
             .replace(/\n$/, "\n\n");
 
           output.push(
-            <div key={`${Math.random()}`} className={`${className}`}>{text}</div>
+            <div key={`${Math.random()}`} className={`${classNames[alt]}`}>{text}</div>
           )
       }
 
-      alt = !alt;
+      alt = 1 - alt;
     }
   
     return output;
@@ -74,19 +77,16 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
   render() {
     return (
-      <div className="output-pane pane pane--right">
-        <div
-          className="output-pane__value textarea pane-textarea">
-            <textarea 
-              spellCheck={false}
-              autoComplete="off"
-              autoCorrect="off"
-              autoCapitalize="off"
-              className="output-pane__overlay textarea"
-              onChange={this.noop}
-              value={this.getOverlayValue(this.props.output)}></textarea>
-            {this.getOutputValue(this.props.output)}
-          </div>
+      <div className="output-pane pane pane--right output-pane__value textarea">
+        <textarea 
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
+          className="output-pane__overlay textarea"
+          onChange={this.noop}
+          value={this.getOverlayValue(this.props.output)}></textarea>
+        {this.getOutputValue(this.props.output)}
       </div>
     );
   }
