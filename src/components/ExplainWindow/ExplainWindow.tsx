@@ -28,7 +28,7 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
     let elements = (
       <div key={`${Math.random()}`}>
         {lines.map((line) => (
-          <div key={`${Math.random()}`} className="explain-window__text-item">{line}</div>
+          <div key={`${Math.random()}`}>{line}</div>
         ))}
       </div>
     );
