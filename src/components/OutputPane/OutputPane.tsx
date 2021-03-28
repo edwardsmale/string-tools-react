@@ -107,10 +107,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
       for (let i = 0; i < value.length; i++) {
 
-        for (let j = 0; j < value[i].length; j++) {
-
-            output.push(<div>{value[i][j]}</div>);
-        }
+        output.push(<div>{value[i].map(val => <div>{val}</div>)}</div>);
       }
     }
 
