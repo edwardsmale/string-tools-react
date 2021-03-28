@@ -51,13 +51,6 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     let output = [];
 
-    let alt = 0;
-
-    const classNames = [
-      "output-pane__text-group--dark",
-      "output-pane__text-group--light"
-    ];
-
     for (let i = 0; i < value.length; i++) {
 
       for (let j = 0; j < value[i].length; j++) {
@@ -67,19 +60,11 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
             .replace(new RegExp(String.fromCharCode(0), "g"), "\\n")
             .replace(/\n$/, "\n\n");
 
-          output.push(
-            <div className={`${classNames[alt]}`}>{text}</div>
-          )
+          output.push(<div>{text}</div>);
       }
-
-      alt = 1 - alt;
     }
 
-    this.cachedOutput = (
-      <div key={hash}>
-        {output}
-      </div>
-    );
+    this.cachedOutput = <div key={hash}>{output}</div>;
 
     this.cachedHash = hash;
 
