@@ -146,7 +146,7 @@ csv
       this.UpdateCodeFromLocationHash();
     }
 
-    this.executeCode(this.codeWindowValue);
+    this.executeCode(this.codeWindowValue, false);
   }
 
   componentWillUnmount() {
@@ -160,7 +160,7 @@ csv
 
     this.setState({input: input});
 
-    this.executeCode(this.codeWindowValue);
+    this.executeCode(this.codeWindowValue, false);
   }
 
   handleCodeWindowInput(code: string) {
@@ -189,23 +189,25 @@ csv
 
       selectedCode = "\n".repeat(returnCount) + selectedCode;
 
-      this.executeCode(selectedCode);
+      this.executeCode(selectedCode, true);
     }
     else {
 
-      this.executeCode(code);
+      this.executeCode(code, true);
     }
   }
 
   private executeCodeTimeout: NodeJS.Timeout | null;
 
-  executeCode(code: string) {
+  executeCode(code: string, isSelect: boolean) {
 
     if (this.executeCodeTimeout) {
       clearTimeout(this.executeCodeTimeout);
     }
 
     const that = this;
+
+    const timeoutLength = isSelect ? 650 : 350;
 
     this.executeCodeTimeout = setTimeout(function () {
 
@@ -214,7 +216,7 @@ csv
       
       that.setState({ output: result, explanation: explanation });
     },
-    350);
+    timeoutLength);
   }
 
   private executeCommands(input: string, code: string): string[][] {
