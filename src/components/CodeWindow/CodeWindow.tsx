@@ -73,6 +73,9 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
           className="string-tools__textarea window-textarea js-code-window-textarea"
           placeholder="Enter your instructions here"
           spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
           onChange={this.handleChange}
           onSelect={this.handleSelect}
           value={this.props.value}
@@ -80,6 +83,9 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
         <textarea 
           className="code-window__overlay textarea-overlay string-tools__textarea window-textarea"
           spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
           value={this.getOverlayValue(this.props.value)}
           readOnly={true}></textarea>
       </div>

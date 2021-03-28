@@ -29,6 +29,10 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       <div className="pane pane--left input-pane">
         <textarea
           className="string-tools__textarea pane-textarea"
+          spellCheck={false}
+          autoComplete="off"
+          autoCorrect="off"
+          autoCapitalize="off"
           placeholder="Paste the text to process in here"
           onChange={this.handleChange}
           value={this.props.value}
