@@ -237,28 +237,28 @@ class Popup extends React.Component<PopupProps, PopupState> {
   }
 
   render() {
-    return <div className="Popup" style={{
+    return <div className="popup" style={{
               left: this.state.x + "rem",
               top: this.state.y + "rem",
               width: this.state.w + 0.125 + "rem",
               height: this.state.h + "rem"
             }}>
-          <div className="Popup__left-edge" draggable onDragStart={this.onLeftEdgeDragStart} onDrag={this.onLeftEdgeDrag} onDragEnd={this.onLeftEdgeDragEnd}></div>
-          <div className="Popup__innards">
-            <div className="Popup__top-edge" draggable onDragStart={this.onTopEdgeDragStart} onDrag={this.onTopEdgeDrag} onDragEnd={this.onTopEdgeDragEnd}></div>
-            <div className="Popup__title" draggable onDragStart={this.onTitleDragStart} onDrag={this.onTitleDrag} onDragEnd={this.onTitleDragEnd}>{this.props.title}
-              <div className="Popup__close" onClick={this.onCloseClick}>&times;</div>
+          <div className="popup__left-edge" draggable onDragStart={this.onLeftEdgeDragStart} onDrag={this.onLeftEdgeDrag} onDragEnd={this.onLeftEdgeDragEnd}></div>
+          <div className="popup__innards">
+            <div className="popup__top-edge" draggable onDragStart={this.onTopEdgeDragStart} onDrag={this.onTopEdgeDrag} onDragEnd={this.onTopEdgeDragEnd}></div>
+            <div className="popup__title" draggable onDragStart={this.onTitleDragStart} onDrag={this.onTitleDrag} onDragEnd={this.onTitleDragEnd}>{this.props.title}
+              <div className="popup__close" onClick={this.onCloseClick}>&times;</div>
               </div>
-              <div className="Popup__text" style={{
+              <div className="popup__text" style={{
                   width: this.state.w - 1 + "rem",
                   height: this.state.h - 4 + "rem"
                 }}>{this.props.children}</div>
-              <div className="Popup__resize" draggable onDragStart={this.onResizeDragStart} onDrag={this.onResizeDrag} onDragEnd={this.onResizeDragEnd}>
-                <div className="Popup__resize-triangle"></div>
+              <div className="popup__resize" draggable onDragStart={this.onResizeDragStart} onDrag={this.onResizeDrag} onDragEnd={this.onResizeDragEnd}>
+                <div className="popup__resize-triangle"></div>
               </div>
-            <div className="Popup__bottom-edge" draggable onDragStart={this.onBottomEdgeDragStart} onDrag={this.onBottomEdgeDrag} onDragEnd={this.onBottomEdgeDragEnd}></div>
+            <div className="popup__bottom-edge" draggable onDragStart={this.onBottomEdgeDragStart} onDrag={this.onBottomEdgeDrag} onDragEnd={this.onBottomEdgeDragEnd}></div>
           </div>  
-          <div className="Popup__right-edge" draggable onDragStart={this.onRightEdgeDragStart} onDrag={this.onRightEdgeDrag} onDragEnd={this.onRightEdgeDragEnd}></div>
+          <div className="popup__right-edge" draggable onDragStart={this.onRightEdgeDragStart} onDrag={this.onRightEdgeDrag} onDragEnd={this.onRightEdgeDragEnd}></div>
         </div>;
   }
 }

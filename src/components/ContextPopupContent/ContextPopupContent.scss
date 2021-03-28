@@ -1,32 +1,32 @@
-.ContextPopupContent {
+.context-popup-content {
 
     font-size: 0.75rem;
     
-    &__Key {
+    &__key {
 
         vertical-align: top;
         font-weight: bold;
         color: #444;
     }
     
-    &__Value {
+    &__value {
 
         font-weight: bold;
         color: #768;
     }
     
-    &__Separator {
+    &__separator {
     
         height: 0.25rem;
         border-bottom: dotted 1px black;
     }
     
-    &__PostSeparator {
+    &__post-separator {
     
         height: 0.25rem;
     }
 
-    &__Header {
+    &__header {
 
         color: #86D;
     }
