@@ -40,19 +40,18 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       "output-pane__text-group--light"
     ];
 
-    let concat = "";
+    let hash = 0;
 
     for (let i = 0; i < value.length; i++) {
 
-      concat += value[i].join("");
-    }
+      for (let j = 0; j < value[i].length; j++) {
 
-    let hash = 0;
+        for (let k = 0; k < value[i][j].length; k++) {
 
-    for (let i = 0; i < concat.length; i++) {
-      const char = concat.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash &= hash;
+          hash = (hash << 5) - hash + value[i][j].charCodeAt(k);
+          hash &= hash;
+        }
+      }
     }
 
     if (this.cachedOutputElement && hash === this.cachedHash) {
