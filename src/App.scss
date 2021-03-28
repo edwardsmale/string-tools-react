@@ -158,58 +158,11 @@ body,
   box-sizing: border-box;
 }
 
-.output-pane {
-
-  position: relative;
-  flex-basis: 100%;
-
-  &__value {
-
-    overflow: auto;
-  }
-
-  &__text-group {
-
-    &--light {
-      min-height: 1.125rem;
-      color: #008888;
-    } 
-
-    &--dark {
-      min-height: 1.125rem;
-      color: #000044;
-    }
-  }
-
-  &__text-item {
-
-    color: rgb(1, 1, 82);
-
-    &:last-child {
-      border: none;
-    }
-  }
-
-  &__overlay {
-
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: transparent;
-    opacity: 0.4;
-    color: #444;
-  }
-}
-
 .output-value__text-item--light {
   color: #008888;
 }
 
 .textarea {
-
-
 
   &__text-item {
 
