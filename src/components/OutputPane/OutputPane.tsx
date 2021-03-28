@@ -17,7 +17,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     super(props)
 
     this.cachedHash = 0;
-    this.cachedOutputElement = null;
+    this.cachedOutput = null;
 
     this.textUtilsService = props.textUtilsService;
 
@@ -27,18 +27,9 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
   private textUtilsService: TextUtilsService;
 
   private cachedHash: number;
-  private cachedOutputElement: JSX.Element | null;
+  private cachedOutput: JSX.Element | null;
 
   getOutputValue(value: string[][]) {
-
-    let output = [];
-
-    let alt = 0;
-
-    const classNames = [
-      "output-pane__text-group--dark",
-      "output-pane__text-group--light"
-    ];
 
     let hash = 0;
 
@@ -54,10 +45,19 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       }
     }
 
-    if (this.cachedOutputElement && hash === this.cachedHash) {
+    if (this.cachedOutput && hash === this.cachedHash) {
 
-      return this.cachedOutputElement;
+      return this.cachedOutput;
     }
+
+    let output = [];
+
+    let alt = 0;
+
+    const classNames = [
+      "output-pane__text-group--dark",
+      "output-pane__text-group--light"
+    ];
 
     for (let i = 0; i < value.length; i++) {
 
@@ -76,7 +76,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
       alt = 1 - alt;
     }
 
-    this.cachedOutputElement = (
+    this.cachedOutput = (
       <div key={hash}>
         {output}
       </div>
@@ -84,7 +84,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     this.cachedHash = hash;
 
-    return this.cachedOutputElement;
+    return this.cachedOutput;
   }
 
   getOverlayValue(value: string[][]) : string {
