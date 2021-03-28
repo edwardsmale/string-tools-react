@@ -48,6 +48,7 @@ class App extends React.Component<AppProps, AppState> {
   codeCompressionService: CodeCompressionService;
   contextService: ContextService;
   commandTypesService: CommandTypesService;
+  commandService: CommandService;
 
   constructor(props: AppProps) {
     super(props)
@@ -56,6 +57,13 @@ class App extends React.Component<AppProps, AppState> {
     this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
     this.contextService = new ContextService(this.textUtilsService);
     this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService), new UpperCommand(this.textUtilsService), new LowerCommand(this.textUtilsService));
+
+    this.commandService = new CommandService(
+      this.textUtilsService,
+      new CommandParsingService(this.textUtilsService, this.commandTypesService), 
+      this.commandTypesService, 
+      new ContextService(this.textUtilsService)
+    );
 
     const input = `Id,AccountRef,FirstName,LastName,City,Worth
 1,W11111,Edward,Smale,Leighton Buzzard,999.99
@@ -130,6 +138,7 @@ csv
   }
 
   componentDidMount() {
+
     window.addEventListener("hashchange", this.LocationHashChanged);
     
     if (window.location.hash) {
@@ -141,6 +150,7 @@ csv
   }
 
   componentWillUnmount() {
+
     window.removeEventListener("hashchange", this.LocationHashChanged);
   }
 
@@ -204,7 +214,7 @@ csv
       
       that.setState({ output: result, explanation: explanation });
     },
-    700);
+    350);
   }
 
   private executeCommands(input: string, code: string): string[][] {
@@ -219,38 +229,18 @@ csv
 
   private processCommands(input: string, code: string, explain: boolean): string[][] {
 
-    const commandService = this.getCommandService();
+    const lines = this.textUtilsService.TextToLines(input);
 
-    let lines = this.textUtilsService.TextToLines(input);
+    const context = this.contextService.CreateContext();
 
-    let context = this.contextService.CreateContext();
-
-    const result = commandService.processCommands(code, lines, explain, context);
+    const result = this.commandService.processCommands(code, lines, explain, context);
 
     if (!explain) {
+
       this.setState({ context: context });
     }
 
     return result; 
-  }
-
-  getCommandService(): CommandService {
-
-    let commandParsingService = new CommandParsingService(
-      this.textUtilsService,
-      this.commandTypesService
-    );
-
-    let contextService = new ContextService(
-      this.textUtilsService
-    );
-    
-    return new CommandService(
-      this.textUtilsService,
-      commandParsingService, 
-      this.commandTypesService, 
-      contextService
-    );
   }
 
   onDragStart(e: React.DragEvent<HTMLDivElement>) {
