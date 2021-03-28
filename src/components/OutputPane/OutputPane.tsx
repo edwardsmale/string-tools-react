@@ -18,6 +18,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     this.cachedHash = 0;
     this.cachedOutput = null;
 
+    this.escapedNewlineRegex = new RegExp(String.fromCharCode(0), "g");
+
     this.textUtilsService = props.textUtilsService;
 
     this.getOutputValue = this.getOutputValue.bind(this);
@@ -27,6 +29,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
   private cachedHash: number;
   private cachedOutput: JSX.Element | null;
+
+  private escapedNewlineRegex: RegExp;
 
   getOutputValue(value: string[][]) {
 
@@ -57,7 +61,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
           const text = value[i][j]
             .replace(/\\n/g, "\n")
-            .replace(new RegExp(String.fromCharCode(0), "g"), "\\n")
+            .replace(this.escapedNewlineRegex, "\\n")
             .replace(/\n$/, "\n\n");
 
           output.push(<div>{text}</div>);
@@ -81,7 +85,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
           const text = value[i][j]
             .replace(/\\n/g, "\n")
-            .replace(new RegExp(String.fromCharCode(0), "g"), "\\n");
+            .replace(this.escapedNewlineRegex, "\\n");
 
           output += text + "\n";
       }
