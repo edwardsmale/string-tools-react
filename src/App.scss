@@ -122,37 +122,6 @@ body,
   }
 }
 
-.code-window {
-
-  position: relative;
-  flex-basis: 100%;
-  overflow: hidden;
-
-  &__overlay {
-    opacity: 0.5;
-    color: chartreuse;
-  }
-}
-
-.explain-window {
-
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-
-  &__textarea {
-
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  &__text-item {
-
-    color: darkred;
-  }
-}
-
 .panes-container {
   display: flex;
   flex-grow: 1;
