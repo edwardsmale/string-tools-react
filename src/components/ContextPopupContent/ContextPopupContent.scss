@@ -4,13 +4,15 @@
     
     &__Key {
 
+        vertical-align: top;
         font-weight: bold;
         color: #444;
     }
     
     &__Value {
 
-        color: #000;
+        font-weight: bold;
+        color: #768;
     }
     
     &__Separator {
@@ -22,5 +24,10 @@
     &__PostSeparator {
     
         height: 0.25rem;
+    }
+
+    &__Header {
+
+        color: #86D;
     }
 }

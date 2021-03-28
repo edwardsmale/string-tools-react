@@ -14,7 +14,7 @@ class ContextPopupContent extends React.Component<ContextPopupContentProps, Cont
   render() {
     
     return <div className="ContextPopupContent">
-      <table>
+      <table cellPadding={3} cellSpacing={0}>
         <colgroup>
           <col width={100} />
           <col width="*" />
@@ -40,7 +40,14 @@ class ContextPopupContent extends React.Component<ContextPopupContentProps, Cont
           </tr>
           <tr>
             <td className="ContextPopupContent__Key">Headers</td>
-            <td className="ContextPopupContent__Value">{this.props.context.columnInfo.headers?.join(", ")}</td>
+            <td className="ContextPopupContent__Value">
+              <table cellPadding={1} cellSpacing={0}>
+                <tbody>
+                  {this.props.context.columnInfo.headers?.map((header, index) => (<tr><td className="ContextPopupContent__Header">{header}</td></tr>))}
+                </tbody>
+              </table>
+              
+            </td>
           </tr>
         </tbody>
       </table>

@@ -179,6 +179,9 @@ export class CommandTypesService {
 
                         var splitValues = (value as string).split(new RegExp(delimiter));
 
+                        context.newColumnInfo.numberOfColumns = splitValues.length;
+                        context.newColumnInfo.headers = null;
+
                         return splitValues;
                     }
                 }
