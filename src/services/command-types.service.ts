@@ -7,10 +7,12 @@ import { CamelCommand } from './commands/camel-command';
 import { PascalCommand } from './commands/pascal-command';
 import { KebabCommand } from './commands/kebab-command';
 import { UpperCommand } from './commands/upper-command';
+import { LowerCommand } from './commands/lower-command';
+import { DistinctCommand } from './commands/distinct-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand) {
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
         this.sortService = sortService;
@@ -19,6 +21,7 @@ export class CommandTypesService {
         this.kebabCommand = kebabCommand;
         this.upperCommand = upperCommand;
         this.lowerCommand = lowerCommand;
+        this.distinctCommand = distinctCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -263,22 +266,18 @@ export class CommandTypesService {
             para: [],
             isArrayBased: true,
             exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
                 if (explain) {
-                    return { explanation: "Delete duplicates" };
+                    
+                    return this.distinctCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.distinctCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
-                
-                    let input = value as string[];
-                    let result: string[] = [];
-
-                    for (let i = 0; i < input.length; i++) {
-
-                        if (!result.includes(input[i])) {
-                            result.push(input[i]);
-                        }
-                    }
-
-                    return [result];
+                    debugger;
+                    return this.distinctCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
