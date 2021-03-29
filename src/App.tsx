@@ -208,7 +208,19 @@ csv
 
     const that = this;
 
-    const timeoutLength = isSelect ? 650 : 350;
+    let timeoutLength: number;
+
+    if (this.inputPaneValue.length < 10000) {
+      timeoutLength = 0;
+    }
+    else if (this.inputPaneValue.length < 200000) {
+      timeoutLength = 100;
+    }
+    else {
+      timeoutLength = isSelect ? 650 : 350;
+    }
+
+    console.log(this.inputPaneValue.length);
 
     this.executeCodeTimeout = setTimeout(function () {
 
