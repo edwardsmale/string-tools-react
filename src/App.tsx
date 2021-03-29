@@ -224,7 +224,7 @@ csv
 
       const result = that.executeCommands(that.inputPaneValue, code);
       const explanation = that.explainCommands(that.inputPaneValue, code);
-      
+
       that.setState({ output: result, explanation: explanation });
     },
     timeoutLength);

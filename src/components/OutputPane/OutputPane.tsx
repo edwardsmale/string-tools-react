@@ -43,25 +43,19 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     while (i < value.length && !needReplace) {
 
-      if (value[i][j]) {
+      const line = value[i][j] || String.fromCharCode(10);
 
-        for (let k = 0; k < value[i][j].length; k++) {
+      for (let k = 0; k < line.length; k++) {
 
-          const charCode = value[i][j].charCodeAt(k);
+        const charCode = line.charCodeAt(k);
 
-          hash  = ((hash << 5) - hash) + charCode;
-          hash |= 0; // Convert to 32bit integer
+        hash  = ((hash << 5) - hash) + charCode;
+        hash |= 0; // Convert to 32bit integer
 
-          needReplace = needReplace || charCode === 0;
-        }
-
-        needReplace = needReplace || (value[i][j].includes("\\n") || value[i][j].endsWith("\n"));
+        needReplace = needReplace || charCode === 0;
       }
-      else {
 
-        hash  = ((hash << 5) - hash) + 10;
-        hash &= hash; // Convert to 32bit integer
-      }
+      needReplace = needReplace || (line.includes("\\n") || line.endsWith("\n"));
 
       if (++j >= value[i].length) {
 
@@ -72,18 +66,12 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     while (i < value.length) {
 
-      if (value[i][j]) {
+      const line = value[i][j] || String.fromCharCode(10);
 
-        for (let k = 0; k < value[i][j].length; k++) {
+      for (let k = 0; k < line.length; k++) {
 
-          hash  = ((hash << 5) - hash) + value[i][j].charCodeAt(k);
-          hash |= 0; // Convert to 32bit integer
-        }
-      }
-      else {
-
-        hash  = ((hash << 5) - hash) + 10;
-        hash &= hash; // Convert to 32bit integer
+        hash  = ((hash << 5) - hash) + line.charCodeAt(k);
+        hash |= 0; // Convert to 32bit integer
       }
 
       if (++j >= value[i].length) {
