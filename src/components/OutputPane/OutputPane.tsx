@@ -94,6 +94,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
       for (let i = 0; i < value.length; i++) {
 
+        let current = [];
+
         for (let j = 0; j < value[i].length; j++) {
 
             const text = value[i][j]
@@ -101,8 +103,10 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
               .replace(this.escapedNewlineRegex, "\\n")
               .replace(/\n$/, "\n\n");
 
-            output.push(<div>{text}</div>);
+            current.push(<div key={j}>{text}</div>);
         }
+
+        output.push(<div key={i}>{current}</div>)
       }
 
       this.cachedOutput = <div key={hash}>{output}</div>;
@@ -113,8 +117,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
       this.cachedOutput = (
         <div key={hash}>
-          {value.map(value_i => <div>
-            {value_i.map(value_j => <div>{value_j}</div>)}
+          {value.map((value_i, i) => <div key={i}>
+            {value_i.map((value_j, j) => <div key={j}>{value_j}</div>)}
           </div>)}
         </div>
       );
