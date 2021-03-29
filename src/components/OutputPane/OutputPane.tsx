@@ -85,10 +85,12 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
       return this.cachedOutput;
     }
-
-    let output = [];
+  
+    this.cachedHash = hash;
 
     if (needReplace) {
+
+      let output = [];
 
       for (let i = 0; i < value.length; i++) {
 
@@ -102,20 +104,23 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
             output.push(<div>{text}</div>);
         }
       }
+
+      this.cachedOutput = <div key={hash}>{output}</div>;
+  
+      return this.cachedOutput;
     }
     else {
 
-      for (let i = 0; i < value.length; i++) {
-
-        output.push(<div>{value[i].map(val => <div>{val}</div>)}</div>);
-      }
+      this.cachedOutput = (
+        <div key={hash}>
+          {value.map(value_i => <div>
+            {value_i.map(value_j => <div>{value_j}</div>)}
+          </div>)}
+        </div>
+      );
+  
+      return this.cachedOutput;
     }
-
-    this.cachedOutput = <div key={hash}>{output}</div>;
-
-    this.cachedHash = hash;
-
-    return this.cachedOutput;
   }
 
   getOverlayValue(value: string[][]) : string {
