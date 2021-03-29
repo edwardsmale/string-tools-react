@@ -220,8 +220,6 @@ csv
       timeoutLength = isSelect ? 650 : 350;
     }
 
-    console.log(this.inputPaneValue.length);
-
     this.executeCodeTimeout = setTimeout(function () {
 
       const result = that.executeCommands(that.inputPaneValue, code);

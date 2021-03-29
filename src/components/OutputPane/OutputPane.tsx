@@ -28,7 +28,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
   private textUtilsService: TextUtilsService;
 
   private cachedHash: number;
-  private cachedOutput: JSX.Element | null;
+  private cachedOutput: JSX.Element[] | null;
 
   private escapedNewlineRegex: RegExp;
 
@@ -49,12 +49,18 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
           const charCode = value[i][j].charCodeAt(k);
 
-          hash = (hash << 5) - hash + charCode;
+          hash  = ((hash << 5) - hash) + charCode;
+          hash |= 0; // Convert to 32bit integer
 
           needReplace = needReplace || charCode === 0;
         }
 
         needReplace = needReplace || (value[i][j].includes("\\n") || value[i][j].endsWith("\n"));
+      }
+      else {
+
+        hash  = ((hash << 5) - hash) + 10;
+        hash &= hash; // Convert to 32bit integer
       }
 
       if (++j >= value[i].length) {
@@ -70,8 +76,14 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
         for (let k = 0; k < value[i][j].length; k++) {
 
-          hash = (hash << 5) - hash + value[i][j].charCodeAt(k);
+          hash  = ((hash << 5) - hash) + value[i][j].charCodeAt(k);
+          hash |= 0; // Convert to 32bit integer
         }
+      }
+      else {
+
+        hash  = ((hash << 5) - hash) + 10;
+        hash &= hash; // Convert to 32bit integer
       }
 
       if (++j >= value[i].length) {
@@ -103,25 +115,23 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
               .replace(this.escapedNewlineRegex, "\\n")
               .replace(/\n$/, "\n\n");
 
-            current.push(<div key={j}>{text}</div>);
+            current.push(<div key={`${Math.random()}`}>{text}</div>);
         }
 
-        output.push(<div key={i}>{current}</div>)
+        output.push(<div key={`${Math.random()}`}>{current}</div>)
       }
 
-      this.cachedOutput = <div key={hash}>{output}</div>;
+      this.cachedOutput = output;
   
       return this.cachedOutput;
     }
     else {
 
-      this.cachedOutput = (
-        <div key={hash}>
-          {value.map((value_i, i) => <div key={i}>
-            {value_i.map((value_j, j) => <div key={j}>{value_j}</div>)}
-          </div>)}
-        </div>
-      );
+      this.cachedOutput = value.map((value_i, i) => 
+          <div key={`${Math.random()}`}>{value_i.map((value_j, j) =>
+              <div key={`${Math.random()}`}>{value_j}</div>
+            )}
+          </div>);
   
       return this.cachedOutput;
     }
