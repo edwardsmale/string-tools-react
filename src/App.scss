@@ -112,6 +112,7 @@ body,
 
   display: flex;
   flex-grow: 1;
+  max-height: 20rem;
 }
 
 .string-tools {
@@ -137,7 +138,8 @@ body,
   &__output-pane-container {
 
     display: flex;
-    flex-basis: 100%;
+    flex-grow: 1;
+    // flex-basis: 100%;
   }
 }
 

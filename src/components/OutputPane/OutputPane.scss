@@ -1,11 +1,16 @@
 .output-pane {
 
-    position: relative;
+    display: flex;  
     flex-basis: 100%;
+
+    &__textarea {
+      
+      flex-grow: 1;
+    }    
   
     &__value {
   
-      overflow: auto;
+      overflow: hidden;
     }
   
     > div > div {
@@ -16,17 +21,5 @@
       &:nth-child(2n) {
         color: #008888;
       }
-    }
-  
-    &__overlay {
-  
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: transparent;
-      opacity: 0.4;
-      color: #444;
     }
   }
