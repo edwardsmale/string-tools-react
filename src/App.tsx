@@ -30,8 +30,10 @@ interface AppState {
   code: string;
   compressedCode: string;
   explanation: string;
-  input: string;
+  input: string[];
+  inputHash: number;
   output: string[][];
+  outputHash: number;
   context: Context;
   topSectionHeight: number;
   codeWindowWidth: number;
@@ -39,6 +41,9 @@ interface AppState {
   draggedBorder: string | undefined;
   isHelpPopupVisible: boolean;
   isContextPopupVisible: boolean;
+  isMouseDown: boolean;
+  mouseX: number;
+  mouseY: number;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -341,15 +346,20 @@ csv
       code: this.codeWindowValue,
       compressedCode: this.codeCompressionService.CompressCode(this.codeWindowValue),
       explanation: this.explainCommands(input, this.codeWindowValue),
-      input: input,
+      input: this.textUtilsService.TextToLines(input),
+      inputHash: 0,
       output: [[]],
+      outputHash: 0,
       context: this.contextService.CreateContext(),
       topSectionHeight: 12,
       codeWindowWidth: 45,
       inputPaneWidth: 50,
       draggedBorder: undefined,
       isHelpPopupVisible: false,
-      isContextPopupVisible: false
+      isContextPopupVisible: false,
+      isMouseDown: false,
+      mouseX: 0,
+      mouseY: 0
     };
 
     this.executeCodeTimeout = null;
@@ -369,6 +379,25 @@ csv
     this.openContextPopup = this.openContextPopup.bind(this);
     this.closeContextPopup = this.closeContextPopup.bind(this);
     this.showFile = this.showFile.bind(this);
+
+    this.mouseDown = this.mouseDown.bind(this);
+    this.mouseUp = this.mouseUp.bind(this);
+    this.mouseMove = this.mouseMove.bind(this);
+  }
+
+  mouseDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) { 
+
+    this.setState({ isMouseDown: true }); 
+  }
+
+  mouseUp(e: React.MouseEvent<HTMLDivElement, MouseEvent>) { 
+
+    this.setState({ isMouseDown: false }); 
+  }
+
+  mouseMove(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
+
+    this.setState({ mouseX: e.clientX, mouseY: e.clientY }); 
   }
 
   UpdateCodeFromLocationHash() {
@@ -406,22 +435,26 @@ csv
 
   handleInputPaneInput(input: string) {
     
-    this.inputPaneValue = input.replace(/\\n/g, String.fromCharCode(0));
+    this.inputPaneValue = input
+      .replace(/\\n/g, String.fromCharCode(0));
 
-    this.setState({input: input});
+    this.setState({
+      input: this.textUtilsService.TextToLines(input),
+      inputHash: this.state.inputHash + 1 
+    });
 
     this.executeCode(this.codeWindowValue, false);
   }
 
   handleCodeWindowInput(code: string) {
+
+    this.setState({code: code});
         
     this.codeWindowValue = code;
 
     let compressedCode = this.codeCompressionService.CompressCode(code);
     
     window.location.hash = "#" + compressedCode;
-
-    this.setState({code: code});
   }
 
   handleCodeWindowSelect(code: string) {
@@ -474,7 +507,7 @@ csv
       const result = that.executeCommands(that.inputPaneValue, code);
       const explanation = that.explainCommands(that.inputPaneValue, code);
 
-      that.setState({ output: result, explanation: explanation });
+      that.setState({ output: result, outputHash: that.state.outputHash + 1, explanation: explanation });
     },
     timeoutLength);
   }
@@ -570,7 +603,7 @@ csv
 
   render() {
     return (
-      <div className="App">        
+      <div className="App" onMouseDown={this.mouseDown} onMouseUp={this.mouseUp} onMouseMove={this.mouseMove}>
         <div className={`${this.state.isHelpPopupVisible ? "" : "u-hidden"}`}>
           <Popup            
             onClose={this.closeHelpPopup}
@@ -617,16 +650,29 @@ csv
           <div className="panes-container">
             <div className="string-tools__input-pane-container" style={ { width: this.state.inputPaneWidth + "rem" }}>
               <InputPane 
-                lines={this.textUtilsService.TextToLines(this.state.input)}
+                lines={this.state.input}
+                hash={this.state.inputHash}
                 width={this.state.inputPaneWidth}
-                charWidth={1}
+                charWidth={0.4}
                 height={42} 
                 lineHeight={1.25} 
+                isMouseDown={this.state.isMouseDown}
+                mouseX={this.state.mouseX}
+                mouseY={this.state.mouseY}
                 textUtilsService={this.textUtilsService} />
             </div>
             <div className="string-tools__input-pane-border" draggable onDragStart={this.onDragStart} data-border-id="input-pane-border"></div>
             <div className="string-tools__output-pane-container">
-              <OutputPane output={this.state.output} height={42} lineHeight={1.25} textUtilsService={this.textUtilsService} />
+              <OutputPane 
+                output={this.state.output} 
+                hash={this.state.outputHash}
+                width={40}
+                charWidth={0.4}
+                height={42} 
+                lineHeight={1.25} 
+                isMouseDown={this.state.isMouseDown}
+                mouseX={this.state.mouseX}
+                mouseY={this.state.mouseY} />
             </div>
           </div>
         </div>

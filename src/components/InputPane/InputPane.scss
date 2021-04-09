@@ -6,5 +6,9 @@
     &__textarea {
 
       overflow: hidden;
+
+      > div {
+        height: 1.25rem;
+      }
     }
   }

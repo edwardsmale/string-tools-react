@@ -1,14 +1,18 @@
 import React from 'react';
 import { TextUtilsService } from '../../services/text-utils.service';
-import VerticalScrollbar from '../VerticalScrollbar/VerticalScrollbar';
+import Scrollbar from '../Scrollbar/Scrollbar';
 import './InputPane.scss';
 
 interface InputPaneProps {
   lines: string[];
+  hash: number;
   width: number;
   charWidth: number;
   height: number;
   lineHeight: number;
+  isMouseDown: boolean;
+  mouseX: number;
+  mouseY: number;
   textUtilsService: TextUtilsService;
 }
 
@@ -27,75 +31,58 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       scrollY: 0
     }
 
+    this.getVisibleWidth = this.getVisibleWidth.bind(this);
+    this.getContentWidth = this.getContentWidth.bind(this);
+    this.getContentHeight = this.getContentHeight.bind(this);
+    this.getVisibleHeight = this.getVisibleHeight.bind(this);
+
     this.getVisibleElements = this.getVisibleElements.bind(this);
-    this.getWidthInChars = this.getWidthInChars.bind(this);
-    this.getHeightInLines = this.getHeightInLines.bind(this);
-    this.getLengthOfVerticalScrollbar = this.getLengthOfVerticalScrollbar.bind(this);
-    this.getPositionOfVerticalScrollbar = this.getPositionOfVerticalScrollbar.bind(this);
-
-    this.downArrowClick = this.downArrowClick.bind(this);
-    this.upArrowClick = this.upArrowClick.bind(this);
-
-    this.downGutterClick = this.downGutterClick.bind(this);
-    this.upGutterClick = this.upGutterClick.bind(this);
   }
+
+  private lastGeneratedContentWidthHash: number | undefined;
+
+  private lastGeneratedContentWidth: number | undefined;
+
+  getVisibleWidth() { return this.props.width / this.props.charWidth; }
+
+  getContentWidth() { 
+
+    if (this.props.hash === this.lastGeneratedContentWidthHash && this.lastGeneratedContentWidth !== undefined) {
+
+      return this.lastGeneratedContentWidth;
+    }
+
+    let widest = 0;
+
+    for (let i = 0; i < Math.min(this.props.lines.length, 100000); i++) {
+
+      if (this.props.lines[i].length > widest) {
+
+        widest = this.props.lines[i].length;
+      }
+    }
+
+    this.lastGeneratedContentWidth = widest;
+    this.lastGeneratedContentWidthHash = this.props.hash;
+
+    return widest;
+  }
+
+  getVisibleHeight() { return this.props.height / this.props.lineHeight; }
+
+  getContentHeight() { return this.props.lines.length; }
 
   getVisibleElements() {
 
-    const a = this.state.scrollX;
-    const b = this.state.scrollX + this.getWidthInChars();
+    const aX = this.state.scrollX;
+    const bX = this.state.scrollX + this.getVisibleWidth();
+
+    const aY = this.state.scrollY;
+    const bY = this.state.scrollY + this.getVisibleHeight();
 
     return this.props.lines
-      .slice(this.state.scrollY, this.state.scrollY + this.getHeightInLines())
-      .map(line => { return <div key={`${Math.random()}`}>{line.substring(a, b)}</div>; })
-  }
-
-  getWidthInChars() {
-
-    return this.props.width / this.props.charWidth;
-  }
-
-  getHeightInLines() {
-
-    return this.props.height / this.props.lineHeight;
-  }
-
-  getLengthOfVerticalScrollbar() {
-
-    return 100.0 * this.getHeightInLines() / this.props.lines.length;
-  }
-
-  getPositionOfVerticalScrollbar() {
-
-    return 100.0 * this.state.scrollY / this.props.lines.length;
-  }
-
-  upArrowClick() {
-
-    if (this.state.scrollY > 0) {
-      this.setState({ scrollY: this.state.scrollY - 1 });
-    }
-  }
-
-  downArrowClick() {
-
-    if (this.state.scrollY + 1 < this.props.lines.length) {
-      this.setState({ scrollY: this.state.scrollY + 1 });
-    }
-  }
-
-  upGutterClick() {
-
-    if (this.state.scrollY > 0) {
-      this.setState({ scrollY: this.state.scrollY - 20 });
-    }
-  }
-
-  downGutterClick() {
-
-    if (this.state.scrollY + 20 < this.props.lines.length) {
-      this.setState({ scrollY: this.state.scrollY + 20 });
-    }
+      .slice(aY, bY)
+      .map(line => { return <div key={`${Math.random()}`}>{line.substring(aX, bX)}</div>; })
   }
 
   render () {  
@@ -104,19 +91,37 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         className="input-pane pane pane--left" 
         style={{ 
           width: this.props.width + "rem", 
-          height: this.props.height + "rem"
+          height: this.props.height + "rem",
+          flexDirection: "column"
         }}>
-        <div className="input-pane__textarea">
-          <div className="textarea">{this.getVisibleElements()}</div>
+        <div style={{
+            display: "flex",
+            flexDirection: "row",
+            overflow: "hidden"
+          }}>
+          <div className="input-pane__textarea textarea">
+            {this.getVisibleElements()}
+          </div>
+          <Scrollbar
+            isVertical={true}
+            isMouseDown={this.props.isMouseDown}
+            mousePos={this.props.mouseY}
+            contentLength={this.getContentHeight()}
+            visibleLength={this.getVisibleHeight()}
+            getScrollPosition={() => { return this.state.scrollY; }}
+            setScrollPosition={(scrollPosition: number) => this.setState({ scrollY: scrollPosition })}
+          ></Scrollbar>
+
         </div>
-        <VerticalScrollbar 
-          onUpArrowClick={this.upArrowClick}
-          onDownArrowClick={this.downArrowClick}
-          onUpGutterClick={this.upGutterClick}
-          onDownGutterClick={this.downGutterClick}
-          barPositionPercentage={this.getPositionOfVerticalScrollbar()}
-          barLengthPercentage={this.getLengthOfVerticalScrollbar()}
-        ></VerticalScrollbar>
+        <Scrollbar 
+          isVertical={false}
+          isMouseDown={this.props.isMouseDown}
+          mousePos={this.props.mouseX}
+          contentLength={this.getContentWidth()}
+          visibleLength={this.getVisibleWidth()}
+          getScrollPosition={() => { return this.state.scrollX; }}
+          setScrollPosition={(scrollPosition: number) => this.setState({ scrollX: scrollPosition })}
+        ></Scrollbar>        
       </div>
     );
   }

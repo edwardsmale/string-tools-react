@@ -1,0 +1,101 @@
+.scrollbar {
+
+    &--vertical {
+
+        flex-direction: column;
+
+        margin-left: auto;
+
+        .scrollbar {
+
+            &__backward-arrow::after {
+
+                content:"▲";
+            }
+        
+            &__forward-arrow::after {
+        
+                content:"▼";
+            }
+
+            &__gutter {
+
+                flex-direction: column;
+            }
+        }
+    }
+
+    &--horizontal {
+        
+        flex-direction: row;
+
+        margin-top: auto;
+        margin-right: 0.875rem;
+
+        .scrollbar {
+            
+            &__backward-arrow,
+            &__forward-arrow {
+
+                line-height: 0.5;
+            }
+
+            &__backward-arrow::after {
+
+                content:"◀";
+            }
+    
+            &__forward-arrow::after {
+    
+                content:"▶";
+            }
+
+            &__gutter {
+                
+                flex-direction: row;
+            }
+        }
+    }
+
+    display: flex;
+
+    flex-basis: 0.875rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+
+    &__backward-arrow,
+    &__forward-arrow {
+
+        flex: 0 0 1rem;
+
+        background-color: rgb(240, 240, 240);
+
+        text-align: center;
+        vertical-align: middle;
+
+        &:hover {
+            background-color: lightgray;
+        }
+
+        &::after {
+            font-size: 0.625rem;
+            color: #666;
+        }
+    }
+
+    &__gutter {
+
+        display: flex;
+
+        flex-grow: 1;
+        background-color: rgb(240, 240, 240);
+
+        &-bar {
+            background-color: lightgray;
+        }
+
+        &-after-bar {
+            flex-grow: 1;
+        }
+    }
+}
