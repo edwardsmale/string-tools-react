@@ -68,7 +68,7 @@ class Scrollbar extends React.Component<ScrollbarProps, ScrollbarState> {
 
   getLength() { 
     
-    return 100.0 * this.props.visibleLength / this.props.contentLength;
+    return Math.max(100.0 * this.props.visibleLength / this.props.contentLength, 5);
   }
 
   private lastPosition: number | undefined;

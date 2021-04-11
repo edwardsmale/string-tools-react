@@ -1,5 +1,4 @@
 import React from 'react';
-import { start } from 'repl';
 import Scrollbar from '../Scrollbar/Scrollbar';
 import './OutputPane.scss';
 
