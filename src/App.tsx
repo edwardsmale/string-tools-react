@@ -585,19 +585,44 @@ csv
 
     e.preventDefault();
 
-    const reader = new FileReader();
+    let contents = "";
+    
+    const load = (files: any) => {
 
-    reader.onload = (e) => { 
+      if (!files.length) {
 
-      if (e.target && e.target.result) {
-        
-        this.handleInputPaneInput(e.target.result.toString());
+        this.handleInputPaneInput(contents);
+
+        return;
       }
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => { 
+  
+        if (e.target && e.target.result) {
+
+          debugger;
+  
+          contents += e.target.result.toString() + "\n";
+
+          load(files.slice(1));
+        }
+      };
+
+      reader.readAsText(files[0]);
     };
 
     if (e.target && e.target.files) {
 
-      reader.readAsText(e.target.files[0]);
+      let files = [];
+
+      for (let i = 0; i < e.target.files.length; i++) {
+
+        files.push(e.target.files[i]);
+      }
+
+      load(files);
     }
   }
 
@@ -646,13 +671,13 @@ csv
             </div>
           </div>
           <div className="string-tools__top-section-border" draggable onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
-          <div><input type="file" onChange={(e) => this.showFile(e)} /></div>
+          <div><input type="file" multiple={true} onChange={(e) => this.showFile(e)} /></div>
           <div className="panes-container">
             <div className="string-tools__input-pane-container" style={ { width: this.state.inputPaneWidth + "rem" }}>
               <InputPane 
                 lines={this.state.input}
                 hash={this.state.inputHash}
-                width={this.state.inputPaneWidth}
+                width={this.state.inputPaneWidth} 
                 charWidth={0.4}
                 height={42} 
                 lineHeight={1.25} 
