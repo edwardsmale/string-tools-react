@@ -3,6 +3,9 @@ import Scrollbar from '../Scrollbar/Scrollbar';
 import './OutputPane.scss';
 
 interface OutputPaneProps {
+  onFocus: () => void;
+  hasFocus: boolean;
+  keyDownEventHandlers: ((event: KeyboardEvent) => void)[];
   output: string[][];
   hash: number;
   width: number;
@@ -17,6 +20,12 @@ interface OutputPaneProps {
 interface OutputPaneState {
   scrollX: number;
   scrollY: number;
+  caretCharIndex: number;
+  caretLineIndex: number;
+  selectionStartCharIndex: number;
+  selectionStartLineIndex: number;
+  selectionStopCharIndex: number;
+  selectionStopLineIndex: number;
 }
 
 class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
@@ -26,7 +35,13 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     this.state = {
       scrollX: 0,
-      scrollY: 0
+      scrollY: 0,
+      caretCharIndex: -1,
+      caretLineIndex: -1,
+      selectionStartCharIndex: -1,
+      selectionStartLineIndex: -1,
+      selectionStopCharIndex: -1,
+      selectionStopLineIndex: -1
     }
 
     this.escapedNewlineRegex = new RegExp(String.fromCharCode(0), "g");
@@ -37,6 +52,17 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     this.getVisibleHeight = this.getVisibleHeight.bind(this);
 
     this.getVisibleElements = this.getVisibleElements.bind(this);
+    this.updateSelectionState = this.updateSelectionState.bind(this);
+    this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.handleMouseUp = this.handleMouseUp.bind(this);
+
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount() {
+
+    this.props.keyDownEventHandlers.push(this.handleKeyDown);
   }
 
   private lastGeneratedContentWidthHash: number | undefined;
@@ -51,7 +77,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
   getContentWidth() { 
 
-    if (this.props.hash === this.lastGeneratedContentWidthHash && this.lastGeneratedContentWidth !== undefined) {
+    if (this.props.hash === this.lastGeneratedContentWidthHash && 
+        this.lastGeneratedContentWidth !== undefined) {
 
       return this.lastGeneratedContentWidth;
     }
@@ -79,7 +106,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
   getContentHeight(): number {
 
-    if (this.props.hash === this.lastGeneratedContentHeightHash && this.lastGeneratedContentHeight !== undefined) {
+    if (this.props.hash === this.lastGeneratedContentHeightHash && 
+        this.lastGeneratedContentHeight !== undefined) {
 
       return this.lastGeneratedContentHeight;
     }
@@ -100,22 +128,52 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
   private lastGeneratedVisibleElementsHash: number | undefined = undefined;
   private lastGeneratedVisibleElementsStartLine: number | undefined = undefined;
   private lastGeneratedVisibleElementsStopLine: number | undefined = undefined;
+
+  private lastGeneratedVisibleElementsCaretCharIndex: number | undefined = undefined;
+  private lastGeneratedVisibleElementsCaretLineIndex: number | undefined = undefined;
+
+  private lastGeneratedVisibleElementsSelectionStartCharIndex: number | undefined = undefined;
+  private lastGeneratedVisibleElementsSelectionStartLineIndex: number | undefined = undefined;
+
+  private lastGeneratedVisibleElementsSelectionStopCharIndex: number | undefined = undefined;
+  private lastGeneratedVisibleElementsSelectionStopLineIndex: number | undefined = undefined;
+
   private lastGeneratedVisibleElements: JSX.Element[] | undefined = undefined;
 
-  getVisibleElements(value: string[][]): JSX.Element[] {
+  getVisibleElements(): JSX.Element[] {
 
-    const startLine = this.state.scrollY;
-    const stopLine = this.state.scrollY + this.getVisibleHeight();
+    const value = this.props.output;
+
+    const aX = this.state.scrollX;
+    const bX = this.state.scrollX + this.getVisibleWidth();
+
+    const aY = this.state.scrollY;
+    const bY = this.state.scrollY + this.getVisibleHeight();
+
+    const caretCharIndex = this.state.caretCharIndex - this.state.scrollX;
+    const caretLineIndex = this.state.caretLineIndex - this.state.scrollY;
+
+    const selectionStartCharIndex = this.state.selectionStartCharIndex - this.state.scrollX;
+    const selectionStartLineIndex = this.state.selectionStartLineIndex - this.state.scrollY;
+
+    const selectionStopCharIndex = this.state.selectionStopCharIndex - this.state.scrollX;
+    const selectionStopLineIndex = this.state.selectionStopLineIndex - this.state.scrollY;
 
     if (this.props.hash === this.lastGeneratedVisibleElementsHash &&
-        startLine === this.lastGeneratedVisibleElementsStartLine &&
-        stopLine === this.lastGeneratedVisibleElementsStopLine &&
-         this.lastGeneratedVisibleElements !== undefined) {
+        aY === this.lastGeneratedVisibleElementsStartLine &&
+        bY === this.lastGeneratedVisibleElementsStopLine &&
+        caretCharIndex === this.lastGeneratedVisibleElementsCaretCharIndex &&
+        caretLineIndex === this.lastGeneratedVisibleElementsCaretLineIndex &&
+        selectionStartCharIndex === this.lastGeneratedVisibleElementsSelectionStartCharIndex &&
+        selectionStartLineIndex === this.lastGeneratedVisibleElementsSelectionStartLineIndex &&
+        selectionStopCharIndex === this.lastGeneratedVisibleElementsSelectionStopCharIndex &&
+        selectionStopLineIndex === this.lastGeneratedVisibleElementsSelectionStopLineIndex &&
+        this.lastGeneratedVisibleElements !== undefined) {
 
       return this.lastGeneratedVisibleElements;
-    }    
+    }
 
-    let output: JSX.Element[] = [];
+    let lineElements: JSX.Element[] = [];
 
     let count = 0;
 
@@ -123,39 +181,236 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
       for (let j = 0; j < value[i].length; j++) {
 
-        if (count >= startLine) {
+        if (count >= aY) {
+
+          const lineIndex = lineElements.length;
+
+          const isLineSelected = 
+            lineIndex > selectionStartLineIndex && 
+            lineIndex < selectionStopLineIndex;
 
           const text = value[i][j]
             .replace(/\\n/g, "\n")
             .replace(this.escapedNewlineRegex, "\\n")
             .replace(/\n$/, "\n\n");
+  
+          const visibleChars = text.substring(aX, bX);
+    
+          let charElements: JSX.Element[] = [];
+    
+          let isCharSelected = false;
+    
+          // Highlight partially-selected lines by adding a CSS class to individual chars.
+          // Highlight fully-selected lines by adding a CSS class to the lines.
+    
+          // If the selection spans multiple lines, and this is the last line, highlight
+          // chars until the stop char index.
+          
+          if (selectionStopLineIndex !== selectionStartLineIndex &&
+              lineIndex === selectionStopLineIndex) {
+            
+            isCharSelected = true;
+          }
 
-          output.push(<div key={`${Math.random()}`}>{text}</div>);
+          for (let charIndex = 0; charIndex < text.length; charIndex++) {
+
+            // If reached the selection start line and char, start highlighting chars.
+            if (lineIndex === selectionStartLineIndex && 
+                charIndex === selectionStartCharIndex) {
+            
+              isCharSelected = true;
+            }
+
+            let isCharCaret = 
+              caretCharIndex === charIndex && 
+              caretLineIndex === lineIndex;
+
+            if (caretLineIndex === lineIndex &&
+                caretCharIndex === visibleChars.length &&
+                charIndex === visibleChars.length - 1) {
+                isCharCaret = true;
+            }
+
+            charElements.push(
+              <i 
+                key={`${Math.random()}`} 
+                className={
+                  ("ch " +
+                  (isCharCaret ? "crt " : " ") +  
+                  (isCharSelected ? "chs ": " ")).trim()
+                }
+                onMouseDown={(event) => { this.handleMouseDown(event, charIndex, lineIndex); }}
+                onMouseMove={(event) => { this.handleMouseMove(event, charIndex, lineIndex); }}
+                onMouseUp={(event) => { this.handleMouseUp(event, charIndex, lineIndex); }}
+              >{visibleChars[charIndex]}</i>
+            );
+
+            // If past the selection stop line and char, stop highlighting chars.
+            if (lineIndex === selectionStopLineIndex &&
+                charIndex === selectionStopCharIndex) {
+    
+              isCharSelected = false;
+            }
+          }
+
+          lineElements.push(
+            <div
+              key={`${Math.random()}`}     
+              className={("ln " + (isLineSelected ? "lns " : " ")).trim()}         
+              onMouseDown={(event) => { this.handleMouseDown(event, text.length, lineIndex); }}
+              onMouseMove={(event) => { this.handleMouseMove(event, text.length, lineIndex); }}
+              onMouseUp={(event) => { this.handleMouseUp(event, text.length, lineIndex); }}
+            >{charElements}</div>
+          );
         }
 
         count++;
 
-        if (count >= stopLine) {
+        if (count >= bY) {
           break;
         }
       }
 
-      if (count >= stopLine) {
+      if (count >= bY) {
         break;
       }
     }
 
     this.lastGeneratedVisibleElementsHash = this.props.hash;
-    this.lastGeneratedVisibleElementsStartLine = startLine;
-    this.lastGeneratedVisibleElementsStopLine = stopLine;
-    this.lastGeneratedVisibleElements = output;
+    this.lastGeneratedVisibleElementsStartLine = aY;
+    this.lastGeneratedVisibleElementsStopLine = bY;
+    this.lastGeneratedVisibleElementsCaretCharIndex = caretCharIndex;
+    this.lastGeneratedVisibleElementsCaretLineIndex = caretLineIndex;
+    this.lastGeneratedVisibleElementsSelectionStartCharIndex = selectionStartCharIndex;
+    this.lastGeneratedVisibleElementsStartLine = selectionStartLineIndex;
+    this.lastGeneratedVisibleElementsSelectionStopCharIndex = selectionStopCharIndex;
+    this.lastGeneratedVisibleElementsStopLine = selectionStopLineIndex;
+    this.lastGeneratedVisibleElements = lineElements;
 
-    return output;
+    return lineElements;
+  }
+
+  mouseDownCharIndex: number = -1;
+  mouseDownLineIndex: number = -1;
+
+  updateSelectionState(charIndex: number, lineIndex: number) : void {
+
+    if (this.mouseDownCharIndex !== -1 && this.mouseDownLineIndex !== -1) {
+
+      if (this.mouseDownCharIndex !== charIndex || this.mouseDownLineIndex !== lineIndex) {
+
+        let startCharIndex = this.mouseDownCharIndex;
+        let startLineIndex = this.mouseDownLineIndex;
+
+        let stopCharIndex = charIndex;
+        let stopLineIndex = lineIndex;
+
+        if (this.mouseDownLineIndex > lineIndex || 
+           (this.mouseDownLineIndex === lineIndex && this.mouseDownCharIndex > charIndex)) {
+
+          // Swap them around if the user has highlighted backwards.
+
+          startCharIndex = charIndex;
+          startLineIndex = lineIndex;
+    
+          stopCharIndex = this.mouseDownCharIndex;
+          stopLineIndex = this.mouseDownLineIndex;
+        }
+
+        this.setState({ 
+          selectionStartCharIndex: startCharIndex,
+          selectionStartLineIndex: startLineIndex,
+          selectionStopCharIndex: stopCharIndex,
+          selectionStopLineIndex: stopLineIndex
+        });
+      }
+      else {
+
+        this.setState({ 
+          selectionStartCharIndex: -1,
+          selectionStartLineIndex: -1,
+          selectionStopCharIndex: -1,
+          selectionStopLineIndex: -1
+        });
+      }
+    }
+  }
+
+  handleMouseDown(event: React.MouseEvent<HTMLSpanElement, MouseEvent>, charIndex: number, lineIndex: number) : void {
+
+    event.stopPropagation();
+
+    charIndex += this.state.scrollX;
+    lineIndex += this.state.scrollY;
+
+    this.mouseDownCharIndex = charIndex;
+    this.mouseDownLineIndex = lineIndex;
+
+    this.props.onFocus();
+  }
+
+  handleMouseMove(event: React.MouseEvent<HTMLSpanElement, MouseEvent>, charIndex: number, lineIndex: number) : void {
+
+    event.stopPropagation();
+
+    charIndex += this.state.scrollX;
+    lineIndex += this.state.scrollY;
+
+    // Prevent weird behaviour when the mouse button was released while the
+    // mouse pointer was outside of the input pane, and therefore was not handled.
+    if (event.buttons === 0) {
+
+      this.mouseDownCharIndex = -1;
+      this.mouseDownLineIndex = -1;
+    }
+
+    this.updateSelectionState(charIndex, lineIndex);
+  }
+
+  handleMouseUp(event: React.MouseEvent<HTMLSpanElement, MouseEvent>, charIndex: number, lineIndex: number) : void {
+
+    event.stopPropagation();
+
+    charIndex += this.state.scrollX;
+    lineIndex += this.state.scrollY;
+
+    this.updateSelectionState(charIndex, lineIndex);
+
+    this.mouseDownCharIndex = -1;
+    this.mouseDownLineIndex = -1;
+
+    this.setState({ 
+      caretCharIndex: charIndex,
+      caretLineIndex: lineIndex 
+    });
+  }  
+
+  handleKeyDown(event: KeyboardEvent) : void {
+    
+    if (this.props.hasFocus) {
+
+      console.log("InputPane " + event.key);
+
+      if (event.ctrlKey === true) {
+
+        if (event.key === "a") {
+          
+          event.preventDefault();
+
+          this.mouseDownCharIndex = 0;
+          this.mouseDownLineIndex = 0;
+
+          const visibleElements = this.getVisibleElements();
+
+          this.updateSelectionState(999, visibleElements.length);
+        }
+      }
+    }
   }
 
   render() {
     return (
-      <div className="output-pane pane pane--right"
+      <div className={"output-pane pane pane--right " + (this.props.hasFocus ? "pane--focussed" : "")}
            style={{ 
              width: this.props.width + "rem",
              height: this.props.height + "rem",
@@ -167,7 +422,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
             overflow: "hidden"
           }}>
           <div className="output-pane__value textarea">
-            {this.getVisibleElements(this.props.output)}
+            {this.getVisibleElements()}
           </div>
           <Scrollbar
             isVertical={true}

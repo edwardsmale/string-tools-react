@@ -308,4 +308,82 @@ export class TextUtilsService {
             return "";
         }
     }
+
+    GetSubText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string {
+
+    if (startLineIndex !== stopLineIndex) {
+
+      let result = "";
+
+      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        
+        const line = lines[lineIndex];
+
+        if (lineIndex === startLineIndex) {
+
+          result += line.substring(startCharIndex) + "\n";
+        }
+        else if (lineIndex < stopLineIndex) {
+
+          result += line + "\n";
+        }
+        else if (lineIndex === stopLineIndex) {
+
+          result += line.substring(0, stopCharIndex) + "\n";
+        }
+      }
+
+      return result;
+    }
+    else {
+
+      const line = lines[startLineIndex];
+
+      return line.substring(startCharIndex, stopCharIndex + 1);
+    }
+  }
+
+  RemoveSubText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string {
+
+    let result = "";
+
+    if (startLineIndex !== stopLineIndex) {
+
+      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        
+        const line = lines[lineIndex];
+
+        if (lineIndex < startLineIndex || lineIndex > stopLineIndex) {
+
+          result += line + "\n";
+        }
+        else if (lineIndex === startLineIndex) {
+
+          result += line.substring(0, startCharIndex);
+        }
+        else if (lineIndex === stopLineIndex) {
+
+          result += line.substring(stopCharIndex + 1) + "\n";
+        }
+      }
+    }
+    else {
+
+      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+        
+        const line = lines[lineIndex];
+
+        if (lineIndex === startLineIndex) {
+
+          result += line.substring(0, startCharIndex) + line.substring(stopCharIndex + 1) + "\n";
+        }
+        else {
+
+          result += line + "\n";
+        }
+      }
+    }
+
+    return result;
+  }
 }
