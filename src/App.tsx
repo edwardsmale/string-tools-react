@@ -158,7 +158,9 @@ class App extends React.Component<AppProps, AppState> {
     this.executeCodeTimeout = null;
 
     this.removeInputPaneText = this.removeInputPaneText.bind(this);
+    this.insertInputPaneText = this.insertInputPaneText.bind(this);
     this.getInputPaneText = this.getInputPaneText.bind(this);
+    this.setInputPaneText = this.setInputPaneText.bind(this);
 
     this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
     this.handleCodeWindowSelect = this.handleCodeWindowSelect.bind(this);
@@ -255,6 +257,18 @@ class App extends React.Component<AppProps, AppState> {
     );
   }
 
+  setInputPaneText(lines: string[]) : void {
+
+    this.inputPaneValue = this.textUtilsService.LinesToText(lines);
+
+    this.setState({
+      input: lines,
+      inputHash: this.state.inputHash + 1
+    });
+
+    this.executeCode(this.codeWindowValue, false);
+  }
+
   removeInputPaneText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : void {
 
     const result = this.textUtilsService.RemoveSubText(
@@ -265,12 +279,31 @@ class App extends React.Component<AppProps, AppState> {
       stopLineIndex
     );
 
+    this.inputPaneValue = this.textUtilsService.LinesToText(result);
+
+    this.setState({
+      input: result,
+      inputHash: this.state.inputHash + 1
+    });
+
+    this.executeCode(this.codeWindowValue, false);
+  }
+
+  insertInputPaneText(lines: string[], charIndex: number, lineIndex: number, textToInsert: string) : void {
+
+    const result = this.textUtilsService.InsertSubText(
+      lines,
+      charIndex,
+      lineIndex,
+      textToInsert
+    );
+
     this.inputPaneValue = result;
 
     this.setState({
       input: this.textUtilsService.TextToLines(result),
       inputHash: this.state.inputHash + 1
-    })
+    });
 
     this.executeCode(this.codeWindowValue, false);
   }
@@ -505,11 +538,16 @@ class App extends React.Component<AppProps, AppState> {
             <div className="string-tools__code-window-container" style={ { width: this.state.codeWindowWidth + "rem" }}>
               <CodeWindow onInput={this.handleCodeWindowInput}
                           onSelect={this.handleCodeWindowSelect}
+                          onFocus={() => { this.setState({ focus: "CodeWindow" }); }}
+                          hasFocus={this.state.focus === "CodeWindow"}
                           textUtilsService={this.textUtilsService} value={this.state.code} />
             </div>
             <div className="string-tools__code-window-border" draggable onDragStart={this.onDragStart} data-border-id="code-window-border"></div>
             <div className="string-tools__explain-window-container">
-              <ExplainWindow explanation={this.state.explanation} textUtilsService={this.textUtilsService} />
+              <ExplainWindow explanation={this.state.explanation}
+                             onFocus={() => { this.setState({ focus: "ExplainWindow" }); }}
+                             hasFocus={this.state.focus === "ExplainWindow"}
+                             textUtilsService={this.textUtilsService} />
             </div>
           </div>
           <div className="string-tools__top-section-border" draggable onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
@@ -523,6 +561,8 @@ class App extends React.Component<AppProps, AppState> {
                 keyDownEventHandlers={this.keyDownEventHandlers}
                 removeInputPaneText={this.removeInputPaneText}
                 getInputPaneText={this.getInputPaneText}
+                setInputPaneText={this.setInputPaneText}
+                insertInputPaneText={this.insertInputPaneText}
                 lines={this.state.input}
                 hash={this.state.inputHash}
                 width={this.state.inputPaneWidth} 

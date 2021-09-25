@@ -52,6 +52,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     this.getVisibleHeight = this.getVisibleHeight.bind(this);
 
     this.getVisibleElements = this.getVisibleElements.bind(this);
+    this.countLines = this.countLines.bind(this);
+    this.getSelectedText = this.getSelectedText.bind(this);
     this.updateSelectionState = this.updateSelectionState.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
@@ -336,6 +338,60 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     }
   }
 
+  countLines(): number {
+
+    const value = this.props.output;
+
+    let lineCount = 0;
+
+    for (let i = 0; i < value.length; i++) {
+
+      for (let j = 0; j < value[i].length; j++) {
+
+          lineCount++;
+      }
+    }
+
+    return lineCount;
+  }
+
+  getSelectedText(): string {
+    
+    const value = this.props.output;
+
+    const startCharIndex = this.state.selectionStartCharIndex;
+    const startLineIndex = this.state.selectionStartLineIndex;
+
+    const stopCharIndex = this.state.selectionStopCharIndex;
+    const stopLineIndex = this.state.selectionStopLineIndex;
+
+    let lineCount = 0;
+    let lines = [];
+
+    for (let i = 0; i < value.length; i++) {
+
+      for (let j = 0; j < value[i].length; j++) {
+
+          if (lineCount === startLineIndex) {
+
+            lines.push(value[i][j].substring(startCharIndex));
+          }
+          else if (lineCount > startLineIndex && lineCount < stopLineIndex) {
+
+            lines.push(value[i][j]);
+          }
+          else if (lineCount === stopLineIndex) {
+
+            lines.push(value[i][j].substring(0, stopCharIndex + 1));
+          }
+
+          lineCount++;
+      }
+    }
+
+    return lines.join("\n");
+  }
+
   handleMouseDown(event: React.MouseEvent<HTMLSpanElement, MouseEvent>, charIndex: number, lineIndex: number) : void {
 
     event.stopPropagation();
@@ -389,8 +445,6 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     
     if (this.props.hasFocus) {
 
-      console.log("InputPane " + event.key);
-
       if (event.ctrlKey === true) {
 
         if (event.key === "a") {
@@ -400,9 +454,13 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           this.mouseDownCharIndex = 0;
           this.mouseDownLineIndex = 0;
 
-          const visibleElements = this.getVisibleElements();
+          this.updateSelectionState(999999, this.countLines());
+        }
+        else if (event.key === "c") {
 
-          this.updateSelectionState(999, visibleElements.length);
+          event.preventDefault();
+
+          navigator.clipboard.writeText(this.getSelectedText());
         }
       }
     }

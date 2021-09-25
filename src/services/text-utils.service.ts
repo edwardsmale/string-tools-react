@@ -26,9 +26,7 @@ export class TextUtilsService {
 
         value = value.replace(/\r\n/g, "\n");
 
-        if (value.endsWith("\n")) {
-            value = value.substring(0, value.length - 1);
-        }
+        value = this.RemoveTrailing(value, "\n");
 
         return value.split(/\n/g);
     }
@@ -281,10 +279,6 @@ export class TextUtilsService {
 
     GetLeadingWhitespace = (value: string): string => {
 
-        if (value.indexOf("Edward") !== -1) {
-            debugger;
-        }
-
         const leadingWhitespaceMatch = value.match(/^(\s+)/);
 
         if (leadingWhitespaceMatch) {
@@ -309,6 +303,17 @@ export class TextUtilsService {
         }
     }
 
+    RemoveTrailing = (value: string, textToRemove: string): string => {
+
+        if (value.endsWith(textToRemove)) {
+
+            return value.substring(0, value.length - textToRemove.length);
+        }
+        else {
+            return value;
+        }
+    }
+
     GetSubText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string {
 
     if (startLineIndex !== stopLineIndex) {
@@ -323,13 +328,13 @@ export class TextUtilsService {
 
           result += line.substring(startCharIndex) + "\n";
         }
-        else if (lineIndex < stopLineIndex) {
+        else if (lineIndex > startLineIndex && lineIndex < stopLineIndex) {
 
           result += line + "\n";
         }
         else if (lineIndex === stopLineIndex) {
 
-          result += line.substring(0, stopCharIndex) + "\n";
+          result += line.substring(0, stopCharIndex + 1) + "\n";
         }
       }
 
@@ -343,7 +348,7 @@ export class TextUtilsService {
     }
   }
 
-  RemoveSubText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string {
+  RemoveSubText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string[] {
 
     let result = "";
 
@@ -384,6 +389,27 @@ export class TextUtilsService {
       }
     }
 
+    return this.TextToLines(result);
+  }
+
+  InsertSubText(lines: string[], charIndex: number, lineIndex: number, textToInsert : string) : string {
+
+    let result = "";
+
+    for (let i = 0; i < lines.length; i++) {
+    
+        const line = lines[i];
+
+        if (i === lineIndex) {
+
+            result += line.substring(0, charIndex) + textToInsert + line.substring(charIndex) + "\n";
+        }
+        else {
+
+            result += line + "\n";
+        }
+    }
+ 
     return result;
   }
 }

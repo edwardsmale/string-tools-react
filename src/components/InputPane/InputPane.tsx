@@ -9,6 +9,8 @@ interface InputPaneProps {
   keyDownEventHandlers: ((event: KeyboardEvent) => void)[];
   removeInputPaneText: (lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) => void;
   getInputPaneText: (lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) => string;
+  setInputPaneText: (lines: string[]) => void;
+  insertInputPaneText: (lines: string[], charIndex: number, lineIndex: number, textToInsert: string) => void;
   lines: string[];
   hash: number;
   width: number;
@@ -303,59 +305,202 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     });
   }
 
-  clipboardText = "";
-
   handleKeyDown(event: KeyboardEvent) : void {
 
-    if (this.props.hasFocus) {
+    if (!this.props.hasFocus) {
+      return;
+    }
 
-      if (event.ctrlKey === true) {
+    if (event.ctrlKey || event.key.length === 1) {
+      event.preventDefault();
+    }
 
-        if (event.key === "a") {
+    let linesWithSelectedTextRemoved = this.props.lines;
 
-          event.preventDefault();
+    let charIndex = this.state.caretCharIndex + 1;
+    let lineIndex = this.state.caretLineIndex;
 
-          this.mouseDownCharIndex = 0;
-          this.mouseDownLineIndex = 0;
+    let changed = false;
 
-          this.updateSelectionState(
-            this.props.lines[this.props.lines.length - 1].length, 
-            this.props.lines.length
-          );
-        }
-        else if (event.key === "x") {
+    // If text is selected, modify charIndex, and create linesWithSelectedTextRemoved.
+    if (this.state.selectionStartCharIndex !== -1) {
 
-          event.preventDefault();
+      charIndex = this.state.selectionStartCharIndex;
+      lineIndex = this.state.selectionStartLineIndex;
 
-          this.clipboardText = this.props.getInputPaneText(
-            this.props.lines,
-            this.state.selectionStartCharIndex,
-            this.state.selectionStartLineIndex,
-            this.state.selectionStopCharIndex,
-            this.state.selectionStopLineIndex
-          );
+      linesWithSelectedTextRemoved = this.props.textUtilsService.RemoveSubText(
+        this.props.lines,
+        this.state.selectionStartCharIndex,
+        this.state.selectionStartLineIndex,
+        this.state.selectionStopCharIndex,
+        this.state.selectionStopLineIndex
+      );
+    }
 
-          console.log(this.clipboardText);
+    if (event.ctrlKey === true) {
 
-          this.props.removeInputPaneText(
-            this.props.lines,
-            this.state.selectionStartCharIndex,
-            this.state.selectionStartLineIndex,
-            this.state.selectionStopCharIndex,
-            this.state.selectionStopLineIndex
-          );
+      if (event.key === "a") {
 
-          this.setState({
-            caretCharIndex: this.state.selectionStartCharIndex - 1,
-            caretLineIndex: this.state.selectionStartLineIndex
-          })
+        // Select all
 
-          this.mouseDownCharIndex = -1;
-          this.mouseDownLineIndex = -1;
+        this.mouseDownCharIndex = 0;
+        this.mouseDownLineIndex = 0;
 
-          this.clearSelection();
+        this.updateSelectionState(
+          this.props.lines[this.props.lines.length - 1].length, 
+          this.props.lines.length
+        );
+      }
+      else if (event.key === "c") {
+
+        // Copy
+
+        const copiedText = this.props.getInputPaneText(
+          this.props.lines,
+          this.state.selectionStartCharIndex,
+          this.state.selectionStartLineIndex,
+          this.state.selectionStopCharIndex,
+          this.state.selectionStopLineIndex
+        );
+
+        navigator.clipboard.writeText(copiedText);
+      }
+      else if (event.key === "x") {
+
+        // Cut
+
+        const cutText = this.props.getInputPaneText(
+          this.props.lines,
+          this.state.selectionStartCharIndex,
+          this.state.selectionStartLineIndex,
+          this.state.selectionStopCharIndex,
+          this.state.selectionStopLineIndex
+        );
+
+        navigator.clipboard.writeText(cutText);
+
+        this.props.removeInputPaneText(
+          this.props.lines,
+          this.state.selectionStartCharIndex,
+          this.state.selectionStartLineIndex,
+          this.state.selectionStopCharIndex,
+          this.state.selectionStopLineIndex
+        );
+
+        changed = true;
+      }
+      else
+      {
+        if (event.key === "v") {
+
+          // Paste
+
+          navigator.clipboard.readText().then((pasteText) => {
+
+            pasteText = this.props.textUtilsService.RemoveTrailing(pasteText, "\n");
+
+            this.props.insertInputPaneText(
+              linesWithSelectedTextRemoved,
+              charIndex,
+              lineIndex,
+              pasteText
+            );
+
+            const lines = this.props.textUtilsService.TextToLines(pasteText);
+            const lastLine = lines[lines.length - 1];
+
+            charIndex = lines.length === 1 ? charIndex + lastLine.length : lastLine.length;
+            lineIndex = lineIndex + lines.length - 1;
+
+            // We have to do the setState and clearSelection here as we're inside a callback.
+
+            this.setState({
+              caretCharIndex: charIndex - 1,
+              caretLineIndex: lineIndex,
+            });
+        
+            this.clearSelection();
+          });
         }
       }
+    }
+    else if (event.key === "Enter") {
+
+      this.props.insertInputPaneText(
+        linesWithSelectedTextRemoved,
+        charIndex,
+        lineIndex,
+        "\n"
+      );
+
+      charIndex = 0;
+      lineIndex++;
+
+      changed = true;
+    }
+    else if (event.key === "Backspace") {
+
+      if (this.state.selectionStartCharIndex !== -1) {
+
+        this.props.setInputPaneText(linesWithSelectedTextRemoved);
+      } 
+      else {
+
+        this.props.removeInputPaneText(
+          this.props.lines,
+          this.state.caretCharIndex,
+          this.state.caretLineIndex,
+          this.state.caretCharIndex,
+          this.state.caretLineIndex
+        );
+
+        charIndex--;
+      }
+
+      changed = true;
+    }
+    else if (event.key === "Delete") {
+
+      if (this.state.selectionStartCharIndex !== -1) {
+
+        this.props.setInputPaneText(linesWithSelectedTextRemoved);
+      } 
+      else {
+
+        this.props.removeInputPaneText(
+          this.props.lines,
+          this.state.caretCharIndex + 1,
+          this.state.caretLineIndex,
+          this.state.caretCharIndex + 1,
+          this.state.caretLineIndex
+        );
+      }
+
+      changed = true;
+    }
+    else if (event.key.length === 1) {
+
+      // A letter, number of symbol key has been pressed.
+
+      this.props.insertInputPaneText(
+        linesWithSelectedTextRemoved,
+        charIndex,
+        lineIndex,
+        event.key
+      );
+
+      charIndex++;
+
+      changed = true;
+    }
+
+    this.setState({
+      caretCharIndex: charIndex - 1,
+      caretLineIndex: lineIndex,
+    });
+
+    if (changed) {
+      this.clearSelection();
     }
   }
 

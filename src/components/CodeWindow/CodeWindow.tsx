@@ -6,6 +6,8 @@ interface CodeWindowProps {
   value: string;
   onInput(input: string): any;
   onSelect(event: any): any;
+  onFocus: () => void;
+  hasFocus: boolean;
   textUtilsService: TextUtilsService;
 }
 
@@ -22,6 +24,8 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
     this.handleChange = this.handleChange.bind(this);
     this.getOverlayValue = this.getOverlayValue.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+
+    this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 
   private textUtilsService: TextUtilsService;
@@ -66,9 +70,17 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
     return overlayLines.join("\n");
   }
 
+  handleMouseDown(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) : void {
+
+    event.stopPropagation();
+
+    this.props.onFocus();
+  }
+
   render() {
     return (
-      <div className="code-window">
+      <div className={"code-window " + (this.props.hasFocus ? "code-window--focussed" : "")}
+           onMouseDown={(event) => { this.handleMouseDown(event); }}>
         <textarea
           className="textarea js-code-window-textarea"
           placeholder="Enter your instructions here"
