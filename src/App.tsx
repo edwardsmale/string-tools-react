@@ -343,7 +343,7 @@ class App extends React.Component<AppProps, AppState> {
       timeoutLength = 0;
     }
     else if (this.inputPaneValue.length < 1000) {
-      timeoutLength = 100;
+      timeoutLength = 0;
     }
     else {
       timeoutLength = isSelect ? 650 : 350;
@@ -364,9 +364,18 @@ class App extends React.Component<AppProps, AppState> {
     return this.processCommands(input, code, false);
   }
 
+  private lastExplanation: string = "";
+  private lastExplainCode: string = "";
+
   private explainCommands(input: string[], code: string): string {
 
-    return this.processCommands(input, code, true).join("\n");
+    if (code !== this.lastExplainCode) {
+
+      this.lastExplainCode = code;
+      this.lastExplanation =  this.processCommands(input, code, true).join("\n");
+    }
+
+    return this.lastExplanation;
   }
 
   private processCommands(input: string[], code: string, explain: boolean): string[][] {
@@ -430,7 +439,7 @@ class App extends React.Component<AppProps, AppState> {
 
     e.preventDefault();
 
-    let contents = "";
+    let contents: string[] = [];
     
     const load = (files: any) => {
 
@@ -438,8 +447,7 @@ class App extends React.Component<AppProps, AppState> {
 
         // We've read all the files, now set the input pane value.
 
-        const lines = this.textUtilsService.TextToLines(contents);
-        this.setInputPane(lines);
+        this.setInputPane(contents);
         return;
       }
 
@@ -449,7 +457,7 @@ class App extends React.Component<AppProps, AppState> {
   
         if (e.target && e.target.result) {
   
-          contents += e.target.result.toString() + "\n";
+          contents = contents.concat(this.textUtilsService.TextToLines(e.target.result.toString()));
 
           load(files.slice(1));
         }

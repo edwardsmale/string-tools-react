@@ -77,16 +77,130 @@ export class TextUtilsService {
         return lines.join("\n");
     }
 
+    Split = (value: string, pattern: string) => {
+
+        if (pattern.length === 1) {
+
+            return this.SplitOnText(value, pattern);
+        }
+        else if (this.IsAlphaNumeric(pattern)) {
+
+            return this.SplitOnText(value, pattern);
+        }
+        else {
+
+            return value.split(new RegExp(pattern));
+        }
+    }
+
+    SplitOnText = (value: string, text: string) => {
+
+        return value.split(text);
+    }
+
+    IsAlphaNumeric = (value: string) => {
+
+        let code, i, len;
+
+        for (i = 0, len = value.length; i < len; i++) {
+
+            code = value.charCodeAt(i);
+
+            if (!(code > 47 && code < 58) && // numeric (0-9)
+                !(code > 64 && code < 91) && // upper alpha (A-Z)
+                !(code > 96 && code < 123)) { // lower alpha (a-z)
+            
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // charCode 48 to 57 are the digits 0 to 9.
+    // charCode 45 is the minus sign.
+
     IsIntegral = (value: string) => {
-        return /^-{0,1}\d+$/.test(value);
+
+        if (!value || value === "-") {
+            return false;
+        }
+
+        let charCode = value.charCodeAt(0);
+
+        if (charCode > 57 || (charCode < 48 && charCode !== 45)) {
+            return false;
+        }
+
+        for (let i = 1; i < value.length; i++) {
+
+            charCode = value.charCodeAt(i);
+
+            if (charCode > 57 || charCode < 48) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     IsPositiveInteger = (value: string) => {
-        return /^[1-9]\d*$/.test(value);
+
+        if (!value) {
+            return false;
+        }
+        
+        let charCode = value.charCodeAt(0);
+
+        for (let i = 0; i < value.length; i++) {
+
+            charCode = value.charCodeAt(i);
+
+            if (charCode > 57 || charCode < 48) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     IsNumeric = (value: string) => {
-        return /^-{0,1}\d+(\.\d+)?$/.test(value);
+
+        if (!value || value === "-" || value === ".") {
+            return false;
+        }
+
+        let charCode = value.charCodeAt(0);
+
+        if (charCode > 57 || (charCode < 48 && charCode !== 45 && charCode !== 46)) {
+            return false;
+        }
+
+        let i = 1;
+
+        while (i < value.length && charCode !== 46) {
+
+            charCode = value.charCodeAt(i);
+
+            if (charCode > 57 || (charCode < 48 && charCode !== 46)) {
+                return false;
+            }
+
+            i++;
+        }
+
+        while (i < value.length && charCode !== 46) {
+
+            charCode = value.charCodeAt(i);
+
+            if (charCode > 57 || charCode < 48) {
+                return false;
+            }
+
+            i++;
+        }
+
+        return true;        
     }
 
     AsArray = (value: string | string[]): string[] => {

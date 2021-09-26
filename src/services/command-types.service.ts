@@ -150,9 +150,11 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
                 value = this.textUtilsService.AsScalar(value);
 
                 if (!para && context.regex) {
+
                     if (explain) {
                         return { explanation: "Split the text using the regex /" + context.regex + "/" };
                     } else {
@@ -160,6 +162,7 @@ export class CommandTypesService {
                     }
                 }
                 else if (!para && context.searchString) {
+
                     if (explain) {
                         return { explanation: "Split the text on '" + context.searchString + "'" };
                     } else {
@@ -172,15 +175,18 @@ export class CommandTypesService {
                     var delimiter = para || defaultDelimiter;
 
                     if (explain) {
+
                         var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false, true);
+
                         return { explanation: "Split the text on every " + formattedDelimiter };
+
                     } else {
 
                         if (delimiter.length === 1 && "|^$*()\\/[].+".includes(delimiter)) {
                             delimiter = "\\" + delimiter;
                         }
 
-                        var splitValues = (value as string).split(new RegExp(delimiter));
+                        var splitValues = this.textUtilsService.Split(value as string, delimiter);
 
                         context.newColumnInfo.numberOfColumns = splitValues.length;
                         context.newColumnInfo.headers = null;
@@ -271,13 +277,9 @@ export class CommandTypesService {
                     
                     return this.distinctCommand.Explain();
 
-                } else if (Array.isArray(value)) {
+                } else {
 
                     return this.distinctCommand.ExecuteArray(value as string[], para, negated, context);
-                }
-                else {
-                    debugger;
-                    return this.distinctCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },

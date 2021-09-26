@@ -46,7 +46,7 @@ export class CommandService {
                     else {
 
                         const newLineValue = commandType.exec(
-                            "dummy value",
+                            ["d"],
                             parsedCommand.para,
                             parsedCommand.negated,
                             context,                      
@@ -240,7 +240,7 @@ export class CommandService {
                             
                         } else {
 
-                            let commandType = parsedCommand.commandType as CommandType;
+                            const commandType = parsedCommand.commandType as CommandType;
 
                             let startJ = 0;
 
@@ -277,7 +277,9 @@ export class CommandService {
                     }
                 }
                 
-                this.contextService.UpdateContextDataTypes(context, newValues);
+                if (!explain) {
+                    this.contextService.UpdateContextDataTypes(context, newValues);
+                }
 
                 currentValues = newValues;
 
@@ -289,10 +291,10 @@ export class CommandService {
             if (explain) {
 
                 for (let i = 0; i < codeLines.length; i++) {
-                    let parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
-                    let para = parsedCommand.para;
-                    let negated = parsedCommand.negated;
-                    let explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
+                    const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
+                    const para = parsedCommand.para;
+                    const negated = parsedCommand.negated;
+                    const explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
                     output.push([explanation.explanation]);
                 }
 
@@ -322,6 +324,21 @@ export class CommandService {
     }
 
     private FlattenValues(currentValues: (string | string[])[]) {
+
+        let allScalar = true;
+
+        for (let j = 0; j < currentValues.length; j++) {
+            
+            if (Array.isArray(currentValues[j])) {
+
+                allScalar = false;
+                break;
+            }
+        }
+
+        if (allScalar) {
+            return currentValues as string[];
+        }
 
         let flattened: string[] = [];
 
