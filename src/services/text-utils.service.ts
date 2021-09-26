@@ -22,6 +22,18 @@ export class TextUtilsService {
         return value1.localeCompare(value2, 'en', { 'sensitivity': 'base' });
     }
 
+    ReplaceInLines = (lines: string[], find: string, replacement: string): string[] => {
+
+        let result = [];
+
+        for (let i = 0; i < lines.length; i++) {
+
+            result.push(this.GlobalStringReplace(lines[i], find, replacement));
+        }
+
+        return result;
+    }
+
     // Counts lines in an array of arrays.
     CountLines2 = (value: string[][]): number => {
   
@@ -477,7 +489,7 @@ export class TextUtilsService {
     return this.TextToLines(result);
   }
 
-  InsertSubText(lines: string[], charIndex: number, lineIndex: number, textToInsert : string) : string {
+  InsertSubText(lines: string[], charIndex: number, lineIndex: number, textToInsert : string) : string[] {
 
     let result = "";
 
@@ -495,6 +507,6 @@ export class TextUtilsService {
         }
     }
  
-    return result;
+    return this.TextToLines(result);
   }
 }

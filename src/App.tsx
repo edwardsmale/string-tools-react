@@ -49,7 +49,7 @@ interface AppState {
 
 class App extends React.Component<AppProps, AppState> {
 
-  inputPaneValue :string;
+  inputPaneValue :string[];
   codeWindowValue :string;
   textUtilsService: TextUtilsService;
   codeCompressionService: CodeCompressionService;
@@ -130,7 +130,7 @@ class App extends React.Component<AppProps, AppState> {
     Processed 2 pages for database 'OfflineReporting', file 'Paperstone_Log' on file 1.
     RESTORE DATABASE successfully processed 464986 pages in 21.161 seconds (171.669 MB/sec).`;
 
-    this.inputPaneValue = input;
+    this.inputPaneValue = this.textUtilsService.TextToLines(input);
     this.codeWindowValue = `regex 12:01:
     match`;
 
@@ -160,9 +160,8 @@ class App extends React.Component<AppProps, AppState> {
     this.removeInputPaneText = this.removeInputPaneText.bind(this);
     this.insertInputPaneText = this.insertInputPaneText.bind(this);
     this.getInputPaneText = this.getInputPaneText.bind(this);
-    this.setInputPaneText = this.setInputPaneText.bind(this);
+    this.setInputPane = this.setInputPane.bind(this);
 
-    this.handleInputPaneInput = this.handleInputPaneInput.bind(this);
     this.handleCodeWindowSelect = this.handleCodeWindowSelect.bind(this);
     this.handleCodeWindowInput = this.handleCodeWindowInput.bind(this);
     this.executeCommands = this.executeCommands.bind(this);
@@ -257,9 +256,9 @@ class App extends React.Component<AppProps, AppState> {
     );
   }
 
-  setInputPaneText(lines: string[]) : void {
+  setInputPane(lines: string[]) : void {
 
-    this.inputPaneValue = this.textUtilsService.LinesToText(lines);
+    this.inputPaneValue = lines;
 
     this.setState({
       input: lines,
@@ -279,14 +278,7 @@ class App extends React.Component<AppProps, AppState> {
       stopLineIndex
     );
 
-    this.inputPaneValue = this.textUtilsService.LinesToText(result);
-
-    this.setState({
-      input: result,
-      inputHash: this.state.inputHash + 1
-    });
-
-    this.executeCode(this.codeWindowValue, false);
+    this.setInputPane(result);
   }
 
   insertInputPaneText(lines: string[], charIndex: number, lineIndex: number, textToInsert: string) : void {
@@ -298,27 +290,7 @@ class App extends React.Component<AppProps, AppState> {
       textToInsert
     );
 
-    this.inputPaneValue = result;
-
-    this.setState({
-      input: this.textUtilsService.TextToLines(result),
-      inputHash: this.state.inputHash + 1
-    });
-
-    this.executeCode(this.codeWindowValue, false);
-  }
-
-  handleInputPaneInput(input: string) {
-    
-    this.inputPaneValue = input
-      .replace(/\\n/g, String.fromCharCode(0));
-
-    this.setState({
-      input: this.textUtilsService.TextToLines(input),
-      inputHash: this.state.inputHash + 1 
-    });
-
-    this.executeCode(this.codeWindowValue, false);
+    this.setInputPane(result);
   }
 
   handleCodeWindowInput(code: string) {
@@ -367,10 +339,10 @@ class App extends React.Component<AppProps, AppState> {
 
     let timeoutLength: number;
 
-    if (this.inputPaneValue.length < 10000) {
+    if (this.inputPaneValue.length < 100) {
       timeoutLength = 0;
     }
-    else if (this.inputPaneValue.length < 200000) {
+    else if (this.inputPaneValue.length < 1000) {
       timeoutLength = 100;
     }
     else {
@@ -387,23 +359,21 @@ class App extends React.Component<AppProps, AppState> {
     timeoutLength);
   }
 
-  private executeCommands(input: string, code: string): string[][] {
+  private executeCommands(input: string[], code: string): string[][] {
 
     return this.processCommands(input, code, false);
   }
 
-  private explainCommands(input: string, code: string): string {
+  private explainCommands(input: string[], code: string): string {
 
     return this.processCommands(input, code, true).join("\n");
   }
 
-  private processCommands(input: string, code: string, explain: boolean): string[][] {
-
-    const lines = this.textUtilsService.TextToLines(input);
+  private processCommands(input: string[], code: string, explain: boolean): string[][] {
 
     const context = this.contextService.CreateContext();
 
-    const result = this.commandService.processCommands(code, lines, explain, context);
+    const result = this.commandService.processCommands(code, input, explain, context);
 
     if (!explain) {
 
@@ -466,8 +436,10 @@ class App extends React.Component<AppProps, AppState> {
 
       if (!files.length) {
 
-        this.handleInputPaneInput(contents);
+        // We've read all the files, now set the input pane value.
 
+        const lines = this.textUtilsService.TextToLines(contents);
+        this.setInputPane(lines);
         return;
       }
 
@@ -476,8 +448,6 @@ class App extends React.Component<AppProps, AppState> {
       reader.onload = (e) => { 
   
         if (e.target && e.target.result) {
-
-          debugger;
   
           contents += e.target.result.toString() + "\n";
 
@@ -561,7 +531,7 @@ class App extends React.Component<AppProps, AppState> {
                 keyDownEventHandlers={this.keyDownEventHandlers}
                 removeInputPaneText={this.removeInputPaneText}
                 getInputPaneText={this.getInputPaneText}
-                setInputPaneText={this.setInputPaneText}
+                setInputPaneLines={this.setInputPane}
                 insertInputPaneText={this.insertInputPaneText}
                 lines={this.state.input}
                 hash={this.state.inputHash}

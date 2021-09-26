@@ -9,7 +9,7 @@ interface InputPaneProps {
   keyDownEventHandlers: ((event: KeyboardEvent) => void)[];
   removeInputPaneText: (lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) => void;
   getInputPaneText: (lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) => string;
-  setInputPaneText: (lines: string[]) => void;
+  setInputPaneLines: (lines: string[]) => void;
   insertInputPaneText: (lines: string[], charIndex: number, lineIndex: number, textToInsert: string) => void;
   lines: string[];
   hash: number;
@@ -442,7 +442,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
       if (this.state.selectionStartCharIndex !== -1) {
 
-        this.props.setInputPaneText(linesWithSelectedTextRemoved);
+        this.props.setInputPaneLines(linesWithSelectedTextRemoved);
       } 
       else {
 
@@ -463,7 +463,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
       if (this.state.selectionStartCharIndex !== -1) {
 
-        this.props.setInputPaneText(linesWithSelectedTextRemoved);
+        this.props.setInputPaneLines(linesWithSelectedTextRemoved);
       } 
       else {
 
