@@ -24,15 +24,29 @@ export class TextUtilsService {
 
     TextToLines = (value: string) => {
 
-        value = value.replace(/\r\n/g, "\n");
+        let result = [];
+        let current = "";
 
-        value = this.RemoveTrailing(value, "\n");
+        for (var i = 0; i < value.length; i++) {
 
-        return value.split(/\n/g);
+            if (value[i] === "\n") {
+                result.push(current);
+                current = "";
+            }
+            else if (value[i] !== "\r") {
+                current += value[i];
+            }
+        }
+
+        if (current) {
+            result.push(current);
+        }
+
+        return result;
     }
 
     LinesToText = (lines: string[]): string => {
-        return lines.join("\r\n");
+        return lines.join("\n");
     }
 
     IsIntegral = (value: string) => {
