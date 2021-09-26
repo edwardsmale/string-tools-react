@@ -589,7 +589,8 @@ class App extends React.Component<AppProps, AppState> {
                 lineHeight={1.25} 
                 isMouseDown={this.state.isMouseDown}
                 mouseX={this.state.mouseX}
-                mouseY={this.state.mouseY} />
+                mouseY={this.state.mouseY}
+                textUtilsService={this.textUtilsService} />
             </div>
           </div>
         </div>

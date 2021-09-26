@@ -1,4 +1,5 @@
 import React from 'react';
+import { TextUtilsService } from '../../services/text-utils.service';
 import Scrollbar from '../Scrollbar/Scrollbar';
 import './OutputPane.scss';
 
@@ -15,6 +16,7 @@ interface OutputPaneProps {
   isMouseDown: boolean;
   mouseX: number;
   mouseY: number;
+  textUtilsService: TextUtilsService;
 }
 
 interface OutputPaneState {
@@ -52,7 +54,6 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     this.getVisibleHeight = this.getVisibleHeight.bind(this);
 
     this.getVisibleElements = this.getVisibleElements.bind(this);
-    this.countLines = this.countLines.bind(this);
     this.getSelectedText = this.getSelectedText.bind(this);
     this.updateSelectionState = this.updateSelectionState.bind(this);
     this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -191,10 +192,13 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
             lineIndex > selectionStartLineIndex && 
             lineIndex < selectionStopLineIndex;
 
-          const text = value[i][j]
-            .replace(/\\n/g, "\n")
-            .replace(this.escapedNewlineRegex, "\\n")
-            .replace(/\n$/, "\n\n");
+          const text = this.props.textUtilsService.ReplaceTrailing(
+            value[i][j]
+              .replace(/\\n/g, "\n")
+              .replace(this.escapedNewlineRegex, "\\n"),
+            "\n", 
+            "\n\n"
+          );
   
           const visibleChars = text.substring(aX, bX);
     
@@ -338,23 +342,6 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     }
   }
 
-  countLines(): number {
-
-    const value = this.props.output;
-
-    let lineCount = 0;
-
-    for (let i = 0; i < value.length; i++) {
-
-      for (let j = 0; j < value[i].length; j++) {
-
-          lineCount++;
-      }
-    }
-
-    return lineCount;
-  }
-
   getSelectedText(): string {
     
     const value = this.props.output;
@@ -454,7 +441,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           this.mouseDownCharIndex = 0;
           this.mouseDownLineIndex = 0;
 
-          this.updateSelectionState(999999, this.countLines());
+          this.updateSelectionState(999999, this.props.textUtilsService.CountLines2(this.props.output));
         }
         else if (event.key === "c") {
 

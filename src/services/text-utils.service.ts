@@ -8,7 +8,7 @@ export class TextUtilsService {
     GlobalStringReplace = (value: string, find: string, replacement: string) => {
         return value.split(find).join(replacement);
     }
-
+    
     // Global string replacement with a regex.
     GlobalRegexReplace = (value: string, regex: string, replacement: string) => {
         return value.replace(new RegExp(regex, "g"), replacement);
@@ -20,6 +20,22 @@ export class TextUtilsService {
 
     CompareCaseInsensitive = (value1: string, value2: string) => {
         return value1.localeCompare(value2, 'en', { 'sensitivity': 'base' });
+    }
+
+    // Counts lines in an array of arrays.
+    CountLines2 = (value: string[][]): number => {
+  
+      let lineCount = 0;
+  
+      for (let i = 0; i < value.length; i++) {
+  
+        for (let j = 0; j < value[i].length; j++) {
+  
+            lineCount++;
+        }
+      }
+  
+      return lineCount;
     }
 
     TextToLines = (value: string) => {
@@ -317,6 +333,39 @@ export class TextUtilsService {
         }
     }
 
+    RemoveLeading = (value: string, textToRemove: string): string => {
+
+        if (value.startsWith(textToRemove)) {
+
+            return value.substring(value.length);
+        }
+        else {
+            return value;
+        }
+    }
+
+    EnsureLeading = (value: string, textToEnsure: string): string => {
+
+        if (!value.startsWith(textToEnsure)) {
+
+            return textToEnsure + value;
+        }
+        else {
+            return value;
+        }
+    }
+
+    ReplaceLeading = (value: string, leadingText: string, replacement: string): string => {
+
+        if (!value.startsWith(leadingText)) {
+
+            return value;
+        }
+        else {
+            return replacement + value.substring(leadingText.length);
+        }
+    }
+
     RemoveTrailing = (value: string, textToRemove: string): string => {
 
         if (value.endsWith(textToRemove)) {
@@ -325,6 +374,28 @@ export class TextUtilsService {
         }
         else {
             return value;
+        }
+    }
+
+    EnsureTrailing = (value: string, textToEnsure: string): string => {
+
+        if (!value.endsWith(textToEnsure)) {
+
+            return value + textToEnsure;
+        }
+        else {
+            return value;
+        }
+    }
+
+    ReplaceTrailing = (value: string, trailingText: string, replacement: string): string => {
+
+        if (!value.endsWith(trailingText)) {
+
+            return value;
+        }
+        else {
+            return value.substring(0, value.length - trailingText.length) + replacement;
         }
     }
 
