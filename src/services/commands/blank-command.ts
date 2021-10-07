@@ -11,7 +11,7 @@ export class BlankCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Matches blank lines only" };
+        return { explanation: "Filters to only include blanks" };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
