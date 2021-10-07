@@ -23,6 +23,7 @@ import HelpPopupContent from './components/HelpPopupContent/HelpPopupContent';
 import ContextPopupContent from './components/ContextPopupContent/ContextPopupContent';
 import { Context } from './interfaces/Context';
 import { DistinctCommand } from './services/commands/distinct-command';
+import { TrimCommand, TrimEndCommand, TrimStartCommand } from './services/commands/trim-command';
 
 interface AppProps {
 }
@@ -64,7 +65,7 @@ class App extends React.Component<AppProps, AppState> {
     this.textUtilsService = new TextUtilsService();
     this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
     this.contextService = new ContextService(this.textUtilsService);
-    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService), new UpperCommand(this.textUtilsService), new LowerCommand(this.textUtilsService), new DistinctCommand(), new BlankCommand(this.textUtilsService));
+    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService), new UpperCommand(this.textUtilsService), new LowerCommand(this.textUtilsService), new DistinctCommand(), new BlankCommand(this.textUtilsService), new TrimCommand(), new TrimStartCommand(), new TrimEndCommand());
 
     this.commandService = new CommandService(
       this.textUtilsService,
