@@ -203,6 +203,11 @@ export class TextUtilsService {
         return true;        
     }
 
+    IsNullOrWhitespace = (value: string) => {
+
+        return !value || value.length === 0 || /^\s+$/.test(value);
+    }
+
     AsArray = (value: string | string[]): string[] => {
         if (Array.isArray(value)) {
             return (value as string[]);

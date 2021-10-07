@@ -3,6 +3,7 @@ import { SortService } from './sort.service';
 import { CommandType, CommandParameter, SortCommandType } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
+import { BlankCommand } from './commands/blank-command';
 import { CamelCommand } from './commands/camel-command';
 import { PascalCommand } from './commands/pascal-command';
 import { KebabCommand } from './commands/kebab-command';
@@ -12,7 +13,8 @@ import { DistinctCommand } from './commands/distinct-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand) {
+
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
         this.sortService = sortService;
@@ -22,6 +24,7 @@ export class CommandTypesService {
         this.upperCommand = upperCommand;
         this.lowerCommand = lowerCommand;
         this.distinctCommand = distinctCommand;
+        this.blankCommand = blankCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -364,6 +367,26 @@ export class CommandTypesService {
                             return (value as string[]).slice(-n);
                         }
                     }
+                }
+            })
+        },
+        {
+            name: "blank",
+            desc: "Matches blank lines only",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.blankCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.blankCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.blankCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
