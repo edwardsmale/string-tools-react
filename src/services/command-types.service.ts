@@ -11,10 +11,11 @@ import { UpperCommand } from './commands/upper-command';
 import { LowerCommand } from './commands/lower-command';
 import { DistinctCommand } from './commands/distinct-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
+import { RemoveCommand } from './commands/remove-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand) {
 
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
@@ -29,6 +30,7 @@ export class CommandTypesService {
         this.trimCommand = trimCommand;
         this.trimStartCommand = trimStartCommand;
         this.trimEndCommand = trimEndCommand;
+        this.removeCommand = removeCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -451,6 +453,26 @@ export class CommandTypesService {
                 }
                 else {
                     return this.trimEndCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "remove",
+            desc: "Removes text matching a regex",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.removeCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.removeCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.removeCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
