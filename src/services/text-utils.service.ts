@@ -606,21 +606,28 @@ export class TextUtilsService {
   InsertSubText(lines: string[], charIndex: number, lineIndex: number, textToInsert : string) : string[] {
 
     let result = "";
-
-    for (let i = 0; i < lines.length; i++) {
     
-        const line = lines[i];
+    if (lines.length === 0) {
 
-        if (i === lineIndex) {
+        result = textToInsert;
+    }
+    else {
 
-            result += line.substring(0, charIndex) + textToInsert + line.substring(charIndex) + "\n";
-        }
-        else {
+        for (let i = 0; i < lines.length; i++) {
+        
+            const line = lines[i];
 
-            result += line + "\n";
+            if (i === lineIndex) {
+
+                result += line.substring(0, charIndex) + textToInsert + line.substring(charIndex) + "\n";
+            }
+            else {
+
+                result += line + "\n";
+            }
         }
     }
- 
+
     return this.TextToLines(result);
   }
 }

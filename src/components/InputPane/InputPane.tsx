@@ -517,9 +517,12 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         <div style={{
             display: "flex",
             flexDirection: "row",
-            overflow: "hidden"
+            overflow: "hidden",
+            flexGrow: 1
           }}>
-          <div className="input-pane__textarea textarea">
+          <div className="input-pane__textarea textarea" 
+               onMouseDown={(event) => { this.handleMouseDown(event, 0, 0); }}
+               onMouseUp={(event) => { this.handleMouseUp(event, 0, 0); }}>
             {this.getVisibleElements()}
           </div>
           <Scrollbar
