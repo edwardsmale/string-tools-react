@@ -25,6 +25,10 @@ import { Context } from './interfaces/Context';
 import { DistinctCommand } from './services/commands/distinct-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './services/commands/trim-command';
 import { RemoveCommand } from './services/commands/remove-command';
+import { EnsureLeadingCommand } from './services/commands/ensure-leading-command';
+import { EnsureTrailingCommand } from './services/commands/ensure-trailing-command';
+import { RemoveLeadingCommand } from './services/commands/remove-leading-command';
+import { RemoveTrailingCommand } from './services/commands/remove-trailing-command';
 
 interface AppProps {
 }
@@ -66,7 +70,7 @@ class App extends React.Component<AppProps, AppState> {
     this.textUtilsService = new TextUtilsService();
     this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
     this.contextService = new ContextService(this.textUtilsService);
-    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService), new UpperCommand(this.textUtilsService), new LowerCommand(this.textUtilsService), new DistinctCommand(), new BlankCommand(this.textUtilsService), new TrimCommand(), new TrimStartCommand(), new TrimEndCommand(), new RemoveCommand());
+    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService), new UpperCommand(this.textUtilsService), new LowerCommand(this.textUtilsService), new DistinctCommand(), new BlankCommand(this.textUtilsService), new TrimCommand(), new TrimStartCommand(), new TrimEndCommand(), new RemoveCommand(), new EnsureLeadingCommand(this.textUtilsService), new EnsureTrailingCommand(this.textUtilsService), new RemoveLeadingCommand(this.textUtilsService), new RemoveTrailingCommand(this.textUtilsService));
 
     this.commandService = new CommandService(
       this.textUtilsService,

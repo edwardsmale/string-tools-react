@@ -12,10 +12,14 @@ import { LowerCommand } from './commands/lower-command';
 import { DistinctCommand } from './commands/distinct-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
 import { RemoveCommand } from './commands/remove-command';
+import { EnsureLeadingCommand } from './commands/ensure-leading-command';
+import { EnsureTrailingCommand } from './commands/ensure-trailing-command';
+import { RemoveLeadingCommand } from './commands/remove-leading-command';
+import { RemoveTrailingCommand } from './commands/remove-trailing-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand) {
 
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
@@ -31,6 +35,10 @@ export class CommandTypesService {
         this.trimStartCommand = trimStartCommand;
         this.trimEndCommand = trimEndCommand;
         this.removeCommand = removeCommand;
+        this.ensureLeadingCommand = ensureLeadingCommand;
+        this.ensureTrailingCcommand = ensureTrailingCcommand;
+        this.removeLeadingCommand = removeLeadingCommand;
+        this.removeTrailingCommand = removeTrailingCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -473,6 +481,86 @@ export class CommandTypesService {
                 }
                 else {
                     return this.removeCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "ensureLeading",
+            desc: "Ensures each item starts with the specified string",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.ensureLeadingCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.ensureLeadingCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.ensureLeadingCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "ensureTrailing",
+            desc: "Ensures each item ends with the specified string",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.ensureTrailingCcommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.ensureTrailingCcommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.ensureTrailingCcommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "removeLeading",
+            desc: "Removes the specified string from the start of each item, if present",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.removeLeadingCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.removeLeadingCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.removeLeadingCommand.ExecuteScalar(value as string, para, negated, context);
+                }
+            })
+        },
+        {
+            name: "removeTrailing",
+            desc: "Removes the specified string from the end of each item, if present",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                if (explain) {
+                    
+                    return this.removeTrailingCommand.Explain();
+
+                } else if (Array.isArray(value)) {
+
+                    return this.removeTrailingCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.removeTrailingCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },

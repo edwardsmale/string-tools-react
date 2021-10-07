@@ -468,7 +468,7 @@ export class TextUtilsService {
 
         if (value.startsWith(textToRemove)) {
 
-            return value.substring(value.length);
+            return value.substring(textToRemove.length);
         }
         else {
             return value;
