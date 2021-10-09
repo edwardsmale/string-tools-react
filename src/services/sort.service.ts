@@ -17,17 +17,21 @@ export class SortService {
 
     SortArray = (values: string[]) => {
 
-        let that = this;
+        values = values.sort();
 
-        if (values.every(that.textUtilsService.IsNumeric)) {
+        // If the last item is numeric, then all the values must be numeric (because
+        // numbers come before letters in ASCII).
+           
+        if (!this.textUtilsService.IsNumeric(values[values.length - 1])) {
 
-            let numbers = (values as string[]).map(parseFloat);
-
-            return numbers.sort(function(a, b) { return a - b; }).map(function (num) { return num.toString(); });
+            return values;
         }
-        else {
-            return values.sort();
-        }
+
+        // Sort numerically.
+        
+        const numbers = (values as string[]).map(parseFloat);
+
+        return numbers.sort(function(a, b) { return a - b; }).map(function (num) { return num.toString(); });
     }
 
     SortArrays = (values: string[][], indices: SortOrderIndex[], context: Context) => {

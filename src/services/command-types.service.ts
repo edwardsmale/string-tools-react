@@ -133,17 +133,35 @@ export class CommandTypesService {
                 } else {
                     if (Array.isArray(value)) {
                         let newValue: string[] = [];
+                        const length = (value as string[]).length;
 
-                        for (let i = 0; i < (value as string[]).length; i++) {
-                            if (context.regex) {
-                                newValue.push(this.textUtilsService.GlobalRegexReplace(value[i], context.regex, para));
-                            } else if (context.searchString) {
-                                newValue.push(this.textUtilsService.GlobalStringReplace(value[i], context.searchString, para));
-                            } else {
-                                newValue.push(value[i]);
+                        if (context.regex) {
+
+                            const globalRegexReplace = this.textUtilsService.GlobalRegexReplace;
+
+                            for (let i = 0; i < length; i++) {
+
+                                newValue.push(globalRegexReplace(value[i], context.regex, para));
                             }
+
+                            return newValue;
                         }
-                        return newValue;
+                        else if (context.searchString) {
+
+                            const globalStringReplace = this.textUtilsService.GlobalStringReplace;
+                            
+                            for (let i = 0; i < length; i++) {
+                                
+                                newValue.push(globalStringReplace(value[i], context.searchString, para));
+                            }
+
+                            return newValue;
+
+                        } else {
+                            
+                            return value;
+                        }
+
                     } else {
                         if (context.regex) {
                             return this.textUtilsService.GlobalRegexReplace(value as string, context.regex, para);
@@ -225,9 +243,12 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                let indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
+                const indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
 
-                let descending = para.toLowerCase().indexOf("desc") !== -1;
+                const descending = para.toLowerCase().indexOf("desc") !== -1;
+
+                const sortArray = this.sortService.SortArray;
+                const sortArrays = this.sortService.SortArrays;
 
                 if (!indices.length) {
                     if (explain) {
@@ -241,9 +262,11 @@ export class CommandTypesService {
                         let sortedValues : string[];
 
                         if (value.length === 1 && Array.isArray(value[0])) {
-                            sortedValues = this.sortService.SortArray(value[0] as string[]);
+                            
+                            sortedValues = sortArray(value[0] as string[]);
                         } else {
-                            sortedValues = this.sortService.SortArray(value as string[]);
+
+                            sortedValues = sortArray(value as string[]);
                         }
 
                         if (descending) {
@@ -255,15 +278,20 @@ export class CommandTypesService {
                 } else {
                     
                     if (explain) {
+
                         let positions: string[] = [];
 
                         for (let i = 0; i < indices.length; i++) {
 
                             positions.push(indices[i].description);
                         }
+
                         return { explanation: "Sort by " + positions.join(", then by ") };
+
                     } else if (!para) {
+
                         return this.sortService.SortLines(value as string[]);
+
                     } else {
 
                         // Negative indexes count back from the end.
@@ -274,7 +302,7 @@ export class CommandTypesService {
                             }
                         }
 
-                        return this.sortService.SortArrays(
+                        return sortArrays(
                             value as string[][], 
                             indices,
                             context
