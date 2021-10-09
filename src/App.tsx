@@ -446,7 +446,7 @@ class App extends React.Component<AppProps, AppState> {
 
     e.preventDefault();
 
-    let contents: string;
+    let contents = "";
     
     const load = (files: any) => {
 

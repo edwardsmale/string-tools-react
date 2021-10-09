@@ -17,14 +17,14 @@ export class SortService {
 
     SortArray = (values: string[]) => {
 
-        values = values.sort();
+        const sortedValues = [...values].sort();
 
         // If the last item is numeric, then all the values must be numeric (because
         // numbers come before letters in ASCII).
            
-        if (!this.textUtilsService.IsNumeric(values[values.length - 1])) {
+        if (!this.textUtilsService.IsNumeric(sortedValues[sortedValues.length - 1])) {
 
-            return values;
+            return sortedValues;
         }
 
         // Sort numerically.
