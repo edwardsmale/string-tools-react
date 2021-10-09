@@ -3,7 +3,7 @@ import { CommandParsingService } from './command-parsing.service';
 import { CommandTypesService } from './command-types.service';
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
-import { CommandType, Explanation } from "../interfaces/CommandInterfaces";
+import { ScalarCommandType, ArrayCommandType, Explanation, CommandType } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
@@ -33,11 +33,14 @@ export class CommandService {
                     codeLines[i]
                 );
 
+                const commandType = parsedCommand.commandType as CommandType;
+
+                const scalarCommandType = parsedCommand.commandType as ScalarCommandType;
+                const arrayCommandType = parsedCommand.commandType as ArrayCommandType;
+
                 let newValues: (string | string[])[] = [];
 
                 if (explain) {
-
-                    let commandType = parsedCommand.commandType as CommandType;
 
                     if (commandType.name === "with") {
 
@@ -45,7 +48,7 @@ export class CommandService {
                     }
                     else {
 
-                        const newLineValue = commandType.exec(
+                        const newLineValue = arrayCommandType.exec(
                             ["d"],
                             parsedCommand.para,
                             parsedCommand.negated,
@@ -60,7 +63,7 @@ export class CommandService {
                 }
                 else {
 
-                    if (parsedCommand.commandType.name === "with") {
+                    if (commandType.name === "with") {
 
                         if (Array.isArray(currentValues)) {
 
@@ -90,7 +93,9 @@ export class CommandService {
                             
                             for (let j = 0; j < currentValues.length; j++) {
 
-                                let selectedVal = this.commandTypesService.FindCommandType("select").exec(
+                                const selectCommandType = this.commandTypesService.FindCommandType("select") as ScalarCommandType;
+
+                                let selectedVal = selectCommandType.exec(
                                     currentValues[j],
                                     parsedCommand.para,
                                     parsedCommand.negated,
@@ -126,7 +131,7 @@ export class CommandService {
                             i = j - 1;
                         }
                     }
-                    else if (parsedCommand.commandType.name === "flat") {
+                    else if (commandType.name === "flat") {
 
                         if (!parsedCommand.para || !this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
 
@@ -173,9 +178,9 @@ export class CommandService {
 
                         // Iterate through the lines and apply the command.
 
-                        if ((parsedCommand.commandType.isArrayBased && !Array.isArray(currentValues[0]))) {
+                        if (commandType.isArrayBased && !Array.isArray(currentValues[0])) {
 
-                            const newLineValue = parsedCommand.commandType.exec(
+                            const newLineValue = scalarCommandType.exec(
                                 currentValues as string[],
                                 parsedCommand.para,
                                 parsedCommand.negated,
@@ -195,7 +200,7 @@ export class CommandService {
 
                                 const flattenedValues = this.FlattenValues(currentValues);
 
-                                const newLineValue = parsedCommand.commandType.exec(
+                                const newLineValue = scalarCommandType.exec(
                                     flattenedValues,
                                     parsedCommand.para,
                                     parsedCommand.negated,
@@ -209,7 +214,7 @@ export class CommandService {
                             }
                             else {
                                 
-                                const newLineValue = parsedCommand.commandType.exec(
+                                const newLineValue = scalarCommandType.exec(
                                     currentValues as string[],
                                     parsedCommand.para,
                                     parsedCommand.negated,
@@ -226,7 +231,7 @@ export class CommandService {
 
                             const flattenedValues = this.FlattenValues(currentValues);
 
-                            const newLineValue = parsedCommand.commandType.exec(
+                            const newLineValue = scalarCommandType.exec(
                                 flattenedValues,
                                 parsedCommand.para,
                                 parsedCommand.negated,
@@ -240,15 +245,13 @@ export class CommandService {
                             
                         } else {
 
-                            const commandType = parsedCommand.commandType as CommandType;
-
                             let startJ = 0;
 
                             if (commandType.name === "header") {
 
                                 context.newColumnInfo.headers = null;
 
-                                commandType.exec(
+                                scalarCommandType.exec(
                                     currentValues[0] as string,
                                     parsedCommand.para,
                                     parsedCommand.negated,
@@ -261,7 +264,7 @@ export class CommandService {
 
                             for (let j = startJ; j < currentValues.length; j++) {
 
-                                const newLineValue = commandType.exec(
+                                const newLineValue = scalarCommandType.exec(
                                     currentValues[j] as string,
                                     parsedCommand.para,
                                     parsedCommand.negated,
@@ -292,9 +295,10 @@ export class CommandService {
 
                 for (let i = 0; i < codeLines.length; i++) {
                     const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
+                    const arrayCommandType = parsedCommand.commandType as ArrayCommandType;
                     const para = parsedCommand.para;
                     const negated = parsedCommand.negated;
-                    const explanation = parsedCommand.commandType.exec(lines, para, negated, context, true) as Explanation;
+                    const explanation = arrayCommandType.exec(lines, para, negated, context, true) as Explanation;
                     output.push([explanation.explanation]);
                 }
 
