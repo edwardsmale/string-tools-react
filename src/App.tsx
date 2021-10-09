@@ -436,46 +436,43 @@ class App extends React.Component<AppProps, AppState> {
 
     e.preventDefault();
 
+    function readFileAsText(file: any){
+
+      return new Promise(function(resolve,reject){
+          let fr = new FileReader();
+
+          fr.onload = function(){
+              resolve(fr.result);
+          };
+
+          fr.onerror = function(){
+              reject(fr);
+          };
+
+          fr.readAsText(file);
+      });
+    }
+
     let contents = "";
-    
-    const load = (files: any) => {
-
-      if (!files.length) {
-
-        // We've read all the files, now set the input pane value.
-
-        contents = contents.replace(/\r/g, "");
-
-        this.setInputPane(this.textUtilsService.TextToLines(contents));
-        
-        return;
-      }
-
-      const reader = new FileReader();
-
-      reader.onload = (e) => { 
-  
-        if (e.target && e.target.result) {
-  
-          contents += e.target.result.toString();
-
-          load(files.slice(1));
-        }
-      };
-
-      reader.readAsText(files[0]);
-    };
 
     if (e.target && e.target.files) {
 
-      let files = [];
+      let readers = [];
 
       for (let i = 0; i < e.target.files.length; i++) {
 
-        files.push(e.target.files[i]);
+        readers.push(readFileAsText(e.target.files[i]));
       }
+      
+      Promise.all(readers).then((values) => {
 
-      load(files);
+        for (let i = 0; i < values.length; i++) {
+          
+          contents += values[i] + "\n";
+        }
+
+        this.setInputPane(contents.split("\n"));
+      });
     }
   }
 
