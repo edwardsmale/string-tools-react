@@ -80,21 +80,6 @@ class App extends React.Component<AppProps, AppState> {
       new ContextService(this.textUtilsService)
     );
 
-//     const input = `Id,AccountRef,FirstName,LastName,City,Worth
-// 1,W11111,Edward,Smale,Leighton Buzzard,999.99
-// 1,W11112,Edward,Smale,Sheffield,800.01
-// 2,W22222,Stephen,Smale,Sheffield,700.50
-// 3,W33333,Jo,Smale,Roehampton,1100.45
-// 4,W44444,Jo,Burton,Barnes,1200.32
-// 5,W55555,Edward,Burton,London,44.76`;
-
-// const input = `Name VARCHAR(100) NOT NULL,
-// Brand VARCHAR(100) NOT NULL,
-// Colour VARCHAR(100) NULL,
-// BasePrice MONEY NOT NULL,
-// RRP MONEY NULL
-// `;
-
     const input = `ReportConsole
     -------------
     [08/22/2019 12:01:19] Up-to-date backup file already exists, skipping download. (Use -Force to download always.)
@@ -146,8 +131,8 @@ class App extends React.Component<AppProps, AppState> {
       focus: "InputPane",
       code: this.codeWindowValue,
       compressedCode: this.codeCompressionService.CompressCode(this.codeWindowValue),
-      explanation: this.explainCommands(input, this.codeWindowValue),
-      input: this.textUtilsService.TextToLines(input),
+      explanation: this.explainCommands(this.inputPaneValue, this.codeWindowValue),
+      input: this.inputPaneValue,
       inputHash: 0,
       output: [[]],
       outputHash: 0,
@@ -462,6 +447,7 @@ class App extends React.Component<AppProps, AppState> {
         contents = contents.replace(/\r/g, "");
 
         this.setInputPane(this.textUtilsService.TextToLines(contents));
+        
         return;
       }
 
