@@ -850,7 +850,7 @@ export class CommandTypesService {
                 desc: "If set, converts into batches of this size"
             }],
             isArrayBased: true,
-            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
                     if (this.textUtilsService.IsIntegral(para)) {
                         return { explanation: "Convert into arrays of " + para + " items" };
@@ -858,7 +858,19 @@ export class CommandTypesService {
                         return { explanation: "Flatten an array of arrays into one array" };
                     }
                 } else {
-                    return value;
+                    if (Array.isArray(value[0])) {
+                        let result = [];
+
+                        for (let i = 0; i < value.length; i++) {
+                            for (let j = 0; j < value[i].length; j++) {
+                                result.push(value[i][j]);
+                            }
+                        }
+                    }
+                    else {
+
+                        return value;
+                    }
                 }
             })
         },
