@@ -51,26 +51,7 @@ export class TextUtilsService {
     }
 
     TextToLines = (value: string) => {
-
-        let result = [];
-        let current = "";
-
-        for (var i = 0; i < value.length; i++) {
-
-            if (value[i] === "\n") {
-                result.push(current);
-                current = "";
-            }
-            else if (value[i] !== "\r") {
-                current += value[i];
-            }
-        }
-
-        if (current) {
-            result.push(current);
-        }
-
-        return result;
+        return value.split("\n");
     }
 
     LinesToText = (lines: string[]): string => {

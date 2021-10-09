@@ -306,23 +306,23 @@ class App extends React.Component<AppProps, AppState> {
         
     this.codeWindowValue = code;
 
-    let compressedCode = this.codeCompressionService.CompressCode(code);
+    const compressedCode = this.codeCompressionService.CompressCode(code);
     
     window.location.hash = "#" + compressedCode;
   }
 
   handleCodeWindowSelect(code: string) {
 
-    let txtarea = document.getElementsByClassName("js-code-window-textarea")[0] as HTMLTextAreaElement;
+    const txtarea = document.getElementsByClassName("js-code-window-textarea")[0] as HTMLTextAreaElement;
 
-    let start = txtarea.selectionStart;
-    let finish = txtarea.selectionEnd;
+    const start = txtarea.selectionStart;
+    const finish = txtarea.selectionEnd;
 
     if (finish - start > 0) {
 
       let selectedCode = txtarea.value.substring(start, finish);
 
-      let returnCount = txtarea.value.substring(0, start).split(/\n/g).filter(i => i).length;
+      const returnCount = txtarea.value.substring(0, start).split(/\n/g).filter(i => i).length;
 
       selectedCode = "\n".repeat(returnCount) + selectedCode;
 
@@ -453,6 +453,8 @@ class App extends React.Component<AppProps, AppState> {
       if (!files.length) {
 
         // We've read all the files, now set the input pane value.
+
+        contents = contents.replace(/\r/g, "");
 
         this.setInputPane(this.textUtilsService.TextToLines(contents));
         return;
