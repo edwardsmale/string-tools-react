@@ -155,7 +155,7 @@ class App extends React.Component<AppProps, AppState> {
       topSectionHeight: 12,
       codeWindowWidth: 45,
       inputPaneWidth: 50,
-      outputPaneWidth: 50,
+      outputPaneWidth: 80,
       draggedBorder: undefined,
       isHelpPopupVisible: false,
       isContextPopupVisible: false,
@@ -424,7 +424,10 @@ class App extends React.Component<AppProps, AppState> {
       this.setState({ codeWindowWidth: e.clientX / 16 });
     }
     else if (this.state.draggedBorder === "input-pane-border") {
-      this.setState({ inputPaneWidth: e.clientX / 16 });
+      this.setState({
+        inputPaneWidth: e.clientX / 16,
+        outputPaneWidth: (window.innerWidth - e.clientX) / 16 - 2
+      });
     }
   }
 
