@@ -46,6 +46,7 @@ interface AppState {
   topSectionHeight: number;
   codeWindowWidth: number;
   inputPaneWidth: number;
+  outputPaneWidth: number;
   draggedBorder: string | undefined;
   isHelpPopupVisible: boolean;
   isContextPopupVisible: boolean;
@@ -154,6 +155,7 @@ class App extends React.Component<AppProps, AppState> {
       topSectionHeight: 12,
       codeWindowWidth: 45,
       inputPaneWidth: 50,
+      outputPaneWidth: 50,
       draggedBorder: undefined,
       isHelpPopupVisible: false,
       isContextPopupVisible: false,
@@ -570,7 +572,7 @@ class App extends React.Component<AppProps, AppState> {
                 keyDownEventHandlers={this.keyDownEventHandlers}
                 output={this.state.output} 
                 hash={this.state.outputHash}
-                width={40}
+                width={this.state.outputPaneWidth}
                 charWidth={0.4}
                 height={42} 
                 lineHeight={1.25} 

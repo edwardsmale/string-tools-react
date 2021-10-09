@@ -179,6 +179,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     let lineElements: JSX.Element[] = [];
 
     let count = 0;
+    
+    const replaceTrailing = this.props.textUtilsService.ReplaceTrailing;
 
     for (let i = 0; i < value.length; i++) {
 
@@ -192,7 +194,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
             lineIndex > selectionStartLineIndex && 
             lineIndex < selectionStopLineIndex;
 
-          const text = this.props.textUtilsService.ReplaceTrailing(
+          const text = replaceTrailing(
             value[i][j]
               .replace(/\\n/g, "\n")
               .replace(this.escapedNewlineRegex, "\\n"),
