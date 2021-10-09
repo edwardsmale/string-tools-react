@@ -446,7 +446,7 @@ class App extends React.Component<AppProps, AppState> {
 
     e.preventDefault();
 
-    let contents: string[] = [];
+    let contents: string;
     
     const load = (files: any) => {
 
@@ -454,7 +454,7 @@ class App extends React.Component<AppProps, AppState> {
 
         // We've read all the files, now set the input pane value.
 
-        this.setInputPane(contents);
+        this.setInputPane(this.textUtilsService.TextToLines(contents));
         return;
       }
 
@@ -464,7 +464,7 @@ class App extends React.Component<AppProps, AppState> {
   
         if (e.target && e.target.result) {
   
-          contents = contents.concat(this.textUtilsService.TextToLines(e.target.result.toString()));
+          contents += e.target.result.toString();
 
           load(files.slice(1));
         }
