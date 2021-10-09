@@ -329,36 +329,22 @@ export class CommandService {
 
     private FlattenValues(currentValues: (string | string[])[]) {
 
-        let allScalar = true;
+        if (!Array.isArray(currentValues[0])) {
 
-        for (let j = 0; j < currentValues.length; j++) {
-            
-            if (Array.isArray(currentValues[j])) {
-
-                allScalar = false;
-                break;
-            }
+            return currentValues;
         }
+        else {
 
-        if (allScalar) {
-            return currentValues as string[];
-        }
+            let flattened: string[] = [];
 
-        let flattened: string[] = [];
-
-        for (let j = 0; j < currentValues.length; j++) {
-
-            if (Array.isArray(currentValues[j])) {
+            for (let j = 0; j < currentValues.length; j++) {
 
                 for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
                     flattened.push(currentValues[j][k]);
                 }
-
-            } else {
-                flattened.push(currentValues[j] as string);
             }
-        }
 
-        return flattened;
+            return flattened;
+        }
     }
 }
