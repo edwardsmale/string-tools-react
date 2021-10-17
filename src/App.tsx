@@ -220,6 +220,12 @@ class App extends React.Component<AppProps, AppState> {
 
   componentDidMount() {
 
+    // Adjust output pane width so that it fills the available space (given the
+    // input pane width).
+    this.setState({
+      outputPaneWidth: window.innerWidth / 16 - this.state.inputPaneWidth - 2
+    });    
+
     window.addEventListener("hashchange", this.LocationHashChanged);
     
     if (window.location.hash) {
