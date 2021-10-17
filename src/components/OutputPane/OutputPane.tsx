@@ -179,6 +179,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     let lineElements: JSX.Element[] = [];
 
     let count = 0;
+
+    let rowAlt = 0;
     
     const replaceTrailing = this.props.textUtilsService.ReplaceTrailing;
 
@@ -264,7 +266,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           lineElements.push(
             <div
               key={`${Math.random()}`}     
-              className={("ln " + (isLineSelected ? "lns " : " ")).trim()}         
+              className={("ln" + rowAlt + " " + (isLineSelected ? "lns " : " ")).trim()}         
               onMouseDown={(event) => { this.handleMouseDown(event, text.length, lineIndex); }}
               onMouseMove={(event) => { this.handleMouseMove(event, text.length, lineIndex); }}
               onMouseUp={(event) => { this.handleMouseUp(event, text.length, lineIndex); }}
@@ -278,6 +280,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           break;
         }
       }
+
+      rowAlt = 1 - rowAlt;
 
       if (count >= bY) {
         break;
