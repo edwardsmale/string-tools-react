@@ -44,6 +44,12 @@ body,
     border-bottom: $border-width #fff solid;
     background-color: #aaa;
     cursor: ns-resize;
+
+    &--dragged {
+
+      background-color: #333 !important;
+      height: 0.125rem;
+    }
   }
 
   &__popup-links {
@@ -84,6 +90,12 @@ body,
     flex-shrink: 0;
     
     box-sizing: border-box;
+
+    &--dragged {
+      
+      background-color: #aaa !important;
+      width: 0.125rem;
+    }
   }
 
   &__code-window-border {
@@ -121,8 +133,13 @@ body,
     
     border-left: $border-width #fff solid;
     border-right: $border-width #fff solid;
-    background-color: #aaa;
     cursor: ew-resize;
+
+    &--dragged {
+
+      width: 0.125rem;
+      background-color: #aaa !important;
+    }
   }
 
   &__output-pane-container {
@@ -204,20 +221,40 @@ body,
 
     &__top-section-border {
   
-      border-top-color: #333;
-      border-bottom-color: black;
+      border-color: black;
+      background-color: #333;
+
+      &--dragged {
+
+        background-color: #aaa !important;
+      }
+    }
+
+    &__bottom-button-bar {
+
+      border-bottom: solid 1px #333;
     }
 
     &__code-window-border {
 
-      border-left-color: #333;
-      border-right-color: black;
+      border-color: black;
+      background-color: #333;
+
+      &--dragged {
+        
+        background-color: #aaa !important;
+      }
     }
 
     &__input-pane-border {
 
       background-color: black;
       border-color: black;
+
+      &--dragged {
+        
+        background-color: #aaa !important;
+      }
     }
 
     &__input-pane-file-input {

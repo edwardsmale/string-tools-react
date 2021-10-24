@@ -169,7 +169,6 @@ match`;
     this.executeCommands = this.executeCommands.bind(this);
     this.executeCode = this.executeCode.bind(this);
     this.onDragStart = this.onDragStart.bind(this);
-    this.onDragOver = this.onDragOver.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.UpdateWidthsAndHeights = this.UpdateWidthsAndHeights.bind(this);
     this.LocationHashChanged = this.LocationHashChanged.bind(this);
@@ -427,25 +426,27 @@ match`;
 
   onDragEnd(e: React.DragEvent<HTMLDivElement>) {
 
-    this.setState({
-      draggedBorder: undefined
-    })
-  }
-
-  onDragOver(e: React.DragEvent<HTMLDivElement>) {
-
     if (this.state.draggedBorder === "top-section-border") {
-      this.setState({ topSectionHeight: e.clientY / 16 }, () => {
+
+      this.setState({ 
+        topSectionHeight: e.clientY / 16,
+        draggedBorder: undefined
+      }, () => {
         this.UpdateWidthsAndHeights();
       });
+
     }
     else if (this.state.draggedBorder === "code-window-border") {
-      this.setState({ codeWindowWidth: e.clientX / 16 });
+      this.setState({ 
+        codeWindowWidth: e.clientX / 16,
+        draggedBorder: undefined
+      });
     }
     else if (this.state.draggedBorder === "input-pane-border") {
       this.setState({
         inputPaneWidth: e.clientX / 16,
-        outputPaneWidth: (window.innerWidth - e.clientX) / 16 - 2
+        outputPaneWidth: (window.innerWidth - e.clientX) / 16 - 2,
+        draggedBorder: undefined
       });
     }
   }
@@ -558,7 +559,6 @@ match`;
           </Popup>
         </div>
         <div className="string-tools" 
-             onDragOver={this.onDragOver} 
              onDragEnd={this.onDragEnd}>
              <div className="string-tools__popup-links popup-links">
               <div className="popup-links__link darkmode-link" onClick={this.toggleDarkmode}></div>
@@ -575,7 +575,7 @@ match`;
                           hasFocus={this.state.focus === "CodeWindow"}
                           textUtilsService={this.textUtilsService} value={this.state.code} />
             </div>
-            <div className="string-tools__code-window-border" draggable onDragStart={this.onDragStart} data-border-id="code-window-border"></div>
+            <div className={"string-tools__code-window-border " + (this.state.draggedBorder === "code-window-border" ? "string-tools__code-window-border--dragged" : "")} draggable onDragStart={this.onDragStart} data-border-id="code-window-border"></div>
             <div className="string-tools__explain-window-container">
               <ExplainWindow explanation={this.state.explanation}
                              onFocus={() => { this.setState({ focus: "ExplainWindow" }); }}
@@ -583,7 +583,9 @@ match`;
                              textUtilsService={this.textUtilsService} />
             </div>
           </div>
-          <div className="string-tools__top-section-border" draggable onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
+          <div className={"string-tools__top-section-border " + (this.state.draggedBorder === "top-section-border" ? "string-tools__top-section-border--dragged" : "")}
+               draggable onDragStart={this.onDragStart}
+               data-border-id="top-section-border"></div>
           <div className="string-tools__bottom-button-bar" style={ { height: "2.5rem" }}>
             <div className="string-tools__input-pane-file-input-wrapper">
               <div className="string-tools__input-pane-file-input-replacement">
@@ -619,7 +621,9 @@ match`;
                 mouseY={this.state.mouseY}
                 textUtilsService={this.textUtilsService} />
             </div>
-            <div className="string-tools__input-pane-border" draggable onDragStart={this.onDragStart} data-border-id="input-pane-border"></div>
+            <div className={"string-tools__input-pane-border " + (this.state.draggedBorder === "input-pane-border" ? "string-tools__input-pane-border--dragged" : "")} 
+                 draggable onDragStart={this.onDragStart} 
+                 data-border-id="input-pane-border"></div>
             <div className="string-tools__output-pane-container">
               <OutputPane 
                 key="OutputPane"

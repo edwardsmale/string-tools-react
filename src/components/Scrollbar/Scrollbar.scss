@@ -79,11 +79,9 @@
 
         &::after {
             font-size: 0.625rem;
-            color: #666;
+            color: #888;
         }
     }
-
-    
 
     &__gutter {
 
@@ -104,20 +102,19 @@
 
 .App--darkmode {
     .scrollbar {
-        border: solid 1px #666;
 
         &__gutter-bar {
-            background-color: #444;
+            background-color: #222;
         }
 
         &__gutter-before-bar,
         &__gutter-after-bar {
-            background-color: black;
+            background-color: #111;
         }
 
         &__backward-arrow,
         &__forward-arrow {
-            background-color: #AAA;
+            background-color: #444;
         }        
     }
 }
