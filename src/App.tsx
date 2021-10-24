@@ -40,6 +40,7 @@ interface AppState {
   explanation: string;
   input: string[];
   inputHash: number;
+  inputFiles: string[];
   output: string[][];
   outputHash: number;
   context: Context;
@@ -136,6 +137,7 @@ match`;
       explanation: this.explainCommands(this.inputPaneValue, this.codeWindowValue),
       input: this.inputPaneValue,
       inputHash: 0,
+      inputFiles: [],
       output: [[]],
       outputHash: 0,
       context: this.contextService.CreateContext(),
@@ -175,6 +177,7 @@ match`;
     this.openContextPopup = this.openContextPopup.bind(this);
     this.closeContextPopup = this.closeContextPopup.bind(this);
     this.toggleDarkmode = this.toggleDarkmode.bind(this);
+    this.importFileClick = this.importFileClick.bind(this);
     this.showFile = this.showFile.bind(this);
 
     this.mouseDown = this.mouseDown.bind(this);
@@ -459,9 +462,27 @@ match`;
     this.setState({ darkmode: !this.state.darkmode});
   }
 
+  importFileClick() {
+    const fileInput = document.getElementsByClassName("js-input-pane-file-input")[0];
+
+    fileInput.click();
+  }
+
   showFile(e: React.ChangeEvent<HTMLInputElement>) {
 
     e.preventDefault();
+
+    if (e.target && e.target.files) {
+
+      let filenames = [];
+
+      for (let i = 0; i < e.target.files.length; i++) {
+
+        filenames.push(e.target.files[i].name);
+      }      
+
+      this.setState({inputFiles: filenames});
+    }
 
     function readFileAsText(file: any){
 
@@ -555,7 +576,19 @@ match`;
             </div>
           </div>
           <div className="string-tools__top-section-border" draggable onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
-          <div><input type="file" className="string-tools__input-pane-file-input" multiple={true} onChange={(e) => this.showFile(e)} /></div>
+          <div className="string-tools__bottom-button-bar">
+            <div className="string-tools__input-pane-file-input-wrapper">
+              <div className="string-tools__input-pane-file-input-replacement">
+                <button className="string-tools__input-pane-file-input-replacement-button"
+                        onClick={this.importFileClick}>Import File(s)</button>
+                <div className="string-tools__input-pane-file-input-file-list">{this.state.inputFiles.join(" | ")}</div>
+              </div>
+              <input type="file" 
+                     className="string-tools__input-pane-file-input js-input-pane-file-input" 
+                     multiple={true} 
+                     onChange={(e) => this.showFile(e)} />
+            </div>
+          </div>
           <div className="panes-container">
             <div className="string-tools__input-pane-container" style={ { width: this.state.inputPaneWidth + "rem" }}>
               <InputPane 
