@@ -45,6 +45,7 @@ interface AppState {
   outputHash: number;
   context: Context;
   topSectionHeight: number;
+  bottomButtonBarHeight: number;
   bottomSectionHeight: number;
   codeWindowWidth: number;
   inputPaneWidth: number;
@@ -142,6 +143,7 @@ match`;
       outputHash: 0,
       context: this.contextService.CreateContext(),
       topSectionHeight: 12,
+      bottomButtonBarHeight: 2.5,
       bottomSectionHeight: 44,
       codeWindowWidth: 45,
       inputPaneWidth: 50,
@@ -228,11 +230,15 @@ match`;
   }
 
   UpdateWidthsAndHeights() {
-    // Adjust output pane width so that it fills the available space (given the
-    // input pane width).
+
+    // Adjust output pane width and bottom section height to fill the available 
+    // space (given the  input pane width).
+
+    const availableVerticalSpace = (window.innerHeight / 16) - this.state.bottomButtonBarHeight;
+
     this.setState({
       outputPaneWidth: window.innerWidth / 16 - this.state.inputPaneWidth - 2,
-      bottomSectionHeight: window.innerHeight / 16 - this.state.topSectionHeight
+      bottomSectionHeight: availableVerticalSpace - this.state.topSectionHeight
     });
   }
 
@@ -429,7 +435,9 @@ match`;
   onDragOver(e: React.DragEvent<HTMLDivElement>) {
 
     if (this.state.draggedBorder === "top-section-border") {
-      this.setState({ topSectionHeight: e.clientY / 16 });
+      this.setState({ topSectionHeight: e.clientY / 16 }, () => {
+        this.UpdateWidthsAndHeights();
+      });
     }
     else if (this.state.draggedBorder === "code-window-border") {
       this.setState({ codeWindowWidth: e.clientX / 16 });
@@ -576,7 +584,7 @@ match`;
             </div>
           </div>
           <div className="string-tools__top-section-border" draggable onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
-          <div className="string-tools__bottom-button-bar">
+          <div className="string-tools__bottom-button-bar" style={ { height: "2.5rem" }}>
             <div className="string-tools__input-pane-file-input-wrapper">
               <div className="string-tools__input-pane-file-input-replacement">
                 <button className="string-tools__input-pane-file-input-replacement-button"
