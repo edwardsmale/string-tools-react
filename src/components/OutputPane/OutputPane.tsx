@@ -470,7 +470,8 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
         <div style={{ 
             display: "flex",
             flexDirection: "row",
-            overflow: "hidden"
+            overflow: "hidden",
+            flexGrow: 1
           }}>
           <div className="output-pane__value textarea">
             {this.getVisibleElements()}

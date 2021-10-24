@@ -5,3 +5,11 @@
     overflow: hidden;
     color: darkred;
   }
+
+.App--darkmode {
+
+  .explain-window {
+
+      color: lighten(darkred, 50%);
+    }
+}

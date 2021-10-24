@@ -12,3 +12,14 @@
       }
     }
   }
+  
+  .App--darkmode {
+
+    .input-pane {
+
+      .textarea {
+
+        color: darken(aquamarine, 40%);
+      }
+    }
+  }

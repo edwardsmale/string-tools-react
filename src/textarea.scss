@@ -64,3 +64,14 @@
   background-color: transparent;
   pointer-events: none; /* Ignore clicks on the overlay; let them bubble up to the code window text area. */
 }
+
+.App--darkmode {
+  .pane--focussed {
+
+    // caret
+    .crt {
+    
+      border-right: solid 1px white;
+    }
+  }
+}

@@ -83,6 +83,8 @@
         }
     }
 
+    
+
     &__gutter {
 
         display: flex;
@@ -97,5 +99,25 @@
         &-after-bar {
             flex-grow: 1;
         }
+    }    
+}
+
+.App--darkmode {
+    .scrollbar {
+        border: solid 1px #666;
+
+        &__gutter-bar {
+            background-color: #444;
+        }
+
+        &__gutter-before-bar,
+        &__gutter-after-bar {
+            background-color: black;
+        }
+
+        &__backward-arrow,
+        &__forward-arrow {
+            background-color: #AAA;
+        }        
     }
 }

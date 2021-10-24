@@ -44,6 +44,7 @@ interface AppState {
   outputHash: number;
   context: Context;
   topSectionHeight: number;
+  bottomSectionHeight: number;
   codeWindowWidth: number;
   inputPaneWidth: number;
   outputPaneWidth: number;
@@ -53,6 +54,7 @@ interface AppState {
   isMouseDown: boolean;
   mouseX: number;
   mouseY: number;
+  darkmode: boolean;
 }
 
 class App extends React.Component<AppProps, AppState> {
@@ -125,7 +127,7 @@ class App extends React.Component<AppProps, AppState> {
 
     this.inputPaneValue = this.textUtilsService.TextToLines(input);
     this.codeWindowValue = `regex 12:01:
-    match`;
+match`;
 
     this.state = {
       focus: "InputPane",
@@ -138,6 +140,7 @@ class App extends React.Component<AppProps, AppState> {
       outputHash: 0,
       context: this.contextService.CreateContext(),
       topSectionHeight: 12,
+      bottomSectionHeight: 44,
       codeWindowWidth: 45,
       inputPaneWidth: 50,
       outputPaneWidth: 80,
@@ -146,7 +149,8 @@ class App extends React.Component<AppProps, AppState> {
       isContextPopupVisible: false,
       isMouseDown: false,
       mouseX: 0,
-      mouseY: 0
+      mouseY: 0,  
+      darkmode: true
     };
 
     this.executeCodeTimeout = null;
@@ -163,12 +167,14 @@ class App extends React.Component<AppProps, AppState> {
     this.onDragStart = this.onDragStart.bind(this);
     this.onDragOver = this.onDragOver.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
+    this.UpdateWidthsAndHeights = this.UpdateWidthsAndHeights.bind(this);
     this.LocationHashChanged = this.LocationHashChanged.bind(this);
     this.UpdateCodeFromLocationHash = this.UpdateCodeFromLocationHash.bind(this);
     this.openHelpPopup = this.openHelpPopup.bind(this);
     this.closeHelpPopup = this.closeHelpPopup.bind(this);
     this.openContextPopup = this.openContextPopup.bind(this);
     this.closeContextPopup = this.closeContextPopup.bind(this);
+    this.toggleDarkmode = this.toggleDarkmode.bind(this);
     this.showFile = this.showFile.bind(this);
 
     this.mouseDown = this.mouseDown.bind(this);
@@ -218,13 +224,18 @@ class App extends React.Component<AppProps, AppState> {
     this.UpdateCodeFromLocationHash();
   }
 
-  componentDidMount() {
-
+  UpdateWidthsAndHeights() {
     // Adjust output pane width so that it fills the available space (given the
     // input pane width).
     this.setState({
-      outputPaneWidth: window.innerWidth / 16 - this.state.inputPaneWidth - 2
-    });    
+      outputPaneWidth: window.innerWidth / 16 - this.state.inputPaneWidth - 2,
+      bottomSectionHeight: window.innerHeight / 16 - this.state.topSectionHeight
+    });
+  }
+
+  componentDidMount() {
+
+    this.UpdateWidthsAndHeights();   
 
     window.addEventListener("hashchange", this.LocationHashChanged);
     
@@ -236,6 +247,8 @@ class App extends React.Component<AppProps, AppState> {
     this.executeCode(this.codeWindowValue, false);
 
     window.addEventListener("keydown", this.keyDown);
+
+    window.addEventListener('resize', this.UpdateWidthsAndHeights)
   }
 
   componentWillUnmount() {
@@ -243,6 +256,10 @@ class App extends React.Component<AppProps, AppState> {
     window.removeEventListener("hashchange", this.LocationHashChanged);
 
     window.removeEventListener("keydown", this.keyDown);
+
+    window.removeEventListener("keydown", this.keyDown);
+
+    window.removeEventListener('resize', this.UpdateWidthsAndHeights)
   }
 
   getInputPaneText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string {
@@ -438,6 +455,10 @@ class App extends React.Component<AppProps, AppState> {
     this.setState({ isContextPopupVisible: false });
   }
 
+  toggleDarkmode() {
+    this.setState({ darkmode: !this.state.darkmode});
+  }
+
   showFile(e: React.ChangeEvent<HTMLInputElement>) {
 
     e.preventDefault();
@@ -484,7 +505,7 @@ class App extends React.Component<AppProps, AppState> {
 
   render() {
     return (
-      <div className="App" onMouseDown={this.mouseDown} onMouseUp={this.mouseUp} onMouseMove={this.mouseMove}>
+      <div className={`App ${this.state.darkmode ? "App--darkmode" : ""}`} onMouseDown={this.mouseDown} onMouseUp={this.mouseUp} onMouseMove={this.mouseMove}>
         <div className={`${this.state.isHelpPopupVisible ? "" : "u-hidden"}`}>
           <Popup            
             onClose={this.closeHelpPopup}
@@ -511,6 +532,8 @@ class App extends React.Component<AppProps, AppState> {
              onDragOver={this.onDragOver} 
              onDragEnd={this.onDragEnd}>
              <div className="string-tools__popup-links popup-links">
+              <div className="popup-links__link darkmode-link" onClick={this.toggleDarkmode}></div>
+              <div className="popup-links__separator">|</div>
               <div className="popup-links__link popup-links__context-link" onClick={this.openContextPopup}>context</div>
               <div className="popup-links__separator">|</div>
               <div className="popup-links__link popup-links__help-link" onClick={this.openHelpPopup}>help</div>
@@ -532,7 +555,7 @@ class App extends React.Component<AppProps, AppState> {
             </div>
           </div>
           <div className="string-tools__top-section-border" draggable onDragStart={this.onDragStart} data-border-id="top-section-border"></div>
-          <div><input type="file" multiple={true} onChange={(e) => this.showFile(e)} /></div>
+          <div><input type="file" className="string-tools__input-pane-file-input" multiple={true} onChange={(e) => this.showFile(e)} /></div>
           <div className="panes-container">
             <div className="string-tools__input-pane-container" style={ { width: this.state.inputPaneWidth + "rem" }}>
               <InputPane 
@@ -548,7 +571,7 @@ class App extends React.Component<AppProps, AppState> {
                 hash={this.state.inputHash}
                 width={this.state.inputPaneWidth} 
                 charWidth={0.4}
-                height={42} 
+                height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
                 isMouseDown={this.state.isMouseDown}
                 mouseX={this.state.mouseX}
@@ -566,7 +589,7 @@ class App extends React.Component<AppProps, AppState> {
                 hash={this.state.outputHash}
                 width={this.state.outputPaneWidth}
                 charWidth={0.4}
-                height={42} 
+                height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
                 isMouseDown={this.state.isMouseDown}
                 mouseX={this.state.mouseX}
