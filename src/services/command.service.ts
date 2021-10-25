@@ -3,7 +3,7 @@ import { CommandParsingService } from './command-parsing.service';
 import { CommandTypesService } from './command-types.service';
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
-import { ScalarCommandType, ArrayCommandType, Explanation, CommandType } from "../interfaces/CommandInterfaces";
+import { ScalarCommandType, ArrayCommandType, Explanation } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
