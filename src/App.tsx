@@ -520,7 +520,9 @@ match`;
           contents += values[i] + "\n";
         }
 
-        this.setInputPane(contents.split("\n"));
+        const lines = this.textUtilsService.TextToLines(contents);
+
+        this.setInputPane(lines);
       });
     }
   }

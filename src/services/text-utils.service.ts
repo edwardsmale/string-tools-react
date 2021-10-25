@@ -52,7 +52,7 @@ export class TextUtilsService {
     }
 
     TextToLines = (value: string) => {
-        return value.split("\n");
+        return this.GlobalStringReplace(value, "\r", "").split("\n");
     }
 
     LinesToText = (lines: string[]): string => {
@@ -366,10 +366,7 @@ export class TextUtilsService {
                 let header = headersOrderedByLength[i].header;
                 let index = headersOrderedByLength[i].index;
 
-                result = result.replace(
-                    new RegExp(header, "g"), 
-                    index.toString()
-                );
+                result = this.GlobalStringReplace(result, header, index.toString());
             }
         }
 
