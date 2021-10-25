@@ -70,7 +70,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
   private lastGeneratedContentWidth: number | undefined;
 
-  getVisibleWidth() { return this.props.width / this.props.charWidth; }
+  getVisibleWidth() { return Math.round(this.props.width / this.props.charWidth); }
 
   getContentWidth() { 
 
@@ -95,7 +95,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     return widest;
   }
 
-  getVisibleHeight() { return this.props.height / this.props.lineHeight; }
+  getVisibleHeight() { return Math.round(this.props.height / this.props.lineHeight); }
 
   getContentHeight() { return this.props.lines.length; }
 
@@ -107,14 +107,11 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     const visibleRange: TextRange = {
       startChar: scrollX,
       startLine: scrollY,
-      stopChar: scrollX + this.getVisibleWidth(),
-      stopLine: scrollY + this.getVisibleHeight()
+      stopChar: Math.min(scrollX + this.getVisibleWidth(), this.getContentWidth()),
+      stopLine: Math.min(scrollY + this.getVisibleHeight(), this.getContentHeight())
     }
 
-    const visibleLines = this.props.lines.slice(
-      visibleRange.startLine,
-      visibleRange.stopLine
-    );
+    const visibleLinesLength = visibleRange.stopLine - visibleRange.startLine;
 
     let lineElements: JSX.Element[] = [];
 
@@ -135,17 +132,14 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       line: this.state.caretPos.line
     };
 
-    for (let lineIndex = 0; lineIndex < visibleLines.length; lineIndex++) {
+    for (let lineIndex = 0; lineIndex < visibleLinesLength; lineIndex++) {
 
       const isLineSelected = 
         scrolledSelection !== null &&
         lineIndex > scrolledSelection.startLine && 
         lineIndex < scrolledSelection.stopLine;
 
-      const visibleChars = visibleLines[lineIndex].substring(
-        visibleRange.startChar,
-        visibleRange.stopChar
-      );
+      const visibleCharsLength: number = visibleRange.stopChar - visibleRange.startChar;
 
       let charElements: JSX.Element[] = [];
 
@@ -164,7 +158,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         isCharSelected = true;
       }
 
-      for (let charIndex = 0; charIndex < visibleChars.length; charIndex++) {
+      for (let charIndex = 0; charIndex < visibleCharsLength; charIndex++) {
 
         const pos: TextPosition = {
           char: charIndex,
@@ -184,8 +178,8 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
           scrolledCaretPosition.line === pos.line;
 
         if (scrolledCaretPosition.line === lineIndex &&
-            scrolledCaretPosition.char === visibleChars.length &&
-            charIndex === visibleChars.length - 1) {
+            scrolledCaretPosition.char === visibleCharsLength &&
+            charIndex === visibleCharsLength - 1) {
               isCharCaret = true;
         }
 
@@ -200,7 +194,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
             onMouseDown={(event) => { this.handleMouseDown(event, pos); }}
             onMouseMove={(event) => { this.handleMouseMove(event, pos); }}
             onMouseUp={(event) => { this.handleMouseUp(event, pos); }}
-          >{visibleChars[charIndex]}</i>
+          >{this.props.lines[lineIndex + visibleRange.startLine][charIndex + visibleRange.startChar]}</i>
         );
 
         // If past the selection stop line and char, stop highlighting chars.
@@ -213,7 +207,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       }
 
       const eolPos: TextPosition = {
-        char: visibleChars.length,
+        char: visibleCharsLength,
         line: lineIndex
       };
 
