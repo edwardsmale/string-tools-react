@@ -245,12 +245,13 @@ export class CommandTypesService {
 
                 const indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
 
-                const descending = para.toLowerCase().indexOf("desc") !== -1;
-
                 const sortArray = this.sortService.SortArray;
                 const sortArrays = this.sortService.SortArrays;
 
                 if (!indices.length) {
+
+                    const descending = para.toLowerCase().indexOf("desc") !== -1;
+                    
                     if (explain) {
                         if (descending) {
                             return { explanation: "Sort the items in descending order" };
