@@ -135,7 +135,7 @@ match`;
       focus: "InputPane",
       code: this.codeWindowValue,
       compressedCode: this.codeCompressionService.CompressCode(this.codeWindowValue),
-      explanation: this.explainCommands(this.inputPaneValue, this.codeWindowValue),
+      explanation: "",
       input: this.inputPaneValue,
       inputHash: 0,
       inputFiles: [],
@@ -328,6 +328,8 @@ match`;
     
     window.location.hash = "#" + compressedCode;
   }
+  
+  private previousCodeWindowCode: string = "";
 
   handleCodeWindowSelect(code: string) {
 
@@ -338,17 +340,18 @@ match`;
 
     if (finish - start > 0) {
 
-      let selectedCode = txtarea.value.substring(start, finish);
+      const selectedCode = txtarea.value.substring(start, finish);
 
       const returnCount = txtarea.value.substring(0, start).split(/\n/g).filter(i => i).length;
 
-      selectedCode = "\n".repeat(returnCount) + selectedCode;
-
-      this.executeCode(selectedCode, true);
+      code = "\n".repeat(returnCount) + selectedCode;
     }
-    else {
+
+    if (code !== this.previousCodeWindowCode) {
 
       this.executeCode(code, true);
+
+      this.previousCodeWindowCode = code;
     }
   }
 
