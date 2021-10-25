@@ -291,19 +291,20 @@ export class TextUtilsService {
         for (let i = 0; i < split.length; i++) {
 
             let val = split[i].trim();
-            let asc = !val.toLowerCase().endsWith("desc") && !val.toLowerCase().endsWith("descending");
 
             if (!val) {
                 continue;
             }
-            
-            val = val
-                .replace(/\s+asc$/, "")
-                .replace(/\s+ascending$/, "")
-                .replace(/\s+descending$/, "")
-                .replace(/\s+desc$/, "");
 
-            let int = parseInt(split[i], 10);
+            const lower = val.toLowerCase();
+
+            if (lower === "asc" || lower === "ascending" || lower === "desc" || lower === "descending") {
+                continue;
+            }
+
+            const asc = !lower.endsWith("desc") && !lower.endsWith("descending");
+
+            const int = parseInt(split[i], 10);
 
             if (!isNaN(int)) {
 
