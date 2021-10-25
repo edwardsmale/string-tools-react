@@ -2,13 +2,14 @@ import React from 'react';
 import { TextUtilsService } from '../../services/text-utils.service';
 import Scrollbar from '../Scrollbar/Scrollbar';
 import './InputPane.scss';
+import {TextSelection} from '../../interfaces/TextSelection';
 
 interface InputPaneProps {
   onFocus: () => void;
   hasFocus: boolean;
   keyDownEventHandlers: ((event: KeyboardEvent) => void)[];
-  removeInputPaneText: (lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) => void;
-  getInputPaneText: (lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) => string;
+  removeInputPaneText: (lines: string[], textSelection: TextSelection) => void;
+  getInputPaneText: (lines: string[], textSelection: TextSelection) => string;
   setInputPaneLines: (lines: string[]) => void;
   insertInputPaneText: (lines: string[], charIndex: number, lineIndex: number, textToInsert: string) => void;
   lines: string[];
@@ -28,10 +29,7 @@ interface InputPaneState {
   scrollY: number;
   caretCharIndex: number;
   caretLineIndex: number;
-  selectionStartCharIndex: number;
-  selectionStartLineIndex: number;
-  selectionStopCharIndex: number;
-  selectionStopLineIndex: number;
+  textSelection: TextSelection | null;
 }
 
 class InputPane extends React.Component<InputPaneProps, InputPaneState> {
@@ -44,10 +42,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       scrollY: 0,
       caretCharIndex: -1,
       caretLineIndex: -1,
-      selectionStartCharIndex: -1,
-      selectionStartLineIndex: -1,
-      selectionStopCharIndex: -1,
-      selectionStopLineIndex: -1
+      textSelection: null
     }
 
     this.getVisibleWidth = this.getVisibleWidth.bind(this);
@@ -120,17 +115,24 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     const caretCharIndex = this.state.caretCharIndex - this.state.scrollX;
     const caretLineIndex = this.state.caretLineIndex - this.state.scrollY;
 
-    const selectionStartCharIndex = this.state.selectionStartCharIndex - this.state.scrollX;
-    const selectionStartLineIndex = this.state.selectionStartLineIndex - this.state.scrollY;
+    let scrolledSelection: TextSelection | null = null;
 
-    const selectionStopCharIndex = this.state.selectionStopCharIndex - this.state.scrollX;
-    const selectionStopLineIndex = this.state.selectionStopLineIndex - this.state.scrollY;
+    if (this.state.textSelection !== null) {
+
+      scrolledSelection = { 
+        startChar: this.state.textSelection.startChar - this.state.scrollX,
+        startLine: this.state.textSelection.startLine - this.state.scrollY,
+        stopChar: this.state.textSelection.stopChar - this.state.scrollX,
+        stopLine: this.state.textSelection.stopLine - this.state.scrollY
+      }
+    }
 
     for (let lineIndex = 0; lineIndex < visibleLines.length; lineIndex++) {
 
       const isLineSelected = 
-        lineIndex > selectionStartLineIndex && 
-        lineIndex < selectionStopLineIndex;
+        scrolledSelection !== null &&
+        lineIndex > scrolledSelection.startLine && 
+        lineIndex < scrolledSelection.stopLine;
 
       const visibleChars = visibleLines[lineIndex].substring(startCharIndex, stopCharIndex);
 
@@ -144,8 +146,9 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       // If the selection spans multiple lines, and this is the last line, highlight
       // chars until the stop char index.
       
-      if (selectionStopLineIndex !== selectionStartLineIndex &&
-          lineIndex === selectionStopLineIndex) {
+      if (scrolledSelection !== null &&
+          scrolledSelection.stopLine !== scrolledSelection.startLine &&
+          lineIndex === scrolledSelection.stopLine) {
         
         isCharSelected = true;
       }
@@ -153,8 +156,9 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       for (let charIndex = 0; charIndex < visibleChars.length; charIndex++) {
 
         // If reached the selection start line and char, start highlighting chars.
-        if (lineIndex === selectionStartLineIndex && 
-            charIndex === selectionStartCharIndex) {
+        if (scrolledSelection !== null &&
+            lineIndex === scrolledSelection.startLine && 
+            charIndex === scrolledSelection?.startChar) {
           
           isCharSelected = true;
         }
@@ -184,8 +188,9 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         );
 
         // If past the selection stop line and char, stop highlighting chars.
-        if (lineIndex === selectionStopLineIndex &&
-            charIndex === selectionStopCharIndex) {
+        if (scrolledSelection !== null &&
+            lineIndex === scrolledSelection.stopLine &&
+            charIndex === scrolledSelection.stopChar) {
 
           isCharSelected = false;
         }
@@ -210,12 +215,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
   clearSelection() {    
 
-    this.setState({ 
-      selectionStartCharIndex: -1,
-      selectionStartLineIndex: -1,
-      selectionStopCharIndex: -1,
-      selectionStopLineIndex: -1
-    });
+    this.setState({ textSelection: null });
   }
 
   updateSelectionState(charIndex: number, lineIndex: number) : void {
@@ -224,30 +224,27 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
       if (this.mouseDownCharIndex !== charIndex || this.mouseDownLineIndex !== lineIndex) {
 
-        let startCharIndex = this.mouseDownCharIndex;
-        let startLineIndex = this.mouseDownLineIndex;
-
-        let stopCharIndex = charIndex;
-        let stopLineIndex = lineIndex;
+        let selection: TextSelection = {
+          startChar: this.mouseDownCharIndex,
+          startLine: this.mouseDownLineIndex,
+          stopChar: charIndex,
+          stopLine: lineIndex
+        };
 
         if (this.mouseDownLineIndex > lineIndex || 
            (this.mouseDownLineIndex === lineIndex && this.mouseDownCharIndex > charIndex)) {
 
           // Swap them around if the user has highlighted backwards.
 
-          startCharIndex = charIndex;
-          startLineIndex = lineIndex;
-    
-          stopCharIndex = this.mouseDownCharIndex;
-          stopLineIndex = this.mouseDownLineIndex;
+          selection = {
+            startChar: selection.stopChar,
+            startLine: selection.stopLine,
+            stopChar: selection.startChar,
+            stopLine: selection.startLine
+          }
         }
 
-        this.setState({ 
-          selectionStartCharIndex: startCharIndex,
-          selectionStartLineIndex: startLineIndex,
-          selectionStopCharIndex: stopCharIndex,
-          selectionStopLineIndex: stopLineIndex
-        });
+        this.setState({ textSelection: selection });
       }
       else {
 
@@ -323,17 +320,14 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     let changed = false;
 
     // If text is selected, modify charIndex, and create linesWithSelectedTextRemoved.
-    if (this.state.selectionStartCharIndex !== -1) {
+    if (this.state.textSelection !== null) {
 
-      charIndex = this.state.selectionStartCharIndex;
-      lineIndex = this.state.selectionStartLineIndex;
+      charIndex = this.state.textSelection.startChar;
+      lineIndex = this.state.textSelection.startLine;
 
       linesWithSelectedTextRemoved = this.props.textUtilsService.RemoveSubText(
         this.props.lines,
-        this.state.selectionStartCharIndex,
-        this.state.selectionStartLineIndex,
-        this.state.selectionStopCharIndex,
-        this.state.selectionStopLineIndex
+        this.state.textSelection
       );
     }
 
@@ -351,40 +345,31 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
           this.props.lines.length
         );
       }
-      else if (event.key === "c") {
+      else if (event.key === "c" && this.state.textSelection !== null) {
 
         // Copy
 
         const copiedText = this.props.getInputPaneText(
           this.props.lines,
-          this.state.selectionStartCharIndex,
-          this.state.selectionStartLineIndex,
-          this.state.selectionStopCharIndex,
-          this.state.selectionStopLineIndex
+          this.state.textSelection
         );
 
         navigator.clipboard.writeText(copiedText);
       }
-      else if (event.key === "x") {
+      else if (event.key === "x" && this.state.textSelection !== null) {
 
         // Cut
 
         const cutText = this.props.getInputPaneText(
           this.props.lines,
-          this.state.selectionStartCharIndex,
-          this.state.selectionStartLineIndex,
-          this.state.selectionStopCharIndex,
-          this.state.selectionStopLineIndex
+          this.state.textSelection
         );
 
         navigator.clipboard.writeText(cutText);
 
         this.props.removeInputPaneText(
           this.props.lines,
-          this.state.selectionStartCharIndex,
-          this.state.selectionStartLineIndex,
-          this.state.selectionStopCharIndex,
-          this.state.selectionStopLineIndex
+          this.state.textSelection
         );
 
         changed = true;
@@ -440,18 +425,19 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     }
     else if (event.key === "Backspace") {
 
-      if (this.state.selectionStartCharIndex !== -1) {
+      if (this.state.textSelection !== null) {
 
         this.props.setInputPaneLines(linesWithSelectedTextRemoved);
       } 
       else {
 
         this.props.removeInputPaneText(
-          this.props.lines,
-          this.state.caretCharIndex,
-          this.state.caretLineIndex,
-          this.state.caretCharIndex,
-          this.state.caretLineIndex
+          this.props.lines, { 
+            startChar: this.state.caretCharIndex,
+            startLine: this.state.caretLineIndex,
+            stopChar: this.state.caretCharIndex,
+            stopLine: this.state.caretLineIndex
+          }
         );
 
         charIndex--;
@@ -461,18 +447,19 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     }
     else if (event.key === "Delete") {
 
-      if (this.state.selectionStartCharIndex !== -1) {
+      if (this.state.textSelection !== null) {
 
         this.props.setInputPaneLines(linesWithSelectedTextRemoved);
       } 
       else {
 
         this.props.removeInputPaneText(
-          this.props.lines,
-          this.state.caretCharIndex + 1,
-          this.state.caretLineIndex,
-          this.state.caretCharIndex + 1,
-          this.state.caretLineIndex
+          this.props.lines, { 
+            startChar: this.state.caretCharIndex + 1,
+            startLine: this.state.caretLineIndex,
+            stopChar: this.state.caretCharIndex + 1,
+            stopLine: this.state.caretLineIndex
+          }
         );
       }
 

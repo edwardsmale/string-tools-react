@@ -29,6 +29,7 @@ import { EnsureLeadingCommand } from './services/commands/ensure-leading-command
 import { EnsureTrailingCommand } from './services/commands/ensure-trailing-command';
 import { RemoveLeadingCommand } from './services/commands/remove-leading-command';
 import { RemoveTrailingCommand } from './services/commands/remove-trailing-command';
+import { TextSelection } from './interfaces/TextSelection';
 
 interface AppProps {
 }
@@ -270,15 +271,9 @@ match`;
     window.removeEventListener('resize', this.UpdateWidthsAndHeights)
   }
 
-  getInputPaneText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string {
+  getInputPaneText(lines: string[], textSelection: TextSelection) : string {
 
-    return this.textUtilsService.GetSubText(
-      lines,
-      startCharIndex,
-      startLineIndex,
-      stopCharIndex,
-      stopLineIndex
-    );
+    return this.textUtilsService.GetSubText(lines, textSelection);
   }
 
   setInputPane(lines: string[]) : void {
@@ -293,15 +288,9 @@ match`;
     this.executeCode(this.codeWindowValue, false);
   }
 
-  removeInputPaneText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : void {
+  removeInputPaneText(lines: string[], textSelection: TextSelection) : void {
 
-    const result = this.textUtilsService.RemoveSubText(
-      lines,
-      startCharIndex,
-      startLineIndex,
-      stopCharIndex,
-      stopLineIndex
-    );
+    const result = this.textUtilsService.RemoveSubText(lines, textSelection);
 
     this.setInputPane(result);
   }
@@ -371,10 +360,10 @@ match`;
       timeoutLength = 0;
     }
     else if (this.inputPaneValue.length < 1000) {
-      timeoutLength = 0;
+      timeoutLength = 200;
     }
     else {
-      timeoutLength = isSelect ? 650 : 350;
+      timeoutLength = isSelect ? 2000 : 2000;
     }
 
     this.executeCodeTimeout = window.setTimeout(function () {

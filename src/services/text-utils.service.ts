@@ -1,4 +1,5 @@
 import { SortOrderIndex } from "../interfaces/SortOrderIndex";
+import { TextSelection } from "../interfaces/TextSelection";
 
 export class TextUtilsService {
 
@@ -511,9 +512,9 @@ export class TextUtilsService {
         }
     }
 
-    GetSubText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string {
+    GetSubText(lines: string[], textSelection: TextSelection) : string {
 
-    if (startLineIndex !== stopLineIndex) {
+    if (textSelection.startLine !== textSelection.stopLine) {
 
       let result = "";
 
@@ -521,17 +522,17 @@ export class TextUtilsService {
         
         const line = lines[lineIndex];
 
-        if (lineIndex === startLineIndex) {
+        if (lineIndex === textSelection.startLine) {
 
-          result += line.substring(startCharIndex) + "\n";
+          result += line.substring(textSelection.startChar) + "\n";
         }
-        else if (lineIndex > startLineIndex && lineIndex < stopLineIndex) {
+        else if (lineIndex > textSelection.startLine && lineIndex < textSelection.stopLine) {
 
           result += line + "\n";
         }
-        else if (lineIndex === stopLineIndex) {
+        else if (lineIndex === textSelection.stopLine) {
 
-          result += line.substring(0, stopCharIndex + 1) + "\n";
+          result += line.substring(0, textSelection.stopChar + 1) + "\n";
         }
       }
 
@@ -539,33 +540,33 @@ export class TextUtilsService {
     }
     else {
 
-      const line = lines[startLineIndex];
+      const line = lines[textSelection.startLine];
 
-      return line.substring(startCharIndex, stopCharIndex + 1);
+      return line.substring(textSelection.startChar, textSelection.stopChar + 1);
     }
   }
 
-  RemoveSubText(lines: string[], startCharIndex: number, startLineIndex: number, stopCharIndex: number, stopLineIndex: number) : string[] {
+  RemoveSubText(lines: string[], textSelection: TextSelection) : string[] {
 
     let result = "";
 
-    if (startLineIndex !== stopLineIndex) {
+    if (textSelection.startLine !== textSelection.stopLine) {
 
       for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
         
         const line = lines[lineIndex];
 
-        if (lineIndex < startLineIndex || lineIndex > stopLineIndex) {
+        if (lineIndex < textSelection.startLine || lineIndex > textSelection.stopLine) {
 
           result += line + "\n";
         }
-        else if (lineIndex === startLineIndex) {
+        else if (lineIndex === textSelection.startLine) {
 
-          result += line.substring(0, startCharIndex);
+          result += line.substring(0, textSelection.startChar);
         }
-        else if (lineIndex === stopLineIndex) {
+        else if (lineIndex === textSelection.stopLine) {
 
-          result += line.substring(stopCharIndex + 1) + "\n";
+          result += line.substring(textSelection.stopChar + 1) + "\n";
         }
       }
     }
@@ -575,9 +576,9 @@ export class TextUtilsService {
         
         const line = lines[lineIndex];
 
-        if (lineIndex === startLineIndex) {
+        if (lineIndex === textSelection.startLine) {
 
-          result += line.substring(0, startCharIndex) + line.substring(stopCharIndex + 1) + "\n";
+          result += line.substring(0, textSelection.startChar) + line.substring(textSelection.stopChar + 1) + "\n";
         }
         else {
 
