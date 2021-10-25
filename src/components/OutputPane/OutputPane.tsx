@@ -162,20 +162,23 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     const value = this.props.output;
 
-    const aX = this.state.scrollX;
-    const bX = this.state.scrollX + this.getVisibleWidth();
+    const scrollX = this.state.scrollX;
+    const scrollY = this.state.scrollY;
 
-    const aY = this.state.scrollY;
-    const bY = this.state.scrollY + this.getVisibleHeight();
+    const aX = scrollX;
+    const bX = scrollX + this.getVisibleWidth();
 
-    const caretCharIndex = this.state.caretCharIndex - this.state.scrollX;
-    const caretLineIndex = this.state.caretLineIndex - this.state.scrollY;
+    const aY = scrollY;
+    const bY = scrollY + this.getVisibleHeight();
 
-    const selectionStartCharIndex = this.state.selectionStartCharIndex - this.state.scrollX;
-    const selectionStartLineIndex = this.state.selectionStartLineIndex - this.state.scrollY;
+    const caretCharIndex = this.state.caretCharIndex - scrollX;
+    const caretLineIndex = this.state.caretLineIndex - scrollY;
 
-    const selectionStopCharIndex = this.state.selectionStopCharIndex - this.state.scrollX;
-    const selectionStopLineIndex = this.state.selectionStopLineIndex - this.state.scrollY;
+    const selectionStartCharIndex = this.state.selectionStartCharIndex - scrollX;
+    const selectionStartLineIndex = this.state.selectionStartLineIndex - scrollY;
+
+    const selectionStopCharIndex = this.state.selectionStopCharIndex - scrollX;
+    const selectionStopLineIndex = this.state.selectionStopLineIndex - scrollY;
 
     if (this.props.hash === this.lastGeneratedVisibleElementsHash &&
         aY === this.lastGeneratedVisibleElementsStartLine &&
@@ -262,7 +265,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
                 className={
                   ("ch " +
                   (isCharCaret ? "crt " : " ") +  
-                  (isCharSelected ? "chs ": " ")).trim()
+                  (isCharSelected ? "chs ": " "))
                 }
                 onMouseDown={(event) => { this.handleMouseDown(event, charIndex, lineIndex); }}
                 onMouseMove={(event) => { this.handleMouseMove(event, charIndex, lineIndex); }}
@@ -281,7 +284,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           lineElements.push(
             <div
               key={`${this.nextNumber()}`}     
-              className={("ln" + rowAlt + " " + (isLineSelected ? "lns " : " ")).trim()}         
+              className={("ln" + rowAlt + " " + (isLineSelected ? "lns " : " "))}         
               onMouseDown={(event) => { this.handleMouseDown(event, text.length, lineIndex); }}
               onMouseMove={(event) => { this.handleMouseMove(event, text.length, lineIndex); }}
               onMouseUp={(event) => { this.handleMouseUp(event, text.length, lineIndex); }}
