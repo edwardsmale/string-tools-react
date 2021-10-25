@@ -9,13 +9,16 @@ export class ContextService {
 
     UpdateContextDataTypes(context: Context, currentValues: (string | string[])[]) {
 
+        const isIntegral = this.textUtilsService.IsIntegral;
+        const isNumeric = this.textUtilsService.IsNumeric;
+
         if (!Array.isArray(currentValues[0])) {
 
             let vals = currentValues as string[];
 
             context.newColumnInfo.numberOfColumns = 1;
-            context.newColumnInfo.isColumnIntegral = [vals.every(val => this.textUtilsService.IsIntegral(val))];
-            context.newColumnInfo.isColumnNumeric = [vals.every(val => this.textUtilsService.IsNumeric(val))];
+            context.newColumnInfo.isColumnIntegral = [vals.every(val => isIntegral(val))];
+            context.newColumnInfo.isColumnNumeric = [vals.every(val => isNumeric(val))];
         }
         else {
 
@@ -44,11 +47,11 @@ export class ContextService {
 
                 for (let j = 0; j < currentValues.length; j++) {
 
-                    if (!this.textUtilsService.IsIntegral(currentValues[j][i])) {
+                    if (!isIntegral(currentValues[j][i])) {
                         isColumnIntegral[i] = false;
                     }
 
-                    if (!this.textUtilsService.IsNumeric(currentValues[j][i])) {
+                    if (!isNumeric(currentValues[j][i])) {
                         isColumnNumeric[i] = false;
                     }
                 }
