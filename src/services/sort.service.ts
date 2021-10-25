@@ -56,7 +56,9 @@ export class SortService {
             }
         }
 
-        if (context.isColumnNumeric && context.isColumnNumeric[index]) {
+        if (context.columnInfo && 
+            context.columnInfo.isColumnNumeric && 
+            context.columnInfo.isColumnNumeric[index]) {
 
             valuesAtIndex = (valuesAtIndex as string[]).map(function (val) { return parseFloat(val); });
             valuesAtIndex = (valuesAtIndex as number[]).sort(function(a, b) { return a - b; });
