@@ -98,7 +98,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
   getVisibleHeight() { return Math.round(this.props.height / this.props.lineHeight); }
 
   getContentHeight() { return this.props.lines.length; }
-
+  
   getVisibleElements() {
 
     const scrollX = this.state.scrollX;
@@ -189,7 +189,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
             className={
               ("ch " +
               (isCharCaret ? "crt " : " ") +  
-              (isCharSelected ? "chs ": " ")).trim()
+              (isCharSelected ? "chs ": " "))
             }
             onMouseDown={(event) => { this.handleMouseDown(event, pos); }}
             onMouseMove={(event) => { this.handleMouseMove(event, pos); }}
@@ -227,7 +227,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
   mouseDownPos: TextPosition | null = null;
 
-  clearSelection() {    
+  clearSelection() : void {    
 
     this.setState({ textSelection: null });
   }
@@ -236,9 +236,10 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
     if (this.mouseDownPos !== null) {
 
-      if (this.mouseDownPos.char !== newMousePos.char || this.mouseDownPos.line !== newMousePos.line) {
+      if (this.mouseDownPos.char !== newMousePos.char || 
+          this.mouseDownPos.line !== newMousePos.line) {
 
-        let selection: TextRange = {
+        let textSelection: TextRange = {
           startChar: this.mouseDownPos.char,
           startLine: this.mouseDownPos.line,
           stopChar: newMousePos.char,
@@ -250,15 +251,15 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         if (this.mouseDownPos.line > newMousePos.line || 
            (this.mouseDownPos.line === newMousePos.line && this.mouseDownPos.char > newMousePos.char)) {
 
-          selection = {
-            startChar: selection.stopChar,
-            startLine: selection.stopLine,
-            stopChar: selection.startChar,
-            stopLine: selection.startLine
+            textSelection = {
+            startChar: textSelection.stopChar,
+            startLine: textSelection.stopLine,
+            stopChar: textSelection.startChar,
+            stopLine: textSelection.startLine
           }
         }
 
-        this.setState({ textSelection: selection });
+        this.setState({ textSelection: textSelection });
       }
       else {
 
@@ -271,12 +272,10 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
     event.stopPropagation();
 
-    mousePos = {
+    this.mouseDownPos = {
       char: mousePos.char + this.state.scrollX,
       line: mousePos.line + this.state.scrollY
     };
-
-    this.mouseDownPos = { char: mousePos.char, line: mousePos.line };
 
     this.props.onFocus();
   }
@@ -285,11 +284,6 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
     event.stopPropagation();
 
-    mousePos = {
-      char: mousePos.char + this.state.scrollX,
-      line: mousePos.line + this.state.scrollY
-    };
-
     // Prevent weird behaviour when the mouse button was released while the
     // mouse pointer was outside of the input pane, and therefore was not handled.
     if (event.buttons === 0) {
@@ -297,26 +291,27 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       this.mouseDownPos = null;
     }
 
-    this.updateSelectionState(mousePos);
+    this.updateSelectionState({
+      char: mousePos.char + this.state.scrollX,
+      line: mousePos.line + this.state.scrollY
+    });
   }
 
   handleMouseUp(event: React.MouseEvent<HTMLSpanElement, MouseEvent>, mousePos: TextPosition) : void {
 
     event.stopPropagation();
 
-    mousePos = {
+    this.updateSelectionState({
       char: mousePos.char + this.state.scrollX,
       line: mousePos.line + this.state.scrollY
-    };
-
-    this.updateSelectionState(mousePos);
+    });
 
     this.mouseDownPos = null;
 
     this.setState({ 
       caretPos: {
-        char: mousePos.char,
-        line: mousePos.line
+        char: mousePos.char + this.state.scrollX,
+        line: mousePos.line + this.state.scrollY
       }
     });
   }
@@ -356,12 +351,12 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
         // Select all
 
-        this.mouseDownPos = { char: 0, line: 0 };
-
-        this.updateSelectionState({
-          char: this.props.lines[this.props.lines.length - 1].length, 
-          line: this.props.lines.length
-        });
+        this.setState({ textSelection: {
+          startChar: 0,
+          startLine: 0,
+          stopChar: this.props.lines[this.props.lines.length - 1].length,
+          stopLine: this.props.lines.length
+        }});
       }
       else if (event.key === "c" && this.state.textSelection !== null) {
 
