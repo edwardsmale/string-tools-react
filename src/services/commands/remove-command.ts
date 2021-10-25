@@ -5,7 +5,7 @@ export class RemoveCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Removes text matching a regex" };
+        return { segments: ["Remove text matching a regex"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

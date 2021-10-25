@@ -5,7 +5,7 @@ export class DistinctCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Delete duplicates" };
+        return { segments: ["Delete duplicates"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

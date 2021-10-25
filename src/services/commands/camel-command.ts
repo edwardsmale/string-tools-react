@@ -11,7 +11,7 @@ export class CamelCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Camel-case the value(s)" };
+        return { segments: ["Camel-case the value(s)"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

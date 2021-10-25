@@ -57,5 +57,5 @@ export interface SortCommandType
 
 export interface Explanation
 {
-    explanation: string;
+    segments: string[];
 }

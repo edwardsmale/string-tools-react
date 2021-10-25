@@ -4,6 +4,7 @@ import './textarea.scss';
 import Popup from './components/Popup/Popup';
 import CodeWindow from './components/CodeWindow/CodeWindow';
 import ExplainWindow from './components/ExplainWindow/ExplainWindow';
+import { Explanation } from './interfaces/CommandInterfaces';
 import InputPane from './components/InputPane/InputPane';
 import OutputPane from './components/OutputPane/OutputPane';
 import { CommandParsingService } from './services/command-parsing.service';
@@ -38,7 +39,7 @@ interface AppState {
   focus: string;
   code: string;
   compressedCode: string;
-  explanation: string;
+  explanation: Explanation[];
   input: string[];
   inputHash: number;
   inputFiles: string[];
@@ -164,7 +165,7 @@ match`;
       focus: "InputPane",
       code: this.codeWindowValue,
       compressedCode: this.codeCompressionService.CompressCode(this.codeWindowValue),
-      explanation: "",
+      explanation: [],
       input: this.inputPaneValue,
       inputHash: 0,
       inputFiles: [],
@@ -411,17 +412,17 @@ match`;
     return result;
   }
 
-  private lastExplanation: string = "";
+  private lastExplanation: Explanation[] = [];
   private lastExplainCode: string = "";
 
-  private explainCommands(input: string[], code: string): string {
+  private explainCommands(input: string[], code: string): Explanation[] {
 
     if (code !== this.lastExplainCode) {
 
       const context = this.contextService.CreateContext();
 
       this.lastExplainCode = code;
-      this.lastExplanation =  this.commandService.explainCommands(code, input, context).join("\n");
+      this.lastExplanation = this.commandService.explainCommands(code, input, context);
     }
 
     return this.lastExplanation;

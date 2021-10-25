@@ -14,11 +14,11 @@ export class CommandService {
         this.contextService = contextService;
     }
 
-    explainCommands(codeValue: string, lines: (string | string[])[], context: Context): string[] {
+    explainCommands(codeValue: string, lines: (string | string[])[], context: Context): Explanation[] {
 
         let codeLines = this.textUtilsService.TextToLines(codeValue);
 
-        let output: string[] = []; 
+        let output: Explanation[] = []; 
 
         for (let i = 0; i < codeLines.length; i++) {
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
@@ -30,7 +30,7 @@ export class CommandService {
                 context,
                 true
             ) as Explanation;
-            output.push(explanation.explanation);
+            output.push(explanation);
         }
 
         return output;    

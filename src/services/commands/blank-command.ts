@@ -9,9 +9,14 @@ export class BlankCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+    Explain(negated: boolean): Explanation {
 
-        return { explanation: "Filters to only include blanks" };
+        if (negated) {
+            return { segments: ["Filters to only include blank lines"] };
+        }
+        else {
+            return { segments: ["Filters to only include non-blank lines"] };
+        }
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

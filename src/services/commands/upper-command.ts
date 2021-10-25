@@ -11,7 +11,7 @@ export class UpperCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Upper-case the value(s)" };
+        return { segments: ["Upper-case the value(s)"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

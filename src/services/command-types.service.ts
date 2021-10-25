@@ -62,7 +62,7 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
-                    return { explanation: "" };
+                    return { segments: [] };
                 } else {
                     return value;
                 }
@@ -82,7 +82,7 @@ export class CommandTypesService {
                 context.regex = para;
                 context.searchString = null;
                 if (explain) {
-                    return { explanation: "Set the current regex to " + para };
+                    return { segments: ["Set the current regex to", para] };
                 } else {
                     return value;
                 }
@@ -102,7 +102,7 @@ export class CommandTypesService {
                 context.searchString = para;
                 context.regex = null;
                 if (explain) {
-                    return { explanation: "Set the current search string to '" + para + "'"};
+                    return { segments: ["Set the current search string to", para] };
                 } else {
                     return value;
                 }
@@ -124,11 +124,11 @@ export class CommandTypesService {
 
                 if (explain) {
                     if (context.regex) {
-                        return { explanation: "Replace text matching the regex " + context.regex + " with '" + para + "'" };
+                        return { segments: ["Replace text matching the regex", context.regex, "with", para] };
                     } else if (context.searchString) {
-                        return { explanation: "Replace '" + context.searchString + "' with '" + para + "'" };
+                        return { segments: ["Replace", context.searchString, "with", para] };
                     } else {
-                        return { explanation: "*** This command only works if a regex or search string has been set by an earlier 'regex' or 'search' instruction." };
+                        return { segments: ["*** This command only works if a regex or search string has been set by an earlier 'regex' or 'search' instruction."] };
                     }
                 } else {
                     if (Array.isArray(value)) {
@@ -191,7 +191,7 @@ export class CommandTypesService {
                 if (!para && context.regex) {
 
                     if (explain) {
-                        return { explanation: "Split the text using the regex " + context.regex };
+                        return { segments: ["Split the text using the regex", context.regex] };
                     } else {
                         return (value as string).split(new RegExp(context.regex));
                     }
@@ -199,7 +199,7 @@ export class CommandTypesService {
                 else if (!para && context.searchString) {
 
                     if (explain) {
-                        return { explanation: "Split the text on '" + context.searchString + "'" };
+                        return { segments: ["Split the text on", context.searchString] };
                     } else {
                         return (value as string).split(context.searchString);
                     }
@@ -213,7 +213,7 @@ export class CommandTypesService {
 
                         var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false, true);
 
-                        return { explanation: "Split the text on every " + formattedDelimiter };
+                        return { segments: ["Split the text on every", formattedDelimiter] };
 
                     } else {
 
@@ -254,10 +254,10 @@ export class CommandTypesService {
                     
                     if (explain) {
                         if (descending) {
-                            return { explanation: "Sort the items in descending order" };
+                            return { segments: ["Sort the items in descending order"] };
                         }
                         else {
-                            return { explanation: "Sort the items" };
+                            return { segments: ["Sort the items"] };
                         }
                     } else {
                         let sortedValues : string[];
@@ -287,7 +287,7 @@ export class CommandTypesService {
                             positions.push(indices[i].description);
                         }
 
-                        return { explanation: "Sort by " + positions.join(", then by ") };
+                        return { segments: ["Sort by", positions.join(", then by ")] };
 
                     } else if (!para) {
 
@@ -343,9 +343,9 @@ export class CommandTypesService {
                 var n = parseInt(para, 10);
                 if (explain) {
                     if (isNaN(n)) {
-                        return { explanation: "Skip n items" };
+                        return { segments: ["Skip n items"] };
                     } else {
-                        return { explanation: "Skip " + n + " item" + (n === 1 ? "" : "s") };
+                        return { segments: ["Skip", n, " item" + (n === 1 ? "" : "s")] };
                     }
                 } else {
                     if (isNaN(n)) {
@@ -374,7 +374,7 @@ export class CommandTypesService {
 
                 if (explain) {
 
-                    return { explanation: "Treat the first array of items as a header row" };
+                    return { segments: ["Treat the first array of items as a header row"] };
                 } else {
 
                     return (value as string[]);
@@ -395,9 +395,9 @@ export class CommandTypesService {
                 var n = parseInt(para, 10);
                 if (explain) {
                     if (isNaN(n)) {
-                        return { explanation: "Take the first n items and ignore the rest" };
+                        return { segments: ["Take the first n items and ignore the rest"] };
                     } else {
-                        return { explanation: "Take the first " + n + " item" + (n === 1 ? "" : "s") + " only" };
+                        return { segments: ["Take the first", n, "item" + (n === 1 ? "" : "s") + " only"] };
                     }
                 } else {
                     if (isNaN(n)) {
@@ -707,7 +707,7 @@ export class CommandTypesService {
                 if (explain) {
                     if (indices.some((i) => isNaN(i))) {
 
-                        return { explanation: "With the specified columns..." };
+                        return { segments: ["With the specified columns..."] };
                     }
                     else if (indices.some((i) => i < 0)) {
 
@@ -722,7 +722,7 @@ export class CommandTypesService {
 
                         let positions = this.textUtilsService.FormatList(formattedIndices);
 
-                        return { explanation: "With the columns " + positions + "..." };
+                        return { segments: ["With the columns", positions, "..."] };
                     }
                     else {
 
@@ -730,10 +730,10 @@ export class CommandTypesService {
 
                         if (indices.length > 1) {
 
-                            return { explanation: "With the items at indexes " + positions + "..." };
+                            return { segments: ["With the items at indexes", positions, "..."] };
                         }
                         else {
-                            return { explanation: "With the items at index " + positions + "..." };
+                            return { segments: ["With the items at index", positions, "..."] };
                         }
                     }
                 } else {
@@ -762,7 +762,7 @@ export class CommandTypesService {
 
                     if (indices.some((i) => isNaN(i))) {
 
-                        return { explanation: "Get the specified columns" };
+                        return { segments: ["Get the specified columns"] };
                     }
                     else if (indices.some((i) => i < 0)) {
 
@@ -777,7 +777,7 @@ export class CommandTypesService {
 
                         let positions = this.textUtilsService.FormatList(formattedIndices);
 
-                        return { explanation: "Get " + positions };
+                        return { segments: ["Get", positions] };
                     }
                     else {
 
@@ -785,10 +785,10 @@ export class CommandTypesService {
 
                         if (indices.length > 1) {
 
-                            return { explanation: "Get the items at indexes " + positions };
+                            return { segments: ["Get the items at indexes", positions] };
                         }
                         else {
-                            return { explanation: "Get the items at index " + positions };
+                            return { segments: ["Get the items at index", positions] };
                         }
                     }
                 } else {
@@ -838,9 +838,9 @@ export class CommandTypesService {
                 if (!searchString && context.regex) {
                     if (explain) {
                         if (negated) {
-                            return { explanation: "Only include items which don't match the regex " + context.regex };
+                            return { segments: ["Only include items which don't match the regex", context.regex] };
                         } else {
-                            return { explanation: "Only include items which match the regex " + context.regex };
+                            return { segments: ["Only include items which match the regex", context.regex] };
                         }
                     } else {
                         if (Array.isArray(value)) {
@@ -857,9 +857,9 @@ export class CommandTypesService {
                 else {
                     if (explain) {
                         if (negated) {
-                            return { explanation: "Only include items that don't contain '" + searchString + "'" };
+                            return { segments: ["Only include items that don't contain", searchString] };
                         } else {
-                            return { explanation: "Only include items containing '" + searchString + "'" };
+                            return { segments: ["Only include items containing", searchString] };
                         }
                     } else {
                         if (negated) {
@@ -882,9 +882,9 @@ export class CommandTypesService {
             exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
                     if (this.textUtilsService.IsIntegral(para)) {
-                        return { explanation: "Convert into arrays of " + para + " items" };
+                        return { segments: ["Convert into arrays of", para, "items"] };
                     } else {
-                        return { explanation: "Flatten an array of arrays into one array" };
+                        return { segments: ["Flatten an array of arrays into one array"] };
                     }
                 } else {
                     if (Array.isArray(value[0])) {
@@ -924,7 +924,7 @@ export class CommandTypesService {
                 }
 
                 if (explain) {
-                    return { explanation: "Enclose each item in " + leftChar + "  " + rightChar };
+                    return { segments: ["Enclose each item in", leftChar, "and", rightChar] };
                 } else {
                     var scalarValue = this.textUtilsService.AsScalar(value);
                     return leftChar + scalarValue + rightChar;
@@ -938,7 +938,7 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
-                    return { explanation: "Output the items in tab-separated format" };
+                    return { segments: ["Output the items in tab-separated format"] };
                 } else {
                     context.newColumnInfo.headers = [];
                     value = this.textUtilsService.AsArray(value);
@@ -1025,7 +1025,7 @@ export class CommandTypesService {
                         }
                     }
 
-                    return { explanation: explanation };
+                    return { segments: [explanation] };
 
                 } else {
                     context.newColumnInfo.headers = [];

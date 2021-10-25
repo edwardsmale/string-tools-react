@@ -11,7 +11,7 @@ export class LowerCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Lower-case the value(s)" };
+        return { segments: ["Lower-case the value(s)"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

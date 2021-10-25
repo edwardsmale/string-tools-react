@@ -11,7 +11,7 @@ export class RemoveTrailingCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Removes the specified string from the end of each line, if present" };
+        return { segments: ["Remove the specified string from the end of each line, if present"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

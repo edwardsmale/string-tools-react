@@ -1,15 +1,28 @@
 .explain-window {
 
-    min-width: 0;
-    min-height: 0;
-    overflow: hidden;
-    color: darkred;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  color: darkred;
+
+  &__segment
+  {
+    margin-right: 0.375rem;
+
+    &:nth-child(2) {
+      color: blue;
+    }
   }
+}
 
 .App--darkmode {
 
   .explain-window {
 
-      color: lighten(darkred, 50%);
+    color: lighten(darkred, 50%);
+      
+    &__segment:nth-child(2) {
+      color: white;
     }
+  }
 }

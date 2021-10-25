@@ -1,9 +1,10 @@
 import React from 'react';
+import { Explanation } from '../../interfaces/CommandInterfaces';
 import { TextUtilsService } from '../../services/text-utils.service';
 import './ExplainWindow.scss';
 
 interface ExplainWindowProps {
-  explanation: string;
+  explanation: Explanation[];
   onFocus: () => void;
   hasFocus: boolean;
   textUtilsService: TextUtilsService;
@@ -46,13 +47,15 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
 
   render() {
 
-    const lines = this.textUtilsService.TextToLines(this.props.explanation);
-
     return (
       <div className={"explain-window textarea " + (this.props.hasFocus ? "explain-window--focussed" : "")}
            onMouseDown={(event) => { this.handleMouseDown(event); }}>
-          {lines.map((line) => (
-            <div key={`e${this.nextNumber()}`}>{line}</div>
+
+         {this.props.explanation.map((line) => (
+            <div key={`e${this.nextNumber()}`}
+                 className="explain-window__line">{line.segments.map((segment) => (
+              <span className="explain-window__segment">{segment}</span>
+            ))}</div>
           ))}
       </div>
     );

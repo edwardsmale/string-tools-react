@@ -11,7 +11,7 @@ export class KebabCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Kebab-case the value(s)" };
+        return { segments: ["Kebab-case the value(s)"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

@@ -11,7 +11,7 @@ export class EnsureTrailingCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Ensures each item ends with the specified string" };
+        return { segments: ["Ensure each item ends with the specified string"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

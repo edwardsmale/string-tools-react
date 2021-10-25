@@ -11,7 +11,7 @@ export class PascalCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Pascal-case the value(s)" };
+        return { segments: ["Pascal-case the value(s)"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {

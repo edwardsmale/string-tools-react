@@ -5,7 +5,7 @@ export class TrimCommand implements Command {
 
     Explain(): Explanation {
 
-        return { explanation: "Trims leading and trailing whitespace" };
+        return { segments: ["Trim leading and trailing whitespace"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
