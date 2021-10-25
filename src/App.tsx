@@ -68,21 +68,49 @@ class App extends React.Component<AppProps, AppState> {
   codeCompressionService: CodeCompressionService;
   contextService: ContextService;
   commandTypesService: CommandTypesService;
+  commandParsingService: CommandParsingService;
   commandService: CommandService;
+  sortService: SortService;
 
   constructor(props: AppProps) {
     super(props)
 
     this.textUtilsService = new TextUtilsService();
-    this.codeCompressionService = new CodeCompressionService(this.textUtilsService);
+    this.codeCompressionService = new CodeCompressionService();
     this.contextService = new ContextService(this.textUtilsService);
-    this.commandTypesService = new CommandTypesService(this.textUtilsService, new SortService(this.textUtilsService), new ContextService(this.textUtilsService), new CamelCommand(this.textUtilsService), new PascalCommand(this.textUtilsService), new KebabCommand(this.textUtilsService), new UpperCommand(this.textUtilsService), new LowerCommand(this.textUtilsService), new DistinctCommand(), new BlankCommand(this.textUtilsService), new TrimCommand(), new TrimStartCommand(), new TrimEndCommand(), new RemoveCommand(), new EnsureLeadingCommand(this.textUtilsService), new EnsureTrailingCommand(this.textUtilsService), new RemoveLeadingCommand(this.textUtilsService), new RemoveTrailingCommand(this.textUtilsService));
+    this.sortService = new SortService(this.textUtilsService);
+
+    this.commandTypesService = new CommandTypesService(
+      this.textUtilsService,
+      this.sortService,
+      this.contextService,
+      new CamelCommand(this.textUtilsService),
+      new PascalCommand(this.textUtilsService),
+      new KebabCommand(this.textUtilsService),
+      new UpperCommand(this.textUtilsService),
+      new LowerCommand(this.textUtilsService),
+      new DistinctCommand(),
+      new BlankCommand(this.textUtilsService),
+      new TrimCommand(),
+      new TrimStartCommand(),
+      new TrimEndCommand(),
+      new RemoveCommand(),
+      new EnsureLeadingCommand(this.textUtilsService),
+      new EnsureTrailingCommand(this.textUtilsService),
+      new RemoveLeadingCommand(this.textUtilsService),
+      new RemoveTrailingCommand(this.textUtilsService)
+    );
+
+    this.commandParsingService = new CommandParsingService(
+      this.textUtilsService,
+      this.commandTypesService
+    );
 
     this.commandService = new CommandService(
       this.textUtilsService,
-      new CommandParsingService(this.textUtilsService, this.commandTypesService), 
+      this.commandParsingService, 
       this.commandTypesService, 
-      new ContextService(this.textUtilsService)
+      this.contextService
     );
 
     const input = `ReportConsole
