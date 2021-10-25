@@ -396,6 +396,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
           navigator.clipboard.readText().then((pasteText) => {
 
             pasteText = this.props.textUtilsService.RemoveTrailing(pasteText, "\n");
+            pasteText = this.props.textUtilsService.RemoveTrailing(pasteText, "\r");
 
             this.props.insertInputPaneText(
               linesWithSelectedTextRemoved,
