@@ -359,7 +359,7 @@ match`;
       timeoutLength = 200;
     }
     else {
-      timeoutLength = isSelect ? 2000 : 2000;
+      timeoutLength = isSelect ? 500 : 500;
     }
 
     this.executeCodeTimeout = window.setTimeout(function () {

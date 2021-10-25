@@ -282,15 +282,18 @@ export class CommandService {
                 context.columnInfo = { ...context.newColumnInfo};
             }
 
-            let output: string[][] = [];           
+            let output: string[][] = [];  
+            
+            if (Array.isArray(currentValues[0])) {
 
-            for (let i = 0; i < currentValues.length; i++) {
-                var value = currentValues[i];
-                if (Array.isArray(value)) {
-                    var arrayValue = value as string[];
-                    output.push(arrayValue);
-                } else {
-                    output.push([value as string]);
+                for (let i = 0; i < currentValues.length; i++) {
+                    output.push(currentValues[i] as string[]);
+                }
+            }
+            else {
+
+                for (let i = 0; i < currentValues.length; i++) {
+                    output.push([currentValues[i] as string]);
                 }
             }
 
