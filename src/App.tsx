@@ -355,7 +355,7 @@ match`;
     }
   }
 
-  private executeCodeTimeout: NodeJS.Timeout | null;
+  private executeCodeTimeout: number | null;
 
   executeCode(code: string, isSelect: boolean) {
 
@@ -377,7 +377,7 @@ match`;
       timeoutLength = isSelect ? 650 : 350;
     }
 
-    this.executeCodeTimeout = setTimeout(function () {
+    this.executeCodeTimeout = window.setTimeout(function () {
 
       const result = that.executeCommands(that.inputPaneValue, code);
       const explanation = that.explainCommands(that.inputPaneValue, code);
