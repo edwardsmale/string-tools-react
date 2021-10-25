@@ -71,8 +71,6 @@ class Scrollbar extends React.Component<ScrollbarProps, ScrollbarState> {
     return Math.max(100.0 * this.props.visibleLength / this.props.contentLength, 5);
   }
 
-  private lastPosition: number | undefined;
-
   getPosition(mousePos: number, isMouseDown: boolean) {
 
     if (this.state.mouseDownPos !== null) {
@@ -110,7 +108,6 @@ class Scrollbar extends React.Component<ScrollbarProps, ScrollbarState> {
       <div className={`scrollbar ${this.props.isVertical ? "scrollbar--vertical" : "scrollbar--horizontal"}`}>
         <div className="scrollbar__backward-arrow" onClick={this.scrollBackward}></div>
         <div className="scrollbar__gutter">
-
           <div className="scrollbar__gutter-before-bar"
               onClick={this.scrollBackwardBig} 
               style={{ flexBasis: this.getGutterBeforeBarLength() + "%" }}></div>

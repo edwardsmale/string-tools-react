@@ -29,7 +29,7 @@ import { EnsureLeadingCommand } from './services/commands/ensure-leading-command
 import { EnsureTrailingCommand } from './services/commands/ensure-trailing-command';
 import { RemoveLeadingCommand } from './services/commands/remove-leading-command';
 import { RemoveTrailingCommand } from './services/commands/remove-trailing-command';
-import { TextSelection } from './interfaces/TextSelection';
+import { TextRange } from './interfaces/TextRange';
 
 interface AppProps {
 }
@@ -271,7 +271,7 @@ match`;
     window.removeEventListener('resize', this.UpdateWidthsAndHeights)
   }
 
-  getInputPaneText(lines: string[], textSelection: TextSelection) : string {
+  getInputPaneText(lines: string[], textSelection: TextRange) : string {
 
     return this.textUtilsService.GetSubText(lines, textSelection);
   }
@@ -288,7 +288,7 @@ match`;
     this.executeCode(this.codeWindowValue, false);
   }
 
-  removeInputPaneText(lines: string[], textSelection: TextSelection) : void {
+  removeInputPaneText(lines: string[], textSelection: TextRange) : void {
 
     const result = this.textUtilsService.RemoveSubText(lines, textSelection);
 
@@ -529,7 +529,10 @@ match`;
 
   render() {
     return (
-      <div className={`App ${this.state.darkmode ? "App--darkmode" : ""}`} onMouseDown={this.mouseDown} onMouseUp={this.mouseUp} onMouseMove={this.mouseMove}>
+      <div className={`App ${this.state.darkmode ? "App--darkmode" : ""}`} 
+           onMouseDown={this.mouseDown} 
+           onMouseUp={this.mouseUp} 
+           onMouseMove={this.mouseMove}>
         <div className={`${this.state.isHelpPopupVisible ? "" : "u-hidden"}`}>
           <Popup            
             onClose={this.closeHelpPopup}

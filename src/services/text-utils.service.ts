@@ -1,5 +1,5 @@
 import { SortOrderIndex } from "../interfaces/SortOrderIndex";
-import { TextSelection } from "../interfaces/TextSelection";
+import { TextRange } from "../interfaces/TextRange";
 
 export class TextUtilsService {
 
@@ -509,7 +509,7 @@ export class TextUtilsService {
         }
     }
 
-    GetSubText(lines: string[], textSelection: TextSelection) : string {
+    GetSubText(lines: string[], textSelection: TextRange) : string {
 
     if (textSelection.startLine !== textSelection.stopLine) {
 
@@ -543,7 +543,7 @@ export class TextUtilsService {
     }
   }
 
-  RemoveSubText(lines: string[], textSelection: TextSelection) : string[] {
+  RemoveSubText(lines: string[], textSelection: TextRange) : string[] {
 
     let result = "";
 

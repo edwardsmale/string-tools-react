@@ -1,4 +1,4 @@
-export interface TextSelection {
+export interface TextRange {
     startChar: number;
     startLine: number;
     stopChar: number;
