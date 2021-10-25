@@ -59,6 +59,21 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     this.handleMouseUp = this.handleMouseUp.bind(this);
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
+
+    this.nextNumber = this.nextNumber.bind(this);
+  }
+
+  private inc:number = 0;
+
+  nextNumber() { 
+    if (this.inc === 2147483647) {
+      this.inc = 0;
+    }
+    else {
+      this.inc++;
+    }
+
+    return this.inc; 
   }
 
   componentDidMount() {
@@ -185,7 +200,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
         charElements.push(
           <i 
-            key={`${Math.random()}`} 
+            key={`i${this.nextNumber()}`} 
             className={
               ("ch " +
               (isCharCaret ? "crt " : " ") +  
@@ -213,7 +228,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
       lineElements.push(
         <div 
-          key={`${Math.random()}`} 
+          key={`${this.nextNumber()}`} 
           className={("ln " + (isLineSelected ? "lns " : " ")).trim()}
           onMouseDown={(event) => { this.handleMouseDown(event, eolPos); }}
           onMouseMove={(event) => { this.handleMouseMove(event, eolPos); }}

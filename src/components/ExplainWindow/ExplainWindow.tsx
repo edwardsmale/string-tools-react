@@ -22,6 +22,19 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
     this.handleMouseDown = this.handleMouseDown.bind(this);
   }
 
+  private inc:number = 0;
+
+  nextNumber() {
+    if (this.inc === 2147483647) {
+      this.inc = 0;
+    }
+    else {
+      this.inc++;
+    }
+
+    return this.inc; 
+  }
+
   private textUtilsService: TextUtilsService;
 
   handleMouseDown(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) : void {
@@ -39,7 +52,7 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
       <div className={"explain-window textarea " + (this.props.hasFocus ? "explain-window--focussed" : "")}
            onMouseDown={(event) => { this.handleMouseDown(event); }}>
           {lines.map((line) => (
-            <div key={`${Math.random()}`}>{line}</div>
+            <div key={`e${this.nextNumber()}`}>{line}</div>
           ))}
       </div>
     );

@@ -61,6 +61,21 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     this.handleMouseUp = this.handleMouseUp.bind(this);
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
+
+    this.nextNumber = this.nextNumber.bind(this);
+  }
+
+  private inc:number = 0;
+
+  nextNumber() {
+    if (this.inc === 2147483647) {
+      this.inc = 0;
+    }
+    else {
+      this.inc++;
+    }
+
+    return this.inc; 
   }
 
   componentDidMount() {
@@ -243,7 +258,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
             charElements.push(
               <i 
-                key={`${Math.random()}`} 
+                key={`o${this.nextNumber()}`} 
                 className={
                   ("ch " +
                   (isCharCaret ? "crt " : " ") +  
@@ -265,7 +280,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
           lineElements.push(
             <div
-              key={`${Math.random()}`}     
+              key={`${this.nextNumber()}`}     
               className={("ln" + rowAlt + " " + (isLineSelected ? "lns " : " ")).trim()}         
               onMouseDown={(event) => { this.handleMouseDown(event, text.length, lineIndex); }}
               onMouseMove={(event) => { this.handleMouseMove(event, text.length, lineIndex); }}
