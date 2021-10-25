@@ -82,7 +82,7 @@ export class CommandTypesService {
                 context.regex = para;
                 context.searchString = null;
                 if (explain) {
-                    return { explanation: "Sets the current regex to /" + para + "/" };
+                    return { explanation: "Set the current regex to " + para };
                 } else {
                     return value;
                 }
@@ -102,7 +102,7 @@ export class CommandTypesService {
                 context.searchString = para;
                 context.regex = null;
                 if (explain) {
-                    return { explanation: "Sets the current search string to '" + para + "'"};
+                    return { explanation: "Set the current search string to '" + para + "'"};
                 } else {
                     return value;
                 }
@@ -124,9 +124,9 @@ export class CommandTypesService {
 
                 if (explain) {
                     if (context.regex) {
-                        return { explanation: "Replaces text matching the regex /" + context.regex + "/ with '" + para + "'" };
+                        return { explanation: "Replace text matching the regex " + context.regex + " with '" + para + "'" };
                     } else if (context.searchString) {
-                        return { explanation: "Replaces '" + context.searchString + "' with '" + para + "'" };
+                        return { explanation: "Replace '" + context.searchString + "' with '" + para + "'" };
                     } else {
                         return { explanation: "*** This command only works if a regex or search string has been set by an earlier 'regex' or 'search' instruction." };
                     }
@@ -191,7 +191,7 @@ export class CommandTypesService {
                 if (!para && context.regex) {
 
                     if (explain) {
-                        return { explanation: "Split the text using the regex /" + context.regex + "/" };
+                        return { explanation: "Split the text using the regex " + context.regex };
                     } else {
                         return (value as string).split(new RegExp(context.regex));
                     }
@@ -707,7 +707,7 @@ export class CommandTypesService {
                 if (explain) {
                     if (indices.some((i) => isNaN(i))) {
 
-                        return { explanation: "With the specified columns" };
+                        return { explanation: "With the specified columns..." };
                     }
                     else if (indices.some((i) => i < 0)) {
 
@@ -722,7 +722,7 @@ export class CommandTypesService {
 
                         let positions = this.textUtilsService.FormatList(formattedIndices);
 
-                        return { explanation: "With the columns " + positions };
+                        return { explanation: "With the columns " + positions + "..." };
                     }
                     else {
 
@@ -730,10 +730,10 @@ export class CommandTypesService {
 
                         if (indices.length > 1) {
 
-                            return { explanation: "With the items at indexes " + positions };
+                            return { explanation: "With the items at indexes " + positions + "..." };
                         }
                         else {
-                            return { explanation: "With the items at index " + positions };
+                            return { explanation: "With the items at index " + positions + "..." };
                         }
                     }
                 } else {
@@ -838,9 +838,9 @@ export class CommandTypesService {
                 if (!searchString && context.regex) {
                     if (explain) {
                         if (negated) {
-                            return { explanation: "Only include items which don't match the regex /" + context.regex + "/" };
+                            return { explanation: "Only include items which don't match the regex " + context.regex };
                         } else {
-                            return { explanation: "Only include items which match the regex /" + context.regex + "/" };
+                            return { explanation: "Only include items which match the regex " + context.regex };
                         }
                     } else {
                         if (Array.isArray(value)) {
