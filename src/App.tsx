@@ -256,19 +256,15 @@ match`;
     this.executeCode(this.codeWindowValue, false);
 
     window.addEventListener("keydown", this.keyDown);
-
     window.addEventListener('resize', this.UpdateWidthsAndHeights)
   }
 
   componentWillUnmount() {
 
     window.removeEventListener("hashchange", this.LocationHashChanged);
-
     window.removeEventListener("keydown", this.keyDown);
-
     window.removeEventListener("keydown", this.keyDown);
-
-    window.removeEventListener('resize', this.UpdateWidthsAndHeights)
+    window.removeEventListener('resize', this.UpdateWidthsAndHeights);
   }
 
   getInputPaneText(lines: string[], textSelection: TextRange) : string {
@@ -378,7 +374,13 @@ match`;
 
   private executeCommands(input: string[], code: string): string[][] {
 
-    return this.processCommands(input, code, false);
+    const context = this.contextService.CreateContext();
+
+    const result = this.commandService.processCommands(code, input, context);
+
+    this.setState({ context: context });
+
+    return result;
   }
 
   private lastExplanation: string = "";
@@ -388,25 +390,13 @@ match`;
 
     if (code !== this.lastExplainCode) {
 
+      const context = this.contextService.CreateContext();
+
       this.lastExplainCode = code;
-      this.lastExplanation =  this.processCommands(input, code, true).join("\n");
+      this.lastExplanation =  this.commandService.explainCommands(code, input, context).join("\n");
     }
 
     return this.lastExplanation;
-  }
-
-  private processCommands(input: string[], code: string, explain: boolean): string[][] {
-
-    const context = this.contextService.CreateContext();
-
-    const result = this.commandService.processCommands(code, input, explain, context);
-
-    if (!explain) {
-
-      this.setState({ context: context });
-    }
-
-    return result; 
   }
 
   onDragStart(e: React.DragEvent<HTMLDivElement>) {
