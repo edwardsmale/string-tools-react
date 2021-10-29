@@ -378,27 +378,25 @@ match`;
     }
 
     const that = this;
-
-    let timeoutLength: number;
-
-    if (this.inputPaneValue.length < 100) {
-      timeoutLength = 0;
-    }
-    else if (this.inputPaneValue.length < 1000) {
-      timeoutLength = 200;
-    }
-    else {
-      timeoutLength = isSelect ? 500 : 500;
-    }
-
-    this.executeCodeTimeout = window.setTimeout(function () {
+    
+    var doExecute = () => {
 
       const result = that.executeCommands(that.inputPaneValue, code);
       const explanation = that.explainCommands(that.inputPaneValue, code);
 
-      that.setState({ output: result, outputHash: that.state.outputHash + 1, explanation: explanation });
-    },
-    timeoutLength);
+      that.setState({ 
+        output: result,
+        outputHash: that.state.outputHash + 1,
+        explanation: explanation 
+      });
+    };
+
+    if (this.inputPaneValue.length < 1000) {
+      doExecute();
+    }
+    else {
+      this.executeCodeTimeout = window.setTimeout(doExecute, 500);
+    }
   }
 
   private executeCommands(input: string[], code: string): string[][] {
@@ -595,8 +593,7 @@ match`;
             <div className="string-tools__explain-window-container">
               <ExplainWindow explanation={this.state.explanation}
                              onFocus={() => { this.setState({ focus: "ExplainWindow" }); }}
-                             hasFocus={this.state.focus === "ExplainWindow"}
-                             textUtilsService={this.textUtilsService} />
+                             hasFocus={this.state.focus === "ExplainWindow"} />
             </div>
           </div>
           <div className={"string-tools__top-section-border " + (this.state.draggedBorder === "top-section-border" ? "string-tools__top-section-border--dragged" : "")}
