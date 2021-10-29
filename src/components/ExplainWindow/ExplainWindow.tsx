@@ -1,13 +1,11 @@
 import React from 'react';
 import { Explanation } from '../../interfaces/CommandInterfaces';
-import { TextUtilsService } from '../../services/text-utils.service';
 import './ExplainWindow.scss';
 
 interface ExplainWindowProps {
   explanation: Explanation[];
   onFocus: () => void;
   hasFocus: boolean;
-  textUtilsService: TextUtilsService;
 }
 
 interface ExplainWindowState {
@@ -17,8 +15,6 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
 
   constructor(props: ExplainWindowProps) {
     super(props)
-
-    this.textUtilsService = props.textUtilsService;
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
   }
@@ -35,8 +31,6 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
 
     return this.inc; 
   }
-
-  private textUtilsService: TextUtilsService;
 
   handleMouseDown(event: React.MouseEvent<HTMLSpanElement, MouseEvent>) : void {
 
