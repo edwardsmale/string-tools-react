@@ -1088,7 +1088,7 @@ export class CommandTypesService {
                 if (explain) {
                     var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, true, false);
 
-                    return { explanation: "Output items separated with " + formattedDelimiter };
+                    return { segments: ["Output items separated with", formattedDelimiter] };
                 } else {
 
                     context.newColumnInfo.headers = [];
@@ -1103,7 +1103,7 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 if (explain) {
-                    return { explanation: "print " + para };
+                    return { segments: ["print", para] };
                 } else {
                     para = this.textUtilsService.ReplaceBackslashTWithTab(para);
                     var result = para;
