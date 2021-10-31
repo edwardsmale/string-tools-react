@@ -40,7 +40,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     this.state = {
       scrollX: 0,
       scrollY: 0,
-      caretPos: { char: 0, line: 0 },
+      caretPos: { char: -1, line: 0 },
       textSelection: null
     }
 
@@ -207,7 +207,8 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
             className={
               ("ch " +
               (isCharCaret ? "crt " : " ") +  
-              (isCharSelected ? "chs ": " "))
+              (isCharSelected ? "chs ": " ")) +
+              (this.state.caretPos.line === lineIndex && this.state.caretPos.char === -1 && charIndex === 0 ? "cs" : "")
             }
             onMouseDown={(event) => { this.handleMouseDown(event, pos); }}
             onMouseMove={(event) => { this.handleMouseMove(event, pos); }}
@@ -231,8 +232,8 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
       lineElements.push(
         <div 
-          key={`${this.nextNumber()}`} 
-          className={("ln " + (isLineSelected ? "lns " : " ")).trim()}
+          key={`${this.nextNumber()}`}
+          className={("ln " + (isLineSelected ? "lns " : " "))}
           onMouseDown={(event) => { this.handleMouseDown(event, eolPos); }}
           onMouseMove={(event) => { this.handleMouseMove(event, eolPos); }}
           onMouseUp={(event) => { this.handleMouseUp(event, eolPos); }}
@@ -344,17 +345,16 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
     const visibleHeight = this.getVisibleHeight();
     const visibleWidth = this.getVisibleWidth();
-    const lineLength = this.props.lines[this.state.scrollY + line].length;
 
     if (event.code === "ArrowLeft") {
       
-      if (char > 0) {
+      if (char >= 0) {
         char--;
       } else if (scrollX > 0) {
         scrollX--;
       } else if (line > 0) {
         line--;
-        char = lineLength;
+        char = this.props.lines[this.state.scrollY + line].length - 1;
 
         scrollX = 0;
 
@@ -367,15 +367,15 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     }
     else if (event.code === "ArrowRight") {
 
-      if (char < visibleWidth - 1) {
+      if (char < visibleWidth - 1 && char < this.props.lines[this.state.scrollY + line].length - 1) {
         char++;
       }
-      else if (scrollX + visibleWidth < lineLength) {
+      else if (scrollX + visibleWidth < this.props.lines[this.state.scrollY + line].length) {
         scrollX++;
       }
       else {
         line++;
-        char = 0;
+        char = -1;
         scrollX = 0;
       }
     }
@@ -383,6 +383,9 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       
       if (line > 0) {
         line--;
+        if (char >= this.props.lines[this.state.scrollY + line].length) {
+          char = this.props.lines[this.state.scrollY + line].length - 1;
+        }
       } 
       else if (scrollY > 0) {
         scrollY--;

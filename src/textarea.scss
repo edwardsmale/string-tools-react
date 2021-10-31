@@ -33,6 +33,11 @@
     margin-right: -1px;
   }
 
+  .cs {
+    border-left: solid 1px black;
+    width: 0.3625rem;
+  }
+
   // selected char
   .chs {
     color: white !important;
@@ -71,7 +76,11 @@
     // caret
     .crt {
     
-      border-right: solid 1px white;
+      border-right-color: white;
+    }
+
+    .cs {
+      border-left-color: white;
     }
   }
 }
