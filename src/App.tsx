@@ -55,9 +55,6 @@ interface AppState {
   draggedBorder: string | undefined;
   isHelpPopupVisible: boolean;
   isContextPopupVisible: boolean;
-  isMouseDown: boolean;
-  mouseX: number;
-  mouseY: number;
   darkmode: boolean;
 }
 
@@ -181,9 +178,6 @@ match`;
       draggedBorder: undefined,
       isHelpPopupVisible: false,
       isContextPopupVisible: false,
-      isMouseDown: false,
-      mouseX: 0,
-      mouseY: 0,  
       darkmode: true
     };
 
@@ -211,25 +205,7 @@ match`;
     this.importFileClick = this.importFileClick.bind(this);
     this.showFile = this.showFile.bind(this);
 
-    this.mouseDown = this.mouseDown.bind(this);
-    this.mouseUp = this.mouseUp.bind(this);
-    this.mouseMove = this.mouseMove.bind(this);
     this.keyDown = this.keyDown.bind(this);
-  }
-
-  mouseDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) { 
-
-    this.setState({ isMouseDown: true }); 
-  }
-
-  mouseUp(e: React.MouseEvent<HTMLDivElement, MouseEvent>) { 
-
-    this.setState({ isMouseDown: false }); 
-  }
-
-  mouseMove(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
-
-    this.setState({ mouseX: e.clientX, mouseY: e.clientY }); 
   }
 
   keyDownEventHandlers: ((event: KeyboardEvent) => void)[] = [];
@@ -546,10 +522,7 @@ match`;
 
   render() {
     return (
-      <div className={`App ${this.state.darkmode ? "App--darkmode" : ""}`} 
-           onMouseDown={this.mouseDown} 
-           onMouseUp={this.mouseUp} 
-           onMouseMove={this.mouseMove}>
+      <div className={`App ${this.state.darkmode ? "App--darkmode" : ""}`} >
         <div className={`${this.state.isHelpPopupVisible ? "" : "u-hidden"}`}>
           <Popup            
             onClose={this.closeHelpPopup}
@@ -629,9 +602,6 @@ match`;
                 charWidth={0.45}
                 height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
-                isMouseDown={this.state.isMouseDown}
-                mouseX={this.state.mouseX}
-                mouseY={this.state.mouseY}
                 textUtilsService={this.textUtilsService} />
             </div>
             <div className={"string-tools__input-pane-border " + (this.state.draggedBorder === "input-pane-border" ? "string-tools__input-pane-border--dragged" : "")} 
@@ -649,9 +619,6 @@ match`;
                 charWidth={0.45}
                 height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
-                isMouseDown={this.state.isMouseDown}
-                mouseX={this.state.mouseX}
-                mouseY={this.state.mouseY}
                 textUtilsService={this.textUtilsService} />
             </div>
           </div>
