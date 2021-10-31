@@ -400,6 +400,19 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         scrollY++;
       }
     }
+    else if (event.code === "Home") {
+      char = -1;
+      scrollX = 0;
+    }
+    else if (event.code === "End") {
+      char = this.props.lines[this.state.scrollY + line].length - 1;
+
+      while (char >= scrollX + visibleWidth) {
+        scrollX++;
+      }
+
+      char -= scrollX;
+    }
 
     this.setState({ 
       caretPos: { char: char, line: line },
@@ -423,7 +436,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     let charIndex = this.state.caretPos.char + 1;
     let lineIndex = this.state.caretPos.line;
 
-    const isArrowKey = event.code.indexOf("Arrow") === 0;
+    const isArrowKey = event.code.indexOf("Arrow") === 0 || event.code === "Home" || event.code === "End";
 
     if (isArrowKey) {
 
