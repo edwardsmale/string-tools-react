@@ -30,6 +30,7 @@ import { EnsureLeadingCommand } from './services/commands/ensure-leading-command
 import { EnsureTrailingCommand } from './services/commands/ensure-trailing-command';
 import { RemoveLeadingCommand } from './services/commands/remove-leading-command';
 import { RemoveTrailingCommand } from './services/commands/remove-trailing-command';
+import { TextPosService } from './services/text-pos-service';
 import { TextRange } from './interfaces/TextRange';
 
 interface AppProps {
@@ -55,6 +56,9 @@ interface AppState {
   draggedBorder: string | undefined;
   isHelpPopupVisible: boolean;
   isContextPopupVisible: boolean;
+  isMouseDown: boolean;
+  mouseX: number;
+  mouseY: number;
   darkmode: boolean;
 }
 
@@ -69,11 +73,13 @@ class App extends React.Component<AppProps, AppState> {
   commandParsingService: CommandParsingService;
   commandService: CommandService;
   sortService: SortService;
+  textPosService: TextPosService;
 
   constructor(props: AppProps) {
     super(props)
 
     this.textUtilsService = new TextUtilsService();
+    this.textPosService = new TextPosService(this.textUtilsService);
     this.codeCompressionService = new CodeCompressionService();
     this.contextService = new ContextService(this.textUtilsService);
     this.sortService = new SortService(this.textUtilsService);
@@ -171,13 +177,16 @@ match`;
       context: this.contextService.CreateContext(),
       topSectionHeight: 12,
       bottomButtonBarHeight: 2.5,
-      bottomSectionHeight: 44,
+      bottomSectionHeight: 30,
       codeWindowWidth: 45,
       inputPaneWidth: 50,
       outputPaneWidth: 80,
       draggedBorder: undefined,
       isHelpPopupVisible: false,
       isContextPopupVisible: false,
+      isMouseDown: false,
+      mouseX: 0,
+      mouseY: 0,  
       darkmode: true
     };
 
@@ -205,7 +214,25 @@ match`;
     this.importFileClick = this.importFileClick.bind(this);
     this.showFile = this.showFile.bind(this);
 
+    this.mouseDown = this.mouseDown.bind(this);
+    this.mouseUp = this.mouseUp.bind(this);
+    this.mouseMove = this.mouseMove.bind(this);
     this.keyDown = this.keyDown.bind(this);
+  }
+
+  mouseDown(e: React.MouseEvent<HTMLDivElement, MouseEvent>) { 
+
+    this.setState({ isMouseDown: true }); 
+  }
+
+  mouseUp(e: React.MouseEvent<HTMLDivElement, MouseEvent>) { 
+
+    this.setState({ isMouseDown: false }); 
+  }
+
+  mouseMove(e: React.MouseEvent<HTMLDivElement, MouseEvent>): void {
+
+    this.setState({ mouseX: e.clientX, mouseY: e.clientY }); 
   }
 
   keyDownEventHandlers: ((event: KeyboardEvent) => void)[] = [];
@@ -239,7 +266,7 @@ match`;
     // Adjust output pane width and bottom section height to fill the available 
     // space (given the  input pane width).
 
-    const availableVerticalSpace = (window.innerHeight / 16) - this.state.bottomButtonBarHeight;
+    const availableVerticalSpace = (window.innerHeight / 16) - this.state.bottomButtonBarHeight - 1;
 
     this.setState({
       outputPaneWidth: window.innerWidth / 16 - this.state.inputPaneWidth - 2,
@@ -522,7 +549,10 @@ match`;
 
   render() {
     return (
-      <div className={`App ${this.state.darkmode ? "App--darkmode" : ""}`} >
+      <div className={`App ${this.state.darkmode ? "App--darkmode" : ""}`} 
+           onMouseDown={this.mouseDown} 
+           onMouseUp={this.mouseUp} 
+           onMouseMove={this.mouseMove}>
         <div className={`${this.state.isHelpPopupVisible ? "" : "u-hidden"}`}>
           <Popup            
             onClose={this.closeHelpPopup}
@@ -602,7 +632,11 @@ match`;
                 charWidth={0.45}
                 height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
-                textUtilsService={this.textUtilsService} />
+                textUtilsService={this.textUtilsService}
+                textPosService={this.textPosService}
+                isMouseDown={this.state.isMouseDown}
+                mouseX={this.state.mouseX}
+                mouseY={this.state.mouseY} />
             </div>
             <div className={"string-tools__input-pane-border " + (this.state.draggedBorder === "input-pane-border" ? "string-tools__input-pane-border--dragged" : "")} 
                  draggable onDragStart={this.onDragStart} 
@@ -619,6 +653,9 @@ match`;
                 charWidth={0.45}
                 height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
+                isMouseDown={this.state.isMouseDown}
+                mouseX={this.state.mouseX}
+                mouseY={this.state.mouseY}
                 textUtilsService={this.textUtilsService} />
             </div>
           </div>
