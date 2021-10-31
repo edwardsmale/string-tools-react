@@ -59,6 +59,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     this.handleMouseUp = this.handleMouseUp.bind(this);
 
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleArrowKey = this.handleArrowKey.bind(this);
 
     this.nextNumber = this.nextNumber.bind(this);
   }
@@ -85,7 +86,9 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
   private lastGeneratedContentWidth: number | undefined;
 
-  getVisibleWidth() { return Math.round(this.props.width / this.props.charWidth); }
+  private scrollbarWidth = 0.875;
+
+  getVisibleWidth() { return Math.round((this.props.width -  this.scrollbarWidth) / this.props.charWidth); }
 
   getContentWidth() { 
 
@@ -325,10 +328,83 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
     this.setState({ 
       caretPos: {
-        char: mousePos.char + this.state.scrollX,
-        line: mousePos.line + this.state.scrollY
+        char: mousePos.char,
+        line: mousePos.line
       }
     });
+  }
+
+  handleArrowKey(event: KeyboardEvent) : void {
+
+    let char = this.state.caretPos.char;
+    let line = this.state.caretPos.line;
+
+    let scrollX = this.state.scrollX;
+    let scrollY = this.state.scrollY;
+
+    const visibleHeight = this.getVisibleHeight();
+    const visibleWidth = this.getVisibleWidth();
+    const lineLength = this.props.lines[this.state.scrollY + line].length;
+
+    if (event.code === "ArrowLeft") {
+      
+      if (char > 0) {
+        char--;
+      } else if (scrollX > 0) {
+        scrollX--;
+      } else if (line > 0) {
+        line--;
+        char = lineLength;
+
+        scrollX = 0;
+
+        while (char >= scrollX + visibleWidth) {
+          scrollX++;
+        }
+
+        char -= scrollX;
+      }
+    }
+    else if (event.code === "ArrowRight") {
+
+      if (char < visibleWidth - 1) {
+        char++;
+      }
+      else if (scrollX + visibleWidth < lineLength) {
+        scrollX++;
+      }
+      else {
+        line++;
+        char = 0;
+        scrollX = 0;
+      }
+    }
+    else if (event.code === "ArrowUp") {
+      
+      if (line > 0) {
+        line--;
+      } 
+      else if (scrollY > 0) {
+        scrollY--;
+      }
+    }
+    else if (event.code === "ArrowDown" && line < this.props.lines.length - 1) {
+      
+      if (line < visibleHeight - 1) {
+        line++;
+      }
+      else if (scrollY + visibleHeight < this.props.lines.length) {
+        scrollY++;
+      }
+    }
+
+    this.setState({ 
+      caretPos: { char: char, line: line },
+      scrollX: scrollX,
+      scrollY: scrollY
+    });
+
+    this.clearSelection();
   }
 
   handleKeyDown(event: KeyboardEvent) : void {
@@ -341,10 +417,18 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       event.preventDefault();
     }
 
-    let linesWithSelectedTextRemoved = this.props.lines;
-
     let charIndex = this.state.caretPos.char + 1;
     let lineIndex = this.state.caretPos.line;
+
+    const isArrowKey = event.code.indexOf("Arrow") === 0;
+
+    if (isArrowKey) {
+
+      this.handleArrowKey(event);
+      return;
+    }
+
+    let linesWithSelectedTextRemoved = this.props.lines;
 
     let changed = false;
 
@@ -415,8 +499,8 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
             this.props.insertInputPaneText(
               linesWithSelectedTextRemoved,
-              charIndex,
-              lineIndex,
+              charIndex + this.state.scrollX,
+              lineIndex + this.state.scrollY,
               pasteText
             );
 
@@ -430,7 +514,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
             this.setState({
               caretPos: {
-                char: charIndex,
+                char: charIndex - 1,
                 line: lineIndex
               }
             });
@@ -464,10 +548,10 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
         this.props.removeInputPaneText(
           this.props.lines, { 
-            startChar: this.state.caretPos.char,
-            startLine: this.state.caretPos.line,
-            stopChar: this.state.caretPos.char,
-            stopLine: this.state.caretPos.line
+            startChar: this.state.caretPos.char + this.state.scrollX,
+            startLine: this.state.caretPos.line + this.state.scrollY,
+            stopChar: this.state.caretPos.char + this.state.scrollX,
+            stopLine: this.state.caretPos.line + this.state.scrollY
           }
         );
 
@@ -486,10 +570,10 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
         this.props.removeInputPaneText(
           this.props.lines, { 
-            startChar: this.state.caretPos.char + 1,
-            startLine: this.state.caretPos.line,
-            stopChar: this.state.caretPos.char + 1,
-            stopLine: this.state.caretPos.line
+            startChar: this.state.caretPos.char + this.state.scrollX + 1,
+            startLine: this.state.caretPos.line + this.state.scrollY,
+            stopChar: this.state.caretPos.char + this.state.scrollX + 1,
+            stopLine: this.state.caretPos.line + this.state.scrollY
           }
         );
       }
@@ -502,8 +586,8 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
       this.props.insertInputPaneText(
         linesWithSelectedTextRemoved,
-        charIndex,
-        lineIndex,
+        charIndex + this.state.scrollX,
+        lineIndex + this.state.scrollY,
         event.key
       );
 
@@ -524,16 +608,13 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     }
   }
 
-  render () {  
+  render () {
+
     return (
       <div
         className={"input-pane pane pane--left " + (this.props.hasFocus ? "pane--focussed" : "")}
         tabIndex={0}
-        style={{ 
-          width: this.props.width + "rem", 
-          height: this.props.height + "rem",
-          flexDirection: "column" 
-        }}>
+        style={{ flexDirection: "column" }}>
         <div style={{
             display: "flex",
             flexDirection: "row",

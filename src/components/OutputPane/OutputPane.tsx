@@ -91,7 +91,9 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
   private escapedNewlineRegex: RegExp;
 
-  getVisibleWidth() { return this.props.width / this.props.charWidth; }
+  private scrollbarWidth = 0.875;
+
+  getVisibleWidth() { return (this.props.width - this.scrollbarWidth) / this.props.charWidth; }
 
   getContentWidth() { 
 
@@ -480,11 +482,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
   render() {
     return (
       <div className={"output-pane pane pane--right " + (this.props.hasFocus ? "pane--focussed" : "")}
-           style={{ 
-             width: this.props.width + "rem",
-             height: this.props.height + "rem",
-             flexDirection: "column"
-            }}>
+           style={{ flexDirection: "column" }}>
         <div style={{ 
             display: "flex",
             flexDirection: "row",

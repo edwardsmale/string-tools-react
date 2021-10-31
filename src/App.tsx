@@ -626,7 +626,7 @@ match`;
                 lines={this.state.input}
                 hash={this.state.inputHash}
                 width={this.state.inputPaneWidth} 
-                charWidth={0.4}
+                charWidth={0.45}
                 height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
                 isMouseDown={this.state.isMouseDown}
@@ -646,7 +646,7 @@ match`;
                 output={this.state.output} 
                 hash={this.state.outputHash}
                 width={this.state.outputPaneWidth}
-                charWidth={0.4}
+                charWidth={0.45}
                 height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
                 isMouseDown={this.state.isMouseDown}
