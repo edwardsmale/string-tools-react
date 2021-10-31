@@ -345,7 +345,7 @@ export class CommandTypesService {
                     if (isNaN(n)) {
                         return { segments: ["Skip n items"] };
                     } else {
-                        return { segments: ["Skip", n, " item" + (n === 1 ? "" : "s")] };
+                        return { segments: ["Skip", n, "item" + (n === 1 ? "" : "s")] };
                     }
                 } else {
                     if (isNaN(n)) {
@@ -422,7 +422,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.blankCommand.Explain();
+                    return this.blankCommand.Explain(negated);
 
                 } else if (Array.isArray(value)) {
 

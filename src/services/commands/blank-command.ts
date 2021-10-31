@@ -12,10 +12,10 @@ export class BlankCommand implements Command {
     Explain(negated: boolean): Explanation {
 
         if (negated) {
-            return { segments: ["Filters to only include blank lines"] };
+            return { segments: ["Exclude blank lines"] };   
         }
         else {
-            return { segments: ["Filters to only include non-blank lines"] };
+            return { segments: ["Only include blank lines"] };
         }
     }
 
