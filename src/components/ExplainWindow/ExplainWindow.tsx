@@ -17,6 +17,7 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
     super(props)
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
+    this.nextNumber = this.nextNumber.bind(this);
   }
 
   private inc:number = 0;
@@ -48,7 +49,8 @@ class ExplainWindow extends React.Component<ExplainWindowProps, ExplainWindowSta
          {this.props.explanation.map((line) => (
             <div key={`e${this.nextNumber()}`}
                  className="explain-window__line">{line.segments.map((segment) => (
-              <span className="explain-window__segment">{segment}</span>
+              <span key={`e${this.nextNumber()}`}
+                    className="explain-window__segment">{segment}</span>
             ))}</div>
           ))}
       </div>
