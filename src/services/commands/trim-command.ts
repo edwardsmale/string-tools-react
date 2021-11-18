@@ -29,7 +29,7 @@ export class TrimStartCommand implements Command {
 
    Explain(para: string, negated: boolean): Explanation {
 
-        return { explanation: "Trims leading whitespace" };
+        return { segments: ["Trims leading whitespace"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
@@ -53,7 +53,7 @@ export class TrimEndCommand implements Command {
 
    Explain(para: string, negated: boolean): Explanation {
 
-        return { explanation: "Trims trailing whitespace" };
+        return { segments: ["Trims trailing whitespace"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
