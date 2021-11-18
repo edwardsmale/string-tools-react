@@ -19,6 +19,7 @@ import { EnsureTrailingCommand } from './commands/ensure-trailing-command';
 import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
 import { HeaderCommand } from './commands/header-command';
+import { SearchCommand } from './commands/search-command';
 
 export class CommandTypesService {
 
@@ -37,6 +38,7 @@ export class CommandTypesService {
         private removeCommand: RemoveCommand,
         private removeLeadingCommand: RemoveLeadingCommand,
         private removeTrailingCommand: RemoveTrailingCommand,
+        private searchCommand: SearchCommand,
         private skipCommand: SkipCommand,
         private takeCommand: TakeCommand,
         private trimCommand: TrimCommand,
@@ -57,6 +59,7 @@ export class CommandTypesService {
         this.removeCommand = removeCommand;
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
+        this.searchCommand = searchCommand;
         this.skipCommand = skipCommand;
         this.sortService = sortService;
         this.takeCommand = takeCommand;
@@ -125,12 +128,16 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                context.searchString = para;
-                context.regex = null;
-                if (explain) {
-                    return { segments: ["Set the current search string to", para] };
-                } else {
-                    return value;
+                
+                if (explain) {                    
+                    return this.searchCommand.Explain(para, negated, context);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.searchCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.searchCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },

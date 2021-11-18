@@ -35,6 +35,7 @@ import { TextRange } from './interfaces/TextRange';
 import { TakeCommand } from './services/commands/take-command';
 import { SkipCommand } from './services/commands/skip-command';
 import { HeaderCommand } from './services/commands/header-command';
+import { SearchCommand } from './services/commands/search-command';
 
 interface AppProps {
 }
@@ -103,6 +104,7 @@ class App extends React.Component<AppProps, AppState> {
       new RemoveCommand(),
       new RemoveLeadingCommand(this.textUtilsService),
       new RemoveTrailingCommand(this.textUtilsService),
+      new SearchCommand(),
       new SkipCommand(),
       new TakeCommand(),
       new TrimCommand(),
