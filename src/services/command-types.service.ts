@@ -20,6 +20,7 @@ import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
 import { HeaderCommand } from './commands/header-command';
 import { SearchCommand } from './commands/search-command';
+import { RegexCommand } from './commands/regex-command';
 
 export class CommandTypesService {
 
@@ -35,6 +36,7 @@ export class CommandTypesService {
         private kebabCommand: KebabCommand,
         private lowerCommand: LowerCommand,
         private pascalCommand: PascalCommand,
+        private regexCommand: RegexCommand,
         private removeCommand: RemoveCommand,
         private removeLeadingCommand: RemoveLeadingCommand,
         private removeTrailingCommand: RemoveTrailingCommand,
@@ -56,6 +58,7 @@ export class CommandTypesService {
         this.kebabCommand = kebabCommand;
         this.lowerCommand = lowerCommand;
         this.pascalCommand = pascalCommand;
+        this.regexCommand = regexCommand;
         this.removeCommand = removeCommand;
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
@@ -108,12 +111,16 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                context.regex = para;
-                context.searchString = null;
-                if (explain) {
-                    return { segments: ["Set the current regex to", para] };
-                } else {
-                    return value;
+
+                if (explain) {                    
+                    return this.regexCommand.Explain(para, negated, context);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.regexCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.regexCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },

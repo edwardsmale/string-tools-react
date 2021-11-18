@@ -36,6 +36,7 @@ import { TakeCommand } from './services/commands/take-command';
 import { SkipCommand } from './services/commands/skip-command';
 import { HeaderCommand } from './services/commands/header-command';
 import { SearchCommand } from './services/commands/search-command';
+import { RegexCommand } from './services/commands/regex-command';
 
 interface AppProps {
 }
@@ -101,6 +102,7 @@ class App extends React.Component<AppProps, AppState> {
       new KebabCommand(this.textUtilsService),
       new LowerCommand(this.textUtilsService),
       new PascalCommand(this.textUtilsService),
+      new RegexCommand(),
       new RemoveCommand(),
       new RemoveLeadingCommand(this.textUtilsService),
       new RemoveTrailingCommand(this.textUtilsService),
