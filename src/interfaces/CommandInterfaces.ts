@@ -41,7 +41,7 @@ export interface ArrayCommandType
 
 export interface Command
 {
-    Explain(): Explanation;
+    Explain(negated: boolean): Explanation;
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string;
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[];
 }

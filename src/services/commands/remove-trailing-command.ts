@@ -9,7 +9,7 @@ export class RemoveTrailingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Remove the specified string from the end of each line, if present"] };
     }

@@ -9,7 +9,7 @@ export class PascalCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Pascal-case the value(s)"] };
     }

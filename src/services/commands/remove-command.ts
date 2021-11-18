@@ -3,7 +3,7 @@ import { Context } from '../../interfaces/Context';
 
 export class RemoveCommand implements Command {
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Remove text matching a regex"] };
     }

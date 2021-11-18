@@ -9,7 +9,7 @@ export class EnsureLeadingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Ensure each item starts with the specified string"] };
     }

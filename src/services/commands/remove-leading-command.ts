@@ -9,7 +9,7 @@ export class RemoveLeadingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Remove the specified string from the start of each line, if present"] };
     }

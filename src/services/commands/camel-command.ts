@@ -9,7 +9,7 @@ export class CamelCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Camel-case the value(s)"] };
     }

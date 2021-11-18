@@ -9,7 +9,7 @@ export class EnsureTrailingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Ensure each item ends with the specified string"] };
     }

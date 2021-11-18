@@ -9,7 +9,7 @@ export class UpperCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Upper-case the value(s)"] };
     }

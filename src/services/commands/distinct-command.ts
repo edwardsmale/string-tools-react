@@ -3,7 +3,7 @@ import { Context } from '../../interfaces/Context';
 
 export class DistinctCommand implements Command {
 
-    Explain(): Explanation {
+   Explain(negated: boolean): Explanation {
 
         return { segments: ["Delete duplicates"] };
     }
