@@ -13,6 +13,7 @@ import { JoinCommand } from './commands/join-command';
 import { KebabCommand } from './commands/kebab-command';
 import { LowerCommand } from './commands/lower-command';
 import { PascalCommand } from './commands/pascal-command';
+import { PrintCommand } from './commands/print-command';
 import { RegexCommand } from './commands/regex-command';
 import { RemoveCommand } from './commands/remove-command';
 import { RemoveLeadingCommand } from './commands/remove-leading-command';
@@ -39,6 +40,7 @@ export class CommandTypesService {
         private kebabCommand: KebabCommand,
         private lowerCommand: LowerCommand,
         private pascalCommand: PascalCommand,
+        private printCommand: PrintCommand,
         private regexCommand: RegexCommand,
         private removeCommand: RemoveCommand,
         private removeLeadingCommand: RemoveLeadingCommand,
@@ -63,6 +65,7 @@ export class CommandTypesService {
         this.kebabCommand = kebabCommand;
         this.lowerCommand = lowerCommand;
         this.pascalCommand = pascalCommand;
+        this.printCommand = printCommand;
         this.regexCommand = regexCommand;
         this.removeCommand = removeCommand;
         this.removeLeadingCommand = removeLeadingCommand;
@@ -1153,45 +1156,19 @@ export class CommandTypesService {
             para: [{ name: "<text>", desc: "What to print." }],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+                
                 if (explain) {
-                    return { segments: ["print", para] };
-                } else {
-                    para = this.textUtilsService.ReplaceBackslashTWithTab(para);
-                    var result = para;
-                    var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
-
-                    // Replace $header
-
-                    if (Array.isArray(context.columnInfo.headers)) {
-
-                        const headersOrderedByLength = this.textUtilsService.GetHeadersOrderedByLength(
-                            context.columnInfo.headers
-                        );
-
-                        for (let i = 0; i < headersOrderedByLength.length; i++) {
-
-                            let header = headersOrderedByLength[i].header;
-                            let index = headersOrderedByLength[i].index;
-
-                            const regex = new RegExp("\\$" + header, "g");
-                            const replacement = arrayValue[index];
-
-                            result = result.replace(regex, replacement);
-                        }
-                    }
-
-                    // Replace $[n]
                     
-                    for (let i = 0; i < arrayValue.length; i++) {
-                        result = result.replace(new RegExp("\\$\\[" + i + "\\]", "g"), arrayValue[i]);
-                    }
-                    for (let i = 0; i < arrayValue.length; i++) {
-                        result = result.replace(new RegExp("\\$\\[-" + i + "\\]", "g"), arrayValue[arrayValue.length - i]);
-                    }
-                    
-                    context.newColumnInfo.headers = [];
-                    return result;
+                    return this.printCommand.Explain(para, negated, context);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.printCommand.ExecuteArray(value as string[], para, negated, context);
                 }
+                else {
+
+                    return this.printCommand.ExecuteScalar(value as string, para, negated, context);
+                } 
             })
         }
     ];

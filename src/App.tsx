@@ -39,6 +39,7 @@ import { SearchCommand } from './services/commands/search-command';
 import { RegexCommand } from './services/commands/regex-command';
 import { TsvCommand } from './services/commands/tsv-command';
 import { JoinCommand } from './services/commands/join-command';
+import { PrintCommand } from './services/commands/print-command';
 
 interface AppProps {
 }
@@ -105,6 +106,7 @@ class App extends React.Component<AppProps, AppState> {
       new KebabCommand(this.textUtilsService),
       new LowerCommand(this.textUtilsService),
       new PascalCommand(this.textUtilsService),
+      new PrintCommand(this.textUtilsService),
       new RegexCommand(),
       new RemoveCommand(),
       new RemoveLeadingCommand(this.textUtilsService),
