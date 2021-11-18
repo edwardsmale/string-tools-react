@@ -9,7 +9,7 @@ export class KebabCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-   Explain(negated: boolean): Explanation {
+   Explain(para: string, negated: boolean): Explanation {
 
         return { segments: ["Kebab-case the value(s)"] };
     }

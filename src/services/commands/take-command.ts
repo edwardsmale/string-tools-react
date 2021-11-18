@@ -2,7 +2,7 @@ import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
 import { TextUtilsService } from '../text-utils.service';
 
-export class UpperCommand implements Command {
+export class TakeCommand implements Command {
 
     constructor(private textUtilsService: TextUtilsService) {
 
@@ -11,12 +11,17 @@ export class UpperCommand implements Command {
 
     Explain(para: string, negated: boolean): Explanation {
 
-        return { segments: ["Upper-case the value(s)"] };
+        if (negated) {
+            return { segments: ["Exclude blank lines"] };   
+        }
+        else {
+            return { segments: ["Only include blank lines"] };
+        }
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
         
-        return value.toUpperCase();   
+        return value;  
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
@@ -25,7 +30,12 @@ export class UpperCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            result.push(value[i].toUpperCase());
+            const isBlank = this.textUtilsService.IsNullOrWhitespace(value[i]);
+
+            if (isBlank === !negated) {
+
+                result.push(value[i]);
+            }
         }
 
         return result;

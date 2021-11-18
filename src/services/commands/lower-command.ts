@@ -9,7 +9,7 @@ export class LowerCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-   Explain(negated: boolean): Explanation {
+   Explain(para: string, negated: boolean): Explanation {
 
         return { segments: ["Lower-case the value(s)"] };
     }
