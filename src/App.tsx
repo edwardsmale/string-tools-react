@@ -34,6 +34,7 @@ import { TextPosService } from './services/text-pos-service';
 import { TextRange } from './interfaces/TextRange';
 import { TakeCommand } from './services/commands/take-command';
 import { SkipCommand } from './services/commands/skip-command';
+import { HeaderCommand } from './services/commands/header-command';
 
 interface AppProps {
 }
@@ -106,7 +107,8 @@ class App extends React.Component<AppProps, AppState> {
       new RemoveLeadingCommand(this.textUtilsService),
       new RemoveTrailingCommand(this.textUtilsService),
       new TakeCommand(),
-      new SkipCommand()
+      new SkipCommand(),
+      new HeaderCommand()
     );
 
     this.commandParsingService = new CommandParsingService(

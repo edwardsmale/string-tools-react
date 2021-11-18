@@ -18,10 +18,11 @@ import { EnsureLeadingCommand } from './commands/ensure-leading-command';
 import { EnsureTrailingCommand } from './commands/ensure-trailing-command';
 import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
+import { HeaderCommand } from './commands/header-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand, private takeCommand: TakeCommand, private skipCommand: SkipCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand, private takeCommand: TakeCommand, private skipCommand: SkipCommand, private headerCommand: HeaderCommand) {
 
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
@@ -43,6 +44,7 @@ export class CommandTypesService {
         this.removeTrailingCommand = removeTrailingCommand;
         this.takeCommand = takeCommand;
         this.skipCommand = skipCommand;
+        this.headerCommand = headerCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -364,17 +366,16 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                if (!context.newColumnInfo.headers) {
-                    context.newColumnInfo.headers = (value as string[]);
+                if (explain) {                    
+                    return this.headerCommand.Explain(para, negated, context);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.headerCommand.ExecuteArray(value as string[], para, negated, context);
                 }
-
-                if (explain) {
-
-                    return { segments: ["Treat the first array of items as a header row"] };
-                } else {
-
-                    return (value as string[]);
-                } 
+                else {
+                    return this.headerCommand.ExecuteScalar(value as string, para, negated, context);
+                }
             })
         },
         {
