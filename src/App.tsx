@@ -32,6 +32,7 @@ import { RemoveLeadingCommand } from './services/commands/remove-leading-command
 import { RemoveTrailingCommand } from './services/commands/remove-trailing-command';
 import { TextPosService } from './services/text-pos-service';
 import { TextRange } from './interfaces/TextRange';
+import { TakeCommand } from './services/commands/take-command';
 
 interface AppProps {
 }
@@ -102,7 +103,8 @@ class App extends React.Component<AppProps, AppState> {
       new EnsureLeadingCommand(this.textUtilsService),
       new EnsureTrailingCommand(this.textUtilsService),
       new RemoveLeadingCommand(this.textUtilsService),
-      new RemoveTrailingCommand(this.textUtilsService)
+      new RemoveTrailingCommand(this.textUtilsService),
+      new TakeCommand()
     );
 
     this.commandParsingService = new CommandParsingService(

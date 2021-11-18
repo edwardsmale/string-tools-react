@@ -1,21 +1,16 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
 
 export class TakeCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
-
-        this.textUtilsService = textUtilsService;
-    }
-
     Explain(para: string, negated: boolean): Explanation {
 
-        if (negated) {
-            return { segments: ["Exclude blank lines"] };   
-        }
-        else {
-            return { segments: ["Only include blank lines"] };
+        var n = parseInt(para, 10);
+
+        if (isNaN(n)) {
+            return { segments: ["Take the first n items and ignore the rest"] };
+        } else {
+            return { segments: ["Take the first", n.toString(), "item" + (n === 1 ? "" : "s") + " only"] };
         }
     }
 
@@ -26,18 +21,15 @@ export class TakeCommand implements Command {
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        let result: string[] = [];
+        var n = parseInt(para, 10);
 
-        for (let i = 0; i < value.length; i++) {
+        if (isNaN(n)) {
 
-            const isBlank = this.textUtilsService.IsNullOrWhitespace(value[i]);
-
-            if (isBlank === !negated) {
-
-                result.push(value[i]);
-            }
+            return value;
         }
+        else {
 
-        return result;
+            return n >= 0 ? value.slice(0, n) : value.slice(-n);
+        }
     }
 }

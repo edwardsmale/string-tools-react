@@ -9,6 +9,7 @@ import { PascalCommand } from './commands/pascal-command';
 import { KebabCommand } from './commands/kebab-command';
 import { UpperCommand } from './commands/upper-command';
 import { LowerCommand } from './commands/lower-command';
+import { TakeCommand } from './commands/take-command';
 import { DistinctCommand } from './commands/distinct-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
 import { RemoveCommand } from './commands/remove-command';
@@ -19,7 +20,7 @@ import { RemoveTrailingCommand } from './commands/remove-trailing-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand, private takeCommand: TakeCommand) {
 
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
@@ -39,6 +40,7 @@ export class CommandTypesService {
         this.ensureTrailingCcommand = ensureTrailingCcommand;
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
+        this.takeCommand = takeCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -321,7 +323,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.distinctCommand.Explain();
+                    return this.distinctCommand.Explain(para, negated);
 
                 } else {
 
@@ -392,24 +394,16 @@ export class CommandTypesService {
             ],
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                var n = parseInt(para, 10);
-                if (explain) {
-                    if (isNaN(n)) {
-                        return { segments: ["Take the first n items and ignore the rest"] };
-                    } else {
-                        return { segments: ["Take the first", n, "item" + (n === 1 ? "" : "s") + " only"] };
-                    }
-                } else {
-                    if (isNaN(n)) {
-                        return value;
-                    }
-                    else {
-                        if (n >= 0) {
-                            return (value as string[]).slice(0, n);
-                        } else {
-                            return (value as string[]).slice(-n);
-                        }
-                    }
+
+                if (explain) {                    
+                    return this.takeCommand.Explain(para, negated);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.takeCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.takeCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -422,7 +416,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.blankCommand.Explain(negated);
+                    return this.blankCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -442,7 +436,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimCommand.Explain();
+                    return this.trimCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -462,7 +456,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimStartCommand.Explain();
+                    return this.trimStartCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -482,7 +476,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimEndCommand.Explain();
+                    return this.trimEndCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -502,7 +496,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeCommand.Explain();
+                    return this.removeCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -522,7 +516,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.ensureLeadingCommand.Explain();
+                    return this.ensureLeadingCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -542,7 +536,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.ensureTrailingCcommand.Explain();
+                    return this.ensureTrailingCcommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -562,7 +556,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeLeadingCommand.Explain();
+                    return this.removeLeadingCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -582,7 +576,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeTrailingCommand.Explain();
+                    return this.removeTrailingCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -602,7 +596,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.camelCommand.Explain();
+                    return this.camelCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -622,7 +616,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.pascalCommand.Explain();
+                    return this.pascalCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -642,7 +636,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.kebabCommand.Explain();
+                    return this.kebabCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -662,7 +656,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.upperCommand.Explain();
+                    return this.upperCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
@@ -682,7 +676,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.lowerCommand.Explain();
+                    return this.lowerCommand.Explain(para, negated);
 
                 } else if (Array.isArray(value)) {
 
