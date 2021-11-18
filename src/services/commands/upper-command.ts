@@ -1,15 +1,9 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
 
 export class UpperCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
-
-        this.textUtilsService = textUtilsService;
-    }
-
-    Explain(para: string, negated: boolean): Explanation {
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Upper-case the value(s)"] };
     }

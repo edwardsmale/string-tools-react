@@ -3,7 +3,7 @@ import { Context } from '../../interfaces/Context';
 
 export class TakeCommand implements Command {
 
-    Explain(para: string, negated: boolean): Explanation {
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         var n = parseInt(para, 10);
 

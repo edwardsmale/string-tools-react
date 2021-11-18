@@ -325,7 +325,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.distinctCommand.Explain(para, negated);
+                    return this.distinctCommand.Explain(para, negated, context);
 
                 } else {
 
@@ -346,7 +346,7 @@ export class CommandTypesService {
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {                    
-                    return this.skipCommand.Explain(para, negated);
+                    return this.skipCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -390,7 +390,7 @@ export class CommandTypesService {
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {                    
-                    return this.takeCommand.Explain(para, negated);
+                    return this.takeCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -410,7 +410,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.blankCommand.Explain(para, negated);
+                    return this.blankCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -430,7 +430,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimCommand.Explain(para, negated);
+                    return this.trimCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -450,7 +450,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimStartCommand.Explain(para, negated);
+                    return this.trimStartCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -470,7 +470,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimEndCommand.Explain(para, negated);
+                    return this.trimEndCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -490,7 +490,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeCommand.Explain(para, negated);
+                    return this.removeCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -510,7 +510,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.ensureLeadingCommand.Explain(para, negated);
+                    return this.ensureLeadingCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -530,7 +530,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.ensureTrailingCcommand.Explain(para, negated);
+                    return this.ensureTrailingCcommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -550,7 +550,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeLeadingCommand.Explain(para, negated);
+                    return this.removeLeadingCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -570,7 +570,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeTrailingCommand.Explain(para, negated);
+                    return this.removeTrailingCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -590,7 +590,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.camelCommand.Explain(para, negated);
+                    return this.camelCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -610,7 +610,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.pascalCommand.Explain(para, negated);
+                    return this.pascalCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -630,7 +630,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.kebabCommand.Explain(para, negated);
+                    return this.kebabCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -650,7 +650,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.upperCommand.Explain(para, negated);
+                    return this.upperCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 
@@ -670,7 +670,7 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.lowerCommand.Explain(para, negated);
+                    return this.lowerCommand.Explain(para, negated, context);
 
                 } else if (Array.isArray(value)) {
 

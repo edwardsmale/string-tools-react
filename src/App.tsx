@@ -93,7 +93,7 @@ class App extends React.Component<AppProps, AppState> {
       new CamelCommand(this.textUtilsService),
       new PascalCommand(this.textUtilsService),
       new KebabCommand(this.textUtilsService),
-      new UpperCommand(this.textUtilsService),
+      new UpperCommand(),
       new LowerCommand(this.textUtilsService),
       new DistinctCommand(),
       new BlankCommand(this.textUtilsService),
