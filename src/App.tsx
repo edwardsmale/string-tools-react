@@ -33,6 +33,7 @@ import { RemoveTrailingCommand } from './services/commands/remove-trailing-comma
 import { TextPosService } from './services/text-pos-service';
 import { TextRange } from './interfaces/TextRange';
 import { TakeCommand } from './services/commands/take-command';
+import { SkipCommand } from './services/commands/skip-command';
 
 interface AppProps {
 }
@@ -104,7 +105,8 @@ class App extends React.Component<AppProps, AppState> {
       new EnsureTrailingCommand(this.textUtilsService),
       new RemoveLeadingCommand(this.textUtilsService),
       new RemoveTrailingCommand(this.textUtilsService),
-      new TakeCommand()
+      new TakeCommand(),
+      new SkipCommand()
     );
 
     this.commandParsingService = new CommandParsingService(

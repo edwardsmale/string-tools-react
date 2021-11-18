@@ -10,6 +10,7 @@ import { KebabCommand } from './commands/kebab-command';
 import { UpperCommand } from './commands/upper-command';
 import { LowerCommand } from './commands/lower-command';
 import { TakeCommand } from './commands/take-command';
+import { SkipCommand } from './commands/skip-command';
 import { DistinctCommand } from './commands/distinct-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
 import { RemoveCommand } from './commands/remove-command';
@@ -20,7 +21,7 @@ import { RemoveTrailingCommand } from './commands/remove-trailing-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand, private takeCommand: TakeCommand) {
+    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand, private takeCommand: TakeCommand, private skipCommand: SkipCommand) {
 
         this.textUtilsService = textUtilsService;
         this.contextService = contextService;
@@ -41,6 +42,7 @@ export class CommandTypesService {
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
         this.takeCommand = takeCommand;
+        this.skipCommand = skipCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -342,24 +344,16 @@ export class CommandTypesService {
             ],
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                var n = parseInt(para, 10);
-                if (explain) {
-                    if (isNaN(n)) {
-                        return { segments: ["Skip n items"] };
-                    } else {
-                        return { segments: ["Skip", n, "item" + (n === 1 ? "" : "s")] };
-                    }
-                } else {
-                    if (isNaN(n)) {
-                        return value;
-                    }
-                    else {
-                        if (n >= 0) {
-                            return (value as string[]).slice(n);
-                        } else {
-                            return (value as string[]).slice(0, -n);
-                        }
-                    }
+
+                if (explain) {                    
+                    return this.skipCommand.Explain(para, negated);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.skipCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.skipCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
