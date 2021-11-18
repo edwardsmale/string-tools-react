@@ -22,29 +22,49 @@ import { HeaderCommand } from './commands/header-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand, private takeCommand: TakeCommand, private skipCommand: SkipCommand, private headerCommand: HeaderCommand) {
+    constructor(private textUtilsService: TextUtilsService,
+        private sortService: SortService,
+        private contextService: ContextService,
+        private blankCommand: BlankCommand,
+        private camelCommand: CamelCommand,
+        private distinctCommand: DistinctCommand,
+        private ensureLeadingCommand: EnsureLeadingCommand,
+        private ensureTrailingCcommand: EnsureTrailingCommand,
+        private headerCommand: HeaderCommand,
+        private kebabCommand: KebabCommand,
+        private lowerCommand: LowerCommand,
+        private pascalCommand: PascalCommand,
+        private removeCommand: RemoveCommand,
+        private removeLeadingCommand: RemoveLeadingCommand,
+        private removeTrailingCommand: RemoveTrailingCommand,
+        private skipCommand: SkipCommand,
+        private takeCommand: TakeCommand,
+        private trimCommand: TrimCommand,
+        private trimEndCommand: TrimEndCommand,
+        private trimStartCommand: TrimStartCommand,
+        private upperCommand: UpperCommand) {
 
-        this.textUtilsService = textUtilsService;
-        this.contextService = contextService;
-        this.sortService = sortService;
-        this.camelCommand = camelCommand;
-        this.pascalCommand = pascalCommand;
-        this.kebabCommand = kebabCommand;
-        this.upperCommand = upperCommand;
-        this.lowerCommand = lowerCommand;
-        this.distinctCommand = distinctCommand;
         this.blankCommand = blankCommand;
-        this.trimCommand = trimCommand;
-        this.trimStartCommand = trimStartCommand;
-        this.trimEndCommand = trimEndCommand;
-        this.removeCommand = removeCommand;
+        this.camelCommand = camelCommand;
+        this.contextService = contextService;
+        this.distinctCommand = distinctCommand;
         this.ensureLeadingCommand = ensureLeadingCommand;
         this.ensureTrailingCcommand = ensureTrailingCcommand;
+        this.headerCommand = headerCommand;
+        this.kebabCommand = kebabCommand;
+        this.lowerCommand = lowerCommand;
+        this.pascalCommand = pascalCommand;
+        this.removeCommand = removeCommand;
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
-        this.takeCommand = takeCommand;
         this.skipCommand = skipCommand;
-        this.headerCommand = headerCommand;
+        this.sortService = sortService;
+        this.takeCommand = takeCommand;
+        this.textUtilsService = textUtilsService;
+        this.trimCommand = trimCommand;
+        this.trimEndCommand = trimEndCommand;
+        this.trimStartCommand = trimStartCommand;
+        this.upperCommand = upperCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
