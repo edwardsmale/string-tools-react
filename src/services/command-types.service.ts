@@ -5,23 +5,23 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { BlankCommand } from './commands/blank-command';
 import { CamelCommand } from './commands/camel-command';
-import { PascalCommand } from './commands/pascal-command';
-import { KebabCommand } from './commands/kebab-command';
-import { UpperCommand } from './commands/upper-command';
-import { LowerCommand } from './commands/lower-command';
-import { TakeCommand } from './commands/take-command';
-import { SkipCommand } from './commands/skip-command';
 import { DistinctCommand } from './commands/distinct-command';
-import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
-import { RemoveCommand } from './commands/remove-command';
 import { EnsureLeadingCommand } from './commands/ensure-leading-command';
 import { EnsureTrailingCommand } from './commands/ensure-trailing-command';
+import { HeaderCommand } from './commands/header-command';
+import { KebabCommand } from './commands/kebab-command';
+import { LowerCommand } from './commands/lower-command';
+import { PascalCommand } from './commands/pascal-command';
+import { RegexCommand } from './commands/regex-command';
+import { RemoveCommand } from './commands/remove-command';
 import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
-import { HeaderCommand } from './commands/header-command';
 import { SearchCommand } from './commands/search-command';
-import { RegexCommand } from './commands/regex-command';
+import { SkipCommand } from './commands/skip-command';
+import { TakeCommand } from './commands/take-command';
+import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
 import { TsvCommand } from './commands/tsv-command';
+import { UpperCommand } from './commands/upper-command';
 
 export class CommandTypesService {
 
