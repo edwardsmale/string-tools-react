@@ -38,6 +38,7 @@ import { HeaderCommand } from './services/commands/header-command';
 import { SearchCommand } from './services/commands/search-command';
 import { RegexCommand } from './services/commands/regex-command';
 import { TsvCommand } from './services/commands/tsv-command';
+import { JoinCommand } from './services/commands/join-command';
 
 interface AppProps {
 }
@@ -100,6 +101,7 @@ class App extends React.Component<AppProps, AppState> {
       new EnsureLeadingCommand(this.textUtilsService),
       new EnsureTrailingCommand(this.textUtilsService),
       new HeaderCommand(),
+      new JoinCommand(this.textUtilsService),
       new KebabCommand(this.textUtilsService),
       new LowerCommand(this.textUtilsService),
       new PascalCommand(this.textUtilsService),

@@ -9,6 +9,7 @@ import { DistinctCommand } from './commands/distinct-command';
 import { EnsureLeadingCommand } from './commands/ensure-leading-command';
 import { EnsureTrailingCommand } from './commands/ensure-trailing-command';
 import { HeaderCommand } from './commands/header-command';
+import { JoinCommand } from './commands/join-command';
 import { KebabCommand } from './commands/kebab-command';
 import { LowerCommand } from './commands/lower-command';
 import { PascalCommand } from './commands/pascal-command';
@@ -34,6 +35,7 @@ export class CommandTypesService {
         private ensureLeadingCommand: EnsureLeadingCommand,
         private ensureTrailingCcommand: EnsureTrailingCommand,
         private headerCommand: HeaderCommand,
+        private joinCommand: JoinCommand,
         private kebabCommand: KebabCommand,
         private lowerCommand: LowerCommand,
         private pascalCommand: PascalCommand,
@@ -57,6 +59,7 @@ export class CommandTypesService {
         this.ensureLeadingCommand = ensureLeadingCommand;
         this.ensureTrailingCcommand = ensureTrailingCcommand;
         this.headerCommand = headerCommand;
+        this.joinCommand = joinCommand;
         this.kebabCommand = kebabCommand;
         this.lowerCommand = lowerCommand;
         this.pascalCommand = pascalCommand;
@@ -72,7 +75,7 @@ export class CommandTypesService {
         this.trimCommand = trimCommand;
         this.trimEndCommand = trimEndCommand;
         this.trimStartCommand = trimStartCommand;
-        this.tsv = tsvCommand;
+        this.tsvCommand = tsvCommand;
         this.upperCommand = upperCommand;
     }
 
@@ -1129,21 +1132,19 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                value = this.textUtilsService.AsArray(value);
-                var defaultDelimiter = "";
-                para = this.textUtilsService.ReplaceBackslashTWithTab(para);
                 
-                var delimiter = para || defaultDelimiter;
-
                 if (explain) {
-                    var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, true, false);
+                    
+                    return this.joinCommand.Explain(para, negated, context);
 
-                    return { segments: ["Output items separated with", formattedDelimiter] };
-                } else {
+                } else if (Array.isArray(value)) {
 
-                    context.newColumnInfo.headers = [];
-                    return (value as string[]).join(delimiter);
+                    return this.joinCommand.ExecuteArray(value as string[], para, negated, context);
                 }
+                else {
+
+                    return this.joinCommand.ExecuteScalar(value as string, para, negated, context);
+                }                
             })
         },
         {
