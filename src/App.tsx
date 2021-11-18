@@ -37,6 +37,7 @@ import { SkipCommand } from './services/commands/skip-command';
 import { HeaderCommand } from './services/commands/header-command';
 import { SearchCommand } from './services/commands/search-command';
 import { RegexCommand } from './services/commands/regex-command';
+import { TsvCommand } from './services/commands/tsv-command';
 
 interface AppProps {
 }
@@ -112,6 +113,7 @@ class App extends React.Component<AppProps, AppState> {
       new TrimCommand(),
       new TrimEndCommand(),
       new TrimStartCommand(),
+      new TsvCommand(this.textUtilsService),
       new UpperCommand()
     );
 
