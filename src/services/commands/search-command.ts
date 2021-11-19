@@ -5,6 +5,7 @@ export class SearchCommand implements Command {
 
    Explain(para: string, negated: boolean, context: Context): Explanation {
 
+        this.SetSearchString(para, context);
         return { segments: ["Set the current search string to", para] };
     }
 

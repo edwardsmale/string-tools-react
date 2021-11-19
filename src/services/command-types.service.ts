@@ -12,6 +12,7 @@ import { HeaderCommand } from './commands/header-command';
 import { JoinCommand } from './commands/join-command';
 import { KebabCommand } from './commands/kebab-command';
 import { LowerCommand } from './commands/lower-command';
+import { MatchCommand } from './commands/match-command';
 import { PascalCommand } from './commands/pascal-command';
 import { PrintCommand } from './commands/print-command';
 import { RegexCommand } from './commands/regex-command';
@@ -39,6 +40,7 @@ export class CommandTypesService {
         private joinCommand: JoinCommand,
         private kebabCommand: KebabCommand,
         private lowerCommand: LowerCommand,
+        private matchCommand: MatchCommand,
         private pascalCommand: PascalCommand,
         private printCommand: PrintCommand,
         private regexCommand: RegexCommand,
@@ -64,6 +66,7 @@ export class CommandTypesService {
         this.joinCommand = joinCommand;
         this.kebabCommand = kebabCommand;
         this.lowerCommand = lowerCommand;
+        this.matchCommand = matchCommand;
         this.pascalCommand = pascalCommand;
         this.printCommand = printCommand;
         this.regexCommand = regexCommand;
@@ -883,41 +886,17 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                var searchString = para || context.searchString;
+                if (explain) {
+                    
+                    return this.matchCommand.Explain(para, negated, context);
 
-                if (!searchString && context.regex) {
-                    if (explain) {
-                        if (negated) {
-                            return { segments: ["Only include items which don't match the regex", context.regex] };
-                        } else {
-                            return { segments: ["Only include items which match the regex", context.regex] };
-                        }
-                    } else {
-                        if (Array.isArray(value)) {
-                            if (negated) {
-                                return (value as string[]).filter(function (val: string) { return new RegExp(context.regex as string).test(val) === false; });
-                            } else {
-                                return (value as string[]).filter(function (val: string) { return new RegExp(context.regex as string).test(val) === true; });
-                            }
-                        } else {
-                            return new RegExp(context.regex).test(value as string) ? value : null;
-                        }
-                    }
+                } else if (Array.isArray(value)) {
+
+                    return this.matchCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
-                    if (explain) {
-                        if (negated) {
-                            return { segments: ["Only include items that don't contain", searchString] };
-                        } else {
-                            return { segments: ["Only include items containing", searchString] };
-                        }
-                    } else {
-                        if (negated) {
-                            return (value as string[]).filter(function (val: string) { return val.includes(searchString as string) === false; });
-                        } else {
-                            return (value as string[]).filter(function (val: string) { return val.includes(searchString as string) === true; });
-                        }
-                    }
+
+                    return this.matchCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },

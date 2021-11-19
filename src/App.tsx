@@ -40,6 +40,7 @@ import { RegexCommand } from './services/commands/regex-command';
 import { TsvCommand } from './services/commands/tsv-command';
 import { JoinCommand } from './services/commands/join-command';
 import { PrintCommand } from './services/commands/print-command';
+import { MatchCommand } from './services/commands/match-command';
 
 interface AppProps {
 }
@@ -105,6 +106,7 @@ class App extends React.Component<AppProps, AppState> {
       new JoinCommand(this.textUtilsService),
       new KebabCommand(this.textUtilsService),
       new LowerCommand(this.textUtilsService),
+      new MatchCommand(),
       new PascalCommand(this.textUtilsService),
       new PrintCommand(this.textUtilsService),
       new RegexCommand(),

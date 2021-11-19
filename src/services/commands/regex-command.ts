@@ -5,6 +5,7 @@ export class RegexCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
+        this.SetRegex(para, context);
         return { segments: ["Set the current regex to", para] };
     }
 
