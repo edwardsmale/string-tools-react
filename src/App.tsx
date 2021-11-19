@@ -436,7 +436,14 @@ match`;
 
     const context = this.contextService.CreateContext();
 
-    const result = this.commandService.processCommands(code, input, context);
+    const inputAOA: string[][] = [];
+
+    for (let i = 0; i < input.length; i++) {
+      
+      inputAOA.push([input[i]]);
+    }
+
+    const result = this.commandService.processCommands(code, inputAOA, context);
 
     this.setState({ context: context });
 
