@@ -14,9 +14,9 @@ export class RemoveTrailingCommand implements Command {
         return { segments: ["Remove the specified string from the end of each line, if present"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [value];  
+        return this.ExecuteArray(value, para, negated, context); 
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

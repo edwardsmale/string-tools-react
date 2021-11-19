@@ -8,9 +8,9 @@ export class TrimCommand implements Command {
         return { segments: ["Trim leading and trailing whitespace"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [value.trim()];  
+        return this.ExecuteArray(value, para, negated, context);  
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
@@ -32,9 +32,9 @@ export class TrimStartCommand implements Command {
         return { segments: ["Trims leading whitespace"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [value.trimStart()];  
+        return this.ExecuteArray(value, para, negated, context);   
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
@@ -56,9 +56,9 @@ export class TrimEndCommand implements Command {
         return { segments: ["Trims trailing whitespace"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [value.trimEnd()];  
+        return this.ExecuteArray(value, para, negated, context);  
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

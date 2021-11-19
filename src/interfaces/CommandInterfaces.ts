@@ -42,7 +42,7 @@ export interface ArrayCommandType
 export interface Command
 {
     Explain(para: string, negated: boolean, context: Context): Explanation;
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[];
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[];
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[];
 }
 
