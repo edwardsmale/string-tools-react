@@ -45,6 +45,7 @@ import { EncloseCommand } from './services/commands/enclose-command';
 import { CsvCommand } from './services/commands/csv-command';
 import { SelectCommand } from './services/commands/select-command';
 import { SplitCommand } from './services/commands/split-command';
+import { NoopCommand } from './services/commands/noop-command';
 
 interface AppProps {
 }
@@ -113,6 +114,7 @@ class App extends React.Component<AppProps, AppState> {
       new KebabCommand(this.textUtilsService),
       new LowerCommand(this.textUtilsService),
       new MatchCommand(),
+      new NoopCommand(),
       new PascalCommand(this.textUtilsService),
       new PrintCommand(this.textUtilsService),
       new RegexCommand(),

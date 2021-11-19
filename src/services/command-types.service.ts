@@ -15,6 +15,7 @@ import { JoinCommand } from './commands/join-command';
 import { KebabCommand } from './commands/kebab-command';
 import { LowerCommand } from './commands/lower-command';
 import { MatchCommand } from './commands/match-command';
+import { NoopCommand } from './commands/noop-command';
 import { PascalCommand } from './commands/pascal-command';
 import { PrintCommand } from './commands/print-command';
 import { RegexCommand } from './commands/regex-command';
@@ -47,6 +48,7 @@ export class CommandTypesService {
         private kebabCommand: KebabCommand,
         private lowerCommand: LowerCommand,
         private matchCommand: MatchCommand,
+        private noopCommand: NoopCommand,
         private pascalCommand: PascalCommand,
         private printCommand: PrintCommand,
         private regexCommand: RegexCommand,
@@ -76,6 +78,7 @@ export class CommandTypesService {
         this.kebabCommand = kebabCommand;
         this.lowerCommand = lowerCommand;
         this.matchCommand = matchCommand;
+        this.noopCommand = noopCommand;
         this.pascalCommand = pascalCommand;
         this.printCommand = printCommand;
         this.regexCommand = regexCommand;
@@ -116,10 +119,16 @@ export class CommandTypesService {
             para: [] as CommandParameter[],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                if (explain) {
-                    return { segments: [] };
-                } else {
-                    return value;
+                
+                if (explain) {                    
+                    return this.noopCommand.Explain(para, negated, context);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.noopCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.noopCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
