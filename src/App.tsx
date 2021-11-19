@@ -43,6 +43,7 @@ import { PrintCommand } from './services/commands/print-command';
 import { MatchCommand } from './services/commands/match-command';
 import { EncloseCommand } from './services/commands/enclose-command';
 import { CsvCommand } from './services/commands/csv-command';
+import { SelectCommand } from './services/commands/select-command';
 
 interface AppProps {
 }
@@ -118,6 +119,7 @@ class App extends React.Component<AppProps, AppState> {
       new RemoveLeadingCommand(this.textUtilsService),
       new RemoveTrailingCommand(this.textUtilsService),
       new SearchCommand(),
+      new SelectCommand(this.textUtilsService),
       new SkipCommand(),
       new TakeCommand(),
       new TrimCommand(),

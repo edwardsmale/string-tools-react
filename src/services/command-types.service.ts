@@ -22,6 +22,7 @@ import { RemoveCommand } from './commands/remove-command';
 import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
 import { SearchCommand } from './commands/search-command';
+import { SelectCommand } from './commands/select-command';
 import { SkipCommand } from './commands/skip-command';
 import { TakeCommand } from './commands/take-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
@@ -52,6 +53,7 @@ export class CommandTypesService {
         private removeLeadingCommand: RemoveLeadingCommand,
         private removeTrailingCommand: RemoveTrailingCommand,
         private searchCommand: SearchCommand,
+        private selectCommand: SelectCommand,
         private skipCommand: SkipCommand,
         private takeCommand: TakeCommand,
         private trimCommand: TrimCommand,
@@ -79,6 +81,7 @@ export class CommandTypesService {
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
         this.searchCommand = searchCommand;
+        this.selectCommand = selectCommand;
         this.skipCommand = skipCommand;
         this.sortService = sortService;
         this.takeCommand = takeCommand;
@@ -812,70 +815,17 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
-
-                const indices = this.textUtilsService.ParseIntegers(para);
-
                 if (explain) {
+                    
+                    return this.selectCommand.Explain(para, negated, context);
 
-                    if (indices.some((i) => isNaN(i))) {
+                } else if (Array.isArray(value)) {
 
-                        return { segments: ["Get the specified columns"] };
-                    }
-                    else if (indices.some((i) => i < 0)) {
+                    return this.selectCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
 
-                        let formattedIndices: string[] = [];
-
-                        for (let i = 0; i < indices.length; i++) {
-
-                            var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
-
-                            formattedIndices.push(formattedIndex);
-                        }
-
-                        let positions = this.textUtilsService.FormatList(formattedIndices);
-
-                        return { segments: ["Get", positions] };
-                    }
-                    else {
-
-                        let positions = this.textUtilsService.FormatList(indices);
-
-                        if (indices.length > 1) {
-
-                            return { segments: ["Get the items at indexes", positions] };
-                        }
-                        else {
-                            return { segments: ["Get the items at index", positions] };
-                        }
-                    }
-                } else {
-
-                    let result: string[] = [];
-
-                    context.newColumnInfo.headers = [];
-                    context.newColumnInfo.numberOfColumns = 0;
-
-                    for (let i = 0; i < indices.length; i++) {
-
-                        var index = indices[i];
-
-                        if (index < 0) {
-                            index += value.length;
-                        }
-
-                        if (index >= 0 && index < value.length) {
-                            result.push(value[index]);
-
-                            if (context.columnInfo.headers) {
-                                context.newColumnInfo.headers.push(context.columnInfo.headers[index]);
-                            }
-
-                            context.newColumnInfo.numberOfColumns++;
-                        }
-                    }
-
-                    return result;
+                    return this.selectCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
