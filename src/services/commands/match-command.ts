@@ -64,11 +64,11 @@ export class MatchCommand implements Command {
 
         if (!searchString && context.regex) {
 
-            return value.filter(function (val: string) { return val.includes(searchString as string) === includeSuccesses; });
+            return value.filter(function (val: string) { return new RegExp(context.regex as string).test(val) === includeSuccesses; });
         }
         else {
 
-            return value.filter(function (val: string) { return new RegExp(context.regex as string).test(val) === includeSuccesses; });
+            return value.filter(function (val: string) { return val.includes(searchString as string) === includeSuccesses; });
         }
     }
 }
