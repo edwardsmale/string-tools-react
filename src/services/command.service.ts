@@ -114,10 +114,7 @@ export class CommandService {
 
                                 if (indices.includes(k)) {
                                     
-                                    for (let l = 0; l < subResult[j].length; l++) {
-
-                                        resultRow.push(subResult[j][l]);                                    
-                                    }
+                                    resultRow.push(subResult[j].join("\n"));
                                 }
                                 else {
                                     
@@ -148,11 +145,16 @@ export class CommandService {
                             if (Array.isArray(currentValues[j])) {
 
                                 for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
-                                    flattened.push(currentValues[j][k]);
 
-                                    if (flattened.length === batchSize) {
-                                        batches.push(flattened);
-                                        flattened = [];
+                                    const lines = this.textUtilsService.TextToLines(currentValues[j][k]);
+
+                                    for (let l = 0; l < lines.length; l++) {
+                                        flattened.push(lines[l]);
+
+                                        if (flattened.length === batchSize) {
+                                            batches.push(flattened);
+                                            flattened = [];
+                                        }
                                     }
                                 }
 
