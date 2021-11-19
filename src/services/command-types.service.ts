@@ -907,33 +907,23 @@ export class CommandTypesService {
         },
         {
             name: "flat",
-            desc: "Flattens an array of arrays into one array, or batches items into arrays of a given size",
+            desc: "Flattens an array of arrays into one array, or into batches of a specified size",
             para: [{
                 name: "Batch Size",
-                desc: "If set, converts into batches of this size"
+                desc: "If set, flattens into batches of this size"
             }],
             isArrayBased: true,
             exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                if (explain) {
-                    if (this.textUtilsService.IsIntegral(para)) {
-                        return { segments: ["Convert into arrays of", para, "items"] };
-                    } else {
-                        return { segments: ["Flatten an array of arrays into one array"] };
-                    }
-                } else {
-                    if (Array.isArray(value[0])) {
-                        let result = [];
 
-                        for (let i = 0; i < value.length; i++) {
-                            for (let j = 0; j < value[i].length; j++) {
-                                result.push(value[i][j]);
-                            }
-                        }
-                    }
-                    else {
+                // This code is only called when generating the explanation.
+                // The code to execute this command is in command.service.ts.
+                if (this.textUtilsService.IsPositiveInteger(para)) {
 
-                        return value;
-                    }
+                    return { segments: ["Flatten into batches of", para] };
+                } 
+                else {
+
+                    return { segments: ["Flatten into one array"] };
                 }
             })
         },
