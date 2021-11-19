@@ -14,11 +14,11 @@ export class TsvCommand implements Command {
         return { segments: ["Output the items in tab-separated format"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
         
         context.newColumnInfo.headers = [];
 
-        return this.textUtilsService.AsArray(value).join("\t");
+        return [this.textUtilsService.AsArray(value).join("\t")];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

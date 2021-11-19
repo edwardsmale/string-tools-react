@@ -58,13 +58,9 @@ export class CsvCommand implements Command {
         return { segments: [explanation] };    
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
 
-        const options = this.parseOptions(para);
-
-        context.newColumnInfo.headers = [];
-
-        return this.toDelimitedString(value, options);
+        return [value];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
