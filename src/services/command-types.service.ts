@@ -22,6 +22,7 @@ import { RegexCommand } from './commands/regex-command';
 import { RemoveCommand } from './commands/remove-command';
 import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
+import { ReplaceCommand } from './commands/replace-command';
 import { SearchCommand } from './commands/search-command';
 import { SelectCommand } from './commands/select-command';
 import { SplitCommand } from './commands/split-command';
@@ -55,6 +56,7 @@ export class CommandTypesService {
         private removeCommand: RemoveCommand,
         private removeLeadingCommand: RemoveLeadingCommand,
         private removeTrailingCommand: RemoveTrailingCommand,
+        private replaceCommand: ReplaceCommand,
         private searchCommand: SearchCommand,
         private selectCommand: SelectCommand,
         private skipCommand: SkipCommand,
@@ -85,6 +87,7 @@ export class CommandTypesService {
         this.removeCommand = removeCommand;
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
+        this.replaceCommand = replaceCommand;
         this.searchCommand = searchCommand;
         this.selectCommand = selectCommand;
         this.skipCommand = skipCommand;
@@ -194,73 +197,17 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                para = this.textUtilsService.ReplaceBackslashTWithTab(para);
-
-                if (explain) {
-
-                    if (context.regex) {
-
-                        return { segments: ["Replace text matching the regex", context.regex, "with", para] };
-                    } 
-                    else if (context.searchString) {
-
-                        return { segments: ["Replace", context.searchString, "with", para] };
-                    } 
-                    else {
-
-                        return { segments: ["*** This command only works if a regex or search string has been set by an earlier 'regex' or 'search' instruction."] };
-                    }
-                } else {
-
-                    if (Array.isArray(value)) {
-
-                        let newValue: string[] = [];
-
-                        const length = (value as string[]).length;
-
-                        if (context.regex) {
-
-                            const globalRegexReplace = this.textUtilsService.GlobalRegexReplace;
-
-                            for (let i = 0; i < length; i++) {
-
-                                newValue.push(globalRegexReplace(value[i], context.regex, para));
-                            }
-
-                            return newValue;
-                        }
-                        else if (context.searchString) {
-
-                            const globalStringReplace = this.textUtilsService.GlobalStringReplace;
-                            
-                            for (let i = 0; i < length; i++) {
-                                
-                                newValue.push(globalStringReplace(value[i], context.searchString, para));
-                            }
-
-                            return newValue;
-                        }
-                        else {
-                            
-                            return value;
-                        }
-
-                    } else {
-
-                        if (context.regex) {
-
-                            return this.textUtilsService.GlobalRegexReplace(value as string, context.regex, para);
-                        }
-                        else if (context.searchString) {
-
-                            return this.textUtilsService.GlobalStringReplace(value as string, context.searchString, para);
-                        }
-                        else {
-
-                            return value;
-                        }
-                    }
+                if (explain) {            
+                           
+                    return this.replaceCommand.Explain(para, negated, context);
                 }
+                else if (Array.isArray(value)) {
+
+                    return this.replaceCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.replaceCommand.ExecuteScalar(value as string, para, negated, context);
+                }                
             })
         },
         {

@@ -46,6 +46,7 @@ import { CsvCommand } from './services/commands/csv-command';
 import { SelectCommand } from './services/commands/select-command';
 import { SplitCommand } from './services/commands/split-command';
 import { NoopCommand } from './services/commands/noop-command';
+import { ReplaceCommand } from './services/commands/replace-command';
 
 interface AppProps {
 }
@@ -121,6 +122,7 @@ class App extends React.Component<AppProps, AppState> {
       new RemoveCommand(),
       new RemoveLeadingCommand(this.textUtilsService),
       new RemoveTrailingCommand(this.textUtilsService),
+      new ReplaceCommand(this.textUtilsService),
       new SearchCommand(),
       new SelectCommand(this.textUtilsService),
       new SkipCommand(),
