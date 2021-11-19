@@ -42,6 +42,7 @@ import { JoinCommand } from './services/commands/join-command';
 import { PrintCommand } from './services/commands/print-command';
 import { MatchCommand } from './services/commands/match-command';
 import { EncloseCommand } from './services/commands/enclose-command';
+import { CsvCommand } from './services/commands/csv-command';
 
 interface AppProps {
 }
@@ -100,6 +101,7 @@ class App extends React.Component<AppProps, AppState> {
       this.contextService,
       new BlankCommand(this.textUtilsService),
       new CamelCommand(this.textUtilsService),
+      new CsvCommand(this.textUtilsService),
       new DistinctCommand(),
       new EncloseCommand(),
       new EnsureLeadingCommand(this.textUtilsService),

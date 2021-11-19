@@ -5,6 +5,7 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { BlankCommand } from './commands/blank-command';
 import { CamelCommand } from './commands/camel-command';
+import { CsvCommand } from './commands/csv-command';
 import { DistinctCommand } from './commands/distinct-command';
 import { EncloseCommand } from './commands/enclose-command';
 import { EnsureLeadingCommand } from './commands/ensure-leading-command';
@@ -34,6 +35,7 @@ export class CommandTypesService {
         private contextService: ContextService,
         private blankCommand: BlankCommand,
         private camelCommand: CamelCommand,
+        private csvCommand: CsvCommand,
         private distinctCommand: DistinctCommand,
         private encloseCommand: EncloseCommand,
         private ensureLeadingCommand: EnsureLeadingCommand,
@@ -1008,95 +1010,19 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                value = this.textUtilsService.AsArray(value);
-
-                var options = {
-                    isDoubleQuote: para.includes('"'),
-                    isSingleQuote: para.includes("'"),
-                    isAtString: para.includes("@"),
-                    isEscaped: para.includes("\\"),
-                    delimiter: para.replace(/["'\\@]+/, "") || ","
-                };
-
-                if (para.includes("\\t")) {
-                    options.delimiter = "\t";
-                }
 
                 if (explain) {
+                    
+                    return this.csvCommand.Explain(para, negated, context);
 
-                    var explanation = "Output the items";
+                } else if (Array.isArray(value)) {
 
-                    if (options.delimiter === ",") {
-                        explanation += " in CSV format";
-                    } else {
-                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(options.delimiter, true, false);
-                        explanation += " separated with " + formattedDelimiter;
-                    }
-
-                    if (options.isDoubleQuote) {
-                        explanation += ", with values in double quotes"
-
-                        if (options.isAtString) {
-                            explanation += " preceded by @"
-                        }
-
-                        if (options.isEscaped) {
-                            explanation += ", backslash-escaping any double quotes";
-                        } else {
-                            explanation += ", doubling-up any double quotes";
-                        }
-                    }
-                    else if (options.isSingleQuote) {
-                        explanation += ", with values in single quotes"
-
-                        if (options.isEscaped) {
-                            explanation += ", backslash-escaping any quotes";
-                        } else {
-                            explanation += ", doubling-up any quotes";
-                        }
-                    }
-
-                    return { segments: [explanation] };
-
-                } else {
-                    context.newColumnInfo.headers = [];
-
-                    var toDelimitedString = (value: string[], options: any) => {
-                        var result = [];
-
-                        for (let i = 0; i < value.length; i++) {
-                            var val = value[i];
-                            if (options.isDoubleQuote) { // || val.includes(options.delimiter)) {
-                                if (options.isEscaped) {
-                                    // Replace " with \"
-                                    val = val.replace(/"/g, '\\"');
-                                    val = '"' + val + '"';
-                                } else {
-                                    // Replace " with ""
-                                    val = val.replace(/"/g, '""');
-                                    val = '"' + val + '"';
-                                    if (options.isAtString) {
-                                        val = "@" + val;
-                                    }
-                                }
-                            } else if (options.isSingleQuote) {
-                                if (options.isEscaped) {
-                                    // Replace ' with \'
-                                    val = val.replace(/'/g, "\\'");
-                                    val = "'" + val + "'";
-                                } else {
-                                    // Replace ' with ''
-                                    val = val.replace(/'/g, "''");
-                                    val = "'" + val + "'";
-                                }
-                            }
-                            result.push(val);
-                        }
-                        return result.join(options.delimiter);
-                    };
+                    return this.csvCommand.ExecuteArray(value as string[], para, negated, context);
                 }
+                else {
 
-                return toDelimitedString((value as string[]), options);
+                    return this.csvCommand.ExecuteScalar(value as string, para, negated, context);
+                }   
             })
         },
         {
