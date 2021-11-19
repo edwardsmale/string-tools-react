@@ -41,6 +41,7 @@ import { TsvCommand } from './services/commands/tsv-command';
 import { JoinCommand } from './services/commands/join-command';
 import { PrintCommand } from './services/commands/print-command';
 import { MatchCommand } from './services/commands/match-command';
+import { EncloseCommand } from './services/commands/enclose-command';
 
 interface AppProps {
 }
@@ -100,6 +101,7 @@ class App extends React.Component<AppProps, AppState> {
       new BlankCommand(this.textUtilsService),
       new CamelCommand(this.textUtilsService),
       new DistinctCommand(),
+      new EncloseCommand(),
       new EnsureLeadingCommand(this.textUtilsService),
       new EnsureTrailingCommand(this.textUtilsService),
       new HeaderCommand(),

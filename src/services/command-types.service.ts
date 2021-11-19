@@ -6,6 +6,7 @@ import { ContextService } from './context.service';
 import { BlankCommand } from './commands/blank-command';
 import { CamelCommand } from './commands/camel-command';
 import { DistinctCommand } from './commands/distinct-command';
+import { EncloseCommand } from './commands/enclose-command';
 import { EnsureLeadingCommand } from './commands/ensure-leading-command';
 import { EnsureTrailingCommand } from './commands/ensure-trailing-command';
 import { HeaderCommand } from './commands/header-command';
@@ -34,6 +35,7 @@ export class CommandTypesService {
         private blankCommand: BlankCommand,
         private camelCommand: CamelCommand,
         private distinctCommand: DistinctCommand,
+        private encloseCommand: EncloseCommand,
         private ensureLeadingCommand: EnsureLeadingCommand,
         private ensureTrailingCcommand: EnsureTrailingCommand,
         private headerCommand: HeaderCommand,
@@ -60,6 +62,7 @@ export class CommandTypesService {
         this.camelCommand = camelCommand;
         this.contextService = contextService;
         this.distinctCommand = distinctCommand;
+        this.encloseCommand = encloseCommand;
         this.ensureLeadingCommand = ensureLeadingCommand;
         this.ensureTrailingCcommand = ensureTrailingCcommand;
         this.headerCommand = headerCommand;
@@ -934,29 +937,22 @@ export class CommandTypesService {
         },
         {
             name: "enclose",
-            desc: "Put character(s) at the start and end of each item",
+            desc: "Puts the specified characters at the start and end of each item",
             para: [],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                var leftChar: string;
-                var rightChar: string;
-
-                if (para.length === 0) {
-                    leftChar = "(";
-                    rightChar = ")";
-                } else if (para.length === 1) {
-                    leftChar = para[0];
-                    rightChar = para[0];
-                } else {
-                    leftChar = para[0];
-                    rightChar = para[1];
-                }
 
                 if (explain) {
-                    return { segments: ["Enclose each item in", leftChar, "and", rightChar] };
-                } else {
-                    var scalarValue = this.textUtilsService.AsScalar(value);
-                    return leftChar + scalarValue + rightChar;
+                    
+                    return this.encloseCommand.Explain(para, negated, context);
+
+                } else if (Array.isArray(value)) {
+
+                    return this.encloseCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+
+                    return this.encloseCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
