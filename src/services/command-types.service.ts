@@ -144,10 +144,11 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                if (explain) {                    
-                    return this.regexCommand.Explain(para, negated, context);
+                if (explain) {     
 
-                } else if (Array.isArray(value)) {
+                    return this.regexCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.regexCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -168,10 +169,11 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                if (explain) {                    
+                if (explain) {            
+                           
                     return this.searchCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.searchCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -195,16 +197,25 @@ export class CommandTypesService {
                 para = this.textUtilsService.ReplaceBackslashTWithTab(para);
 
                 if (explain) {
+
                     if (context.regex) {
+
                         return { segments: ["Replace text matching the regex", context.regex, "with", para] };
-                    } else if (context.searchString) {
+                    } 
+                    else if (context.searchString) {
+
                         return { segments: ["Replace", context.searchString, "with", para] };
-                    } else {
+                    } 
+                    else {
+
                         return { segments: ["*** This command only works if a regex or search string has been set by an earlier 'regex' or 'search' instruction."] };
                     }
                 } else {
+
                     if (Array.isArray(value)) {
+
                         let newValue: string[] = [];
+
                         const length = (value as string[]).length;
 
                         if (context.regex) {
@@ -228,18 +239,24 @@ export class CommandTypesService {
                             }
 
                             return newValue;
-
-                        } else {
+                        }
+                        else {
                             
                             return value;
                         }
 
                     } else {
+
                         if (context.regex) {
+
                             return this.textUtilsService.GlobalRegexReplace(value as string, context.regex, para);
-                        } else if (context.searchString) {
+                        }
+                        else if (context.searchString) {
+
                             return this.textUtilsService.GlobalStringReplace(value as string, context.searchString, para);
-                        } else {
+                        }
+                        else {
+
                             return value;
                         }
                     }
@@ -258,14 +275,16 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                if (explain) {                    
-                    return this.splitCommand.Explain(para, negated, context);
+                if (explain) {     
 
-                } else if (Array.isArray(value)) {
+                    return this.splitCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
                     return this.splitCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.splitCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -292,30 +311,38 @@ export class CommandTypesService {
                     const descending = para.toLowerCase().indexOf("desc") !== -1;
                     
                     if (explain) {
+
                         if (descending) {
+
                             return { segments: ["Sort the items in descending order"] };
                         }
                         else {
+
                             return { segments: ["Sort the items"] };
                         }
-                    } else {
+                    } 
+                    else {
+
                         let sortedValues : string[];
 
                         if (value.length === 1 && Array.isArray(value[0])) {
                             
                             sortedValues = sortArray(value[0] as string[]);
-                        } else {
+                        }
+                        else {
 
                             sortedValues = sortArray(value as string[]);
                         }
 
                         if (descending) {
+
                             sortedValues = sortedValues.reverse();
                         }
 
                         return [sortedValues];
                     }
-                } else {
+                } 
+                else {
                     
                     if (explain) {
 
@@ -327,12 +354,12 @@ export class CommandTypesService {
                         }
 
                         return { segments: ["Sort by", positions.join(", then by ")] };
-
-                    } else if (!para) {
+                    } 
+                    else if (!para) {
 
                         return this.sortService.SortLines(value as string[]);
-
-                    } else {
+                    } 
+                    else {
 
                         // Negative indexes count back from the end.
                         for (let i = 0; i < indices.length; i++) {
@@ -361,8 +388,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.distinctCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.distinctCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -384,14 +411,16 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                if (explain) {                    
-                    return this.skipCommand.Explain(para, negated, context);
+                if (explain) {
 
-                } else if (Array.isArray(value)) {
+                    return this.skipCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
                     return this.skipCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.skipCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -403,14 +432,16 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                if (explain) {                    
-                    return this.headerCommand.Explain(para, negated, context);
+                if (explain) {    
 
-                } else if (Array.isArray(value)) {
+                    return this.headerCommand.Explain(para, negated, context);
+                }
+                 else if (Array.isArray(value)) {
 
                     return this.headerCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.headerCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -427,10 +458,11 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                if (explain) {                    
-                    return this.takeCommand.Explain(para, negated, context);
+                if (explain) {     
 
-                } else if (Array.isArray(value)) {
+                    return this.takeCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.takeCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -449,8 +481,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.blankCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.blankCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -470,8 +502,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.trimCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.trimCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -491,8 +523,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.trimStartCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.trimStartCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -512,8 +544,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.trimEndCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.trimEndCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -533,8 +565,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.removeCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.removeCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -554,8 +586,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.ensureLeadingCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.ensureLeadingCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -575,8 +607,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.ensureTrailingCcommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.ensureTrailingCcommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -596,8 +628,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.removeLeadingCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.removeLeadingCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -617,8 +649,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.removeTrailingCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.removeTrailingCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -638,8 +670,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.camelCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.camelCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -659,8 +691,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.pascalCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.pascalCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -680,8 +712,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.kebabCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.kebabCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -701,8 +733,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.upperCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.upperCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -722,8 +754,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.lowerCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.lowerCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -748,8 +780,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.selectCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.selectCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -774,8 +806,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.matchCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.matchCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -795,8 +827,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.encloseCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.encloseCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -816,8 +848,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.tsvCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.tsvCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -862,8 +894,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.csvCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.csvCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -888,8 +920,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.joinCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.joinCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -909,8 +941,8 @@ export class CommandTypesService {
                 if (explain) {
                     
                     return this.printCommand.Explain(para, negated, context);
-
-                } else if (Array.isArray(value)) {
+                }
+                else if (Array.isArray(value)) {
 
                     return this.printCommand.ExecuteArray(value as string[], para, negated, context);
                 }

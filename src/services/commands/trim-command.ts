@@ -27,7 +27,7 @@ export class TrimCommand implements Command {
 
 export class TrimStartCommand implements Command {
 
-    Explain(para: string, negated: boolean): Explanation {
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Trims leading whitespace"] };
     }
@@ -51,7 +51,7 @@ export class TrimStartCommand implements Command {
 
 export class TrimEndCommand implements Command {
 
-    Explain(para: string, negated: boolean): Explanation {
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Trims trailing whitespace"] };
     }
