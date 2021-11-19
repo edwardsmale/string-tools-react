@@ -9,10 +9,9 @@ export class RegexCommand implements Command {
         return { segments: ["Set the current regex to", para] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        this.SetRegex(para, context);
-        return [value];
+        return this.ExecuteArray(value, para, negated, context);
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

@@ -8,9 +8,9 @@ export class UpperCommand implements Command {
         return { segments: ["Upper-case the value(s)"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [value.toUpperCase()];   
+        return this.ExecuteArray(value, para, negated, context);  
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

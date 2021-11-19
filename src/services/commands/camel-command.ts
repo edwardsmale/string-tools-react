@@ -14,9 +14,9 @@ export class CamelCommand implements Command {
         return { segments: ["Camel-case the value(s)"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [this.ToCamelCase(value)];    
+        return this.ExecuteArray(value, para, negated, context);   
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

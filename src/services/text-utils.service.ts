@@ -126,6 +126,14 @@ export class TextUtilsService {
         return true;
     }
 
+    ParseInteger = (value: string) => {
+
+        return this.IsIntegral(value) ? parseInt(value, 10) : null;
+    }
+
+    // charCode 48 to 57 are the digits 0 to 9.
+    // charCode 45 is the minus sign.
+
     IsPositiveInteger = (value: string) => {
 
         if (!value) {
@@ -134,7 +142,11 @@ export class TextUtilsService {
         
         let charCode = value.charCodeAt(0);
 
-        for (let i = 0; i < value.length; i++) {
+        if (charCode > 57 || charCode < 49) {
+            return false;
+        }
+
+        for (let i = 1; i < value.length; i++) {
 
             charCode = value.charCodeAt(i);
 
@@ -144,6 +156,11 @@ export class TextUtilsService {
         }
 
         return true;
+    }
+
+    ParsePositiveInteger = (value: string) => {
+
+        return this.IsPositiveInteger(value) ? parseInt(value, 10) : null;
     }
 
     IsNumeric = (value: string) => {
@@ -358,7 +375,7 @@ export class TextUtilsService {
 
         let result = codeLine;
 
-        if (Array.isArray(headers)) {
+        if (headers) {
 
             let headersOrderedByLength = this.GetHeadersOrderedByLength(headers);
 

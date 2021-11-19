@@ -14,9 +14,9 @@ export class LowerCommand implements Command {
         return { segments: ["Lower-case the value(s)"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [value.toLowerCase()];   
+        return this.ExecuteArray(value, para, negated, context);  
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

@@ -28,17 +28,17 @@ export class SplitCommand implements Command {
             var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false, true);
 
             return { segments: ["Split the text on every", formattedDelimiter] };
-
         }
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
 
-        return this.splitScalar(value, para, negated, context);
+        return this.ExecuteArray(value, para, negated, context);
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
+        debugger;
         let result = [];
 
         for (let i = 0; i < value.length; i++) {

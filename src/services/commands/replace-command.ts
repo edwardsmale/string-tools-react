@@ -27,22 +27,9 @@ export class ReplaceCommand implements Command {
         }
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        para = this.FormatPara(para);
-
-        if (context.regex) {
-
-            return [this.textUtilsService.GlobalRegexReplace(value as string, context.regex, para)];
-        }
-        else if (context.searchString) {
-
-            return [this.textUtilsService.GlobalStringReplace(value as string, context.searchString, para)];
-        }
-        else {
-
-            return [value];
-        }
+        return this.ExecuteArray(value, para, negated, context);
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

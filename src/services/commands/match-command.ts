@@ -36,24 +36,9 @@ export class MatchCommand implements Command {
         }
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        const searchString = para || context.searchString;
-
-        let isMatch = false;
-        
-        if (!searchString && context.regex) {
-            
-            isMatch = new RegExp(context.regex).test(value as string);
-        }
-        else {
-
-            isMatch = value.includes(searchString as string);
-        }
-
-        const isSuccess = negated ? !isMatch : isMatch;
-
-        return isSuccess ? [value] : [];
+        return this.ExecuteArray(value, para, negated, context);
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

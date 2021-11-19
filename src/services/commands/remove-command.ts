@@ -8,9 +8,9 @@ export class RemoveCommand implements Command {
         return { segments: ["Remove text matching a regex"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
+    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        return [value];  
+        return this.ExecuteArray(value, para, negated, context); 
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
