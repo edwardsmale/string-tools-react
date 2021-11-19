@@ -23,6 +23,7 @@ import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
 import { SearchCommand } from './commands/search-command';
 import { SelectCommand } from './commands/select-command';
+import { SplitCommand } from './commands/split-command';
 import { SkipCommand } from './commands/skip-command';
 import { TakeCommand } from './commands/take-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
@@ -55,6 +56,7 @@ export class CommandTypesService {
         private searchCommand: SearchCommand,
         private selectCommand: SelectCommand,
         private skipCommand: SkipCommand,
+        private splitCommand: SplitCommand,
         private takeCommand: TakeCommand,
         private trimCommand: TrimCommand,
         private trimEndCommand: TrimEndCommand,
@@ -84,6 +86,7 @@ export class CommandTypesService {
         this.selectCommand = selectCommand;
         this.skipCommand = skipCommand;
         this.sortService = sortService;
+        this.splitCommand = splitCommand;
         this.takeCommand = takeCommand;
         this.textUtilsService = textUtilsService;
         this.trimCommand = trimCommand;
@@ -246,48 +249,15 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                value = this.textUtilsService.AsScalar(value);
+                if (explain) {                    
+                    return this.splitCommand.Explain(para, negated, context);
 
-                if (!para && context.regex) {
+                } else if (Array.isArray(value)) {
 
-                    if (explain) {
-                        return { segments: ["Split the text using the regex", context.regex] };
-                    } else {
-                        return (value as string).split(new RegExp(context.regex));
-                    }
-                }
-                else if (!para && context.searchString) {
-
-                    if (explain) {
-                        return { segments: ["Split the text on", context.searchString] };
-                    } else {
-                        return (value as string).split(context.searchString);
-                    }
+                    return this.splitCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
-                    var defaultDelimiter = ",";
-                    para = para === "\\t" ? "\t" : para;
-                    var delimiter = para || defaultDelimiter;
-
-                    if (explain) {
-
-                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false, true);
-
-                        return { segments: ["Split the text on every", formattedDelimiter] };
-
-                    } else {
-
-                        if (delimiter.length === 1 && "|^$*()\\/[].+".includes(delimiter)) {
-                            delimiter = "\\" + delimiter;
-                        }
-
-                        var splitValues = this.textUtilsService.Split(value as string, delimiter);
-
-                        context.newColumnInfo.numberOfColumns = splitValues.length;
-                        context.newColumnInfo.headers = null;
-
-                        return splitValues;
-                    }
+                    return this.splitCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },

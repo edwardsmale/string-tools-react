@@ -44,6 +44,7 @@ import { MatchCommand } from './services/commands/match-command';
 import { EncloseCommand } from './services/commands/enclose-command';
 import { CsvCommand } from './services/commands/csv-command';
 import { SelectCommand } from './services/commands/select-command';
+import { SplitCommand } from './services/commands/split-command';
 
 interface AppProps {
 }
@@ -121,6 +122,7 @@ class App extends React.Component<AppProps, AppState> {
       new SearchCommand(),
       new SelectCommand(this.textUtilsService),
       new SkipCommand(),
+      new SplitCommand(this.textUtilsService),
       new TakeCommand(),
       new TrimCommand(),
       new TrimEndCommand(),
