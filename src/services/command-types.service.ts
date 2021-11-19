@@ -123,10 +123,11 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                if (explain) {                    
-                    return this.noopCommand.Explain(para, negated, context);
+                if (explain) {      
 
-                } else if (Array.isArray(value)) {
+                    return this.noopCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
                     return this.noopCommand.ExecuteArray(value as string[], para, negated, context);
                 }
@@ -233,95 +234,6 @@ export class CommandTypesService {
                 else {
 
                     return this.splitCommand.ExecuteScalar(value as string, para, negated, context);
-                }
-            })
-        },
-        {
-            name: "sort",
-            desc: "Sorts the items",
-            para: [
-                {
-                    name: "index",
-                    desc: "Index(es) of column to sort on"
-                }
-            ],
-            isArrayBased: false,
-            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                const indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
-
-                const sortArray = this.sortService.SortArray;
-                const sortArrays = this.sortService.SortArrays;
-
-                if (!indices.length) {
-
-                    const descending = para.toLowerCase().indexOf("desc") !== -1;
-                    
-                    if (explain) {
-
-                        if (descending) {
-
-                            return { segments: ["Sort the items in descending order"] };
-                        }
-                        else {
-
-                            return { segments: ["Sort the items"] };
-                        }
-                    } 
-                    else {
-
-                        let sortedValues : string[];
-
-                        if (value.length === 1 && Array.isArray(value[0])) {
-                            
-                            sortedValues = sortArray(value[0] as string[]);
-                        }
-                        else {
-
-                            sortedValues = sortArray(value as string[]);
-                        }
-
-                        if (descending) {
-
-                            sortedValues = sortedValues.reverse();
-                        }
-
-                        return [sortedValues];
-                    }
-                } 
-                else {
-                    
-                    if (explain) {
-
-                        let positions: string[] = [];
-
-                        for (let i = 0; i < indices.length; i++) {
-
-                            positions.push(indices[i].description);
-                        }
-
-                        return { segments: ["Sort by", positions.join(", then by ")] };
-                    } 
-                    else if (!para) {
-
-                        return this.sortService.SortLines(value as string[]);
-                    } 
-                    else {
-
-                        // Negative indexes count back from the end.
-                        for (let i = 0; i < indices.length; i++) {
-
-                            if (indices[i].index < 0) {
-                                indices[i].index += value[0].length;
-                            }
-                        }
-
-                        return sortArrays(
-                            value as string[][], 
-                            indices,
-                            context
-                        );
-                    }
                 }
             })
         },
@@ -942,6 +854,95 @@ export class CommandTypesService {
                     }
                     else {
                         return { segments: ["With the items at index", positions, "..."] };
+                    }
+                }
+            })
+        },
+        {
+            name: "sort",
+            desc: "Sorts the items",
+            para: [
+                {
+                    name: "index",
+                    desc: "Index(es) of column to sort on"
+                }
+            ],
+            isArrayBased: false,
+            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                const indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
+
+                const sortArray = this.sortService.SortArray;
+                const sortArrays = this.sortService.SortArrays;
+
+                if (!indices.length) {
+
+                    const descending = para.toLowerCase().indexOf("desc") !== -1;
+                    
+                    if (explain) {
+
+                        if (descending) {
+
+                            return { segments: ["Sort the items in descending order"] };
+                        }
+                        else {
+
+                            return { segments: ["Sort the items"] };
+                        }
+                    } 
+                    else {
+
+                        let sortedValues : string[];
+
+                        if (value.length === 1 && Array.isArray(value[0])) {
+                            
+                            sortedValues = sortArray(value[0] as string[]);
+                        }
+                        else {
+
+                            sortedValues = sortArray(value as string[]);
+                        }
+
+                        if (descending) {
+
+                            sortedValues = sortedValues.reverse();
+                        }
+
+                        return [sortedValues];
+                    }
+                } 
+                else {
+                    
+                    if (explain) {
+
+                        let positions: string[] = [];
+
+                        for (let i = 0; i < indices.length; i++) {
+
+                            positions.push(indices[i].description);
+                        }
+
+                        return { segments: ["Sort by", positions.join(", then by ")] };
+                    } 
+                    else if (!para) {
+
+                        return this.sortService.SortLines(value as string[]);
+                    } 
+                    else {
+
+                        // Negative indexes count back from the end.
+                        for (let i = 0; i < indices.length; i++) {
+
+                            if (indices[i].index < 0) {
+                                indices[i].index += value[0].length;
+                            }
+                        }
+
+                        return sortArrays(
+                            value as string[][], 
+                            indices,
+                            context
+                        );
                     }
                 }
             })
