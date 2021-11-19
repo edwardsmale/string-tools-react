@@ -755,55 +755,6 @@ export class CommandTypesService {
             })
         },
         {
-            name: "with",
-            desc: "Selects which parts of the results to operate on",
-            para: [] as CommandParameter[],
-            isArrayBased: true,
-            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
-
-                const indices = this.textUtilsService.ParseIntegers(para);
-
-                if (explain) {
-                    if (indices.some((i) => isNaN(i))) {
-
-                        return { segments: ["With the specified columns..."] };
-                    }
-                    else if (indices.some((i) => i < 0)) {
-
-                        let formattedIndices: string[] = [];
-
-                        for (let i = 0; i < indices.length; i++) {
-
-                            var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
-
-                            formattedIndices.push(formattedIndex);
-                        }
-
-                        let positions = this.textUtilsService.FormatList(formattedIndices);
-
-                        return { segments: ["With the columns", positions, "..."] };
-                    }
-                    else {
-
-                        let positions = this.textUtilsService.FormatList(indices);
-
-                        if (indices.length > 1) {
-
-                            return { segments: ["With the items at indexes", positions, "..."] };
-                        }
-                        else {
-                            return { segments: ["With the items at index", positions, "..."] };
-                        }
-                    }
-                } else {
-
-                    return value;
-                }
-            })
-        },
-        {
             name: "select",
             desc: "Returns values at selected indices.",
             para: [
@@ -813,7 +764,7 @@ export class CommandTypesService {
                 }
             ],
             isArrayBased: true,
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
                     
@@ -852,28 +803,6 @@ export class CommandTypesService {
                 else {
 
                     return this.matchCommand.ExecuteScalar(value as string, para, negated, context);
-                }
-            })
-        },
-        {
-            name: "flat",
-            desc: "Flattens an array of arrays into one array, or into batches of a specified size",
-            para: [{
-                name: "Batch Size",
-                desc: "If set, flattens into batches of this size"
-            }],
-            isArrayBased: true,
-            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                // This code is only called when generating the explanation.
-                // The code to execute this command is in command.service.ts.
-                if (this.textUtilsService.IsPositiveInteger(para)) {
-
-                    return { segments: ["Flatten into batches of", para] };
-                } 
-                else {
-
-                    return { segments: ["Flatten into one array"] };
                 }
             })
         },
@@ -1010,6 +939,75 @@ export class CommandTypesService {
 
                     return this.printCommand.ExecuteScalar(value as string, para, negated, context);
                 } 
+            })
+        },
+        {
+            name: "with",
+            desc: "Selects which parts of the results to operate on",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                // This code is only called when generating the explanation.
+                // The code to execute this command is in command.service.ts.
+
+                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
+
+                const indices = this.textUtilsService.ParseIntegers(para);
+
+                if (indices.some((i) => isNaN(i))) {
+
+                    return { segments: ["With the specified columns..."] };
+                }
+                else if (indices.some((i) => i < 0)) {
+
+                    let formattedIndices: string[] = [];
+
+                    for (let i = 0; i < indices.length; i++) {
+
+                        var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
+
+                        formattedIndices.push(formattedIndex);
+                    }
+
+                    let positions = this.textUtilsService.FormatList(formattedIndices);
+
+                    return { segments: ["With the columns", positions, "..."] };
+                }
+                else {
+
+                    let positions = this.textUtilsService.FormatList(indices);
+
+                    if (indices.length > 1) {
+
+                        return { segments: ["With the items at indexes", positions, "..."] };
+                    }
+                    else {
+                        return { segments: ["With the items at index", positions, "..."] };
+                    }
+                }
+            })
+        },
+        {
+            name: "flat",
+            desc: "Flattens an array of arrays into one array, or into batches of a specified size",
+            para: [{
+                name: "Batch Size",
+                desc: "If set, flattens into batches of this size"
+            }],
+            isArrayBased: true,
+            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                // This code is only called when generating the explanation.
+                // The code to execute this command is in command.service.ts.
+                if (this.textUtilsService.IsPositiveInteger(para)) {
+
+                    return { segments: ["Flatten into batches of", para] };
+                } 
+                else {
+
+                    return { segments: ["Flatten into one array"] };
+                }
             })
         }
     ];
