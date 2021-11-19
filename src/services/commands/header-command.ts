@@ -8,9 +8,9 @@ export class HeaderCommand implements Command {
         return { segments: ["Treat the first array of items as a header row"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
         
-        return value;
+        return [value];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

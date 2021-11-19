@@ -14,9 +14,9 @@ export class PascalCommand implements Command {
         return { segments: ["Pascal-case the value(s)"] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
         
-        return this.ToPascalCase(value);    
+        return [this.ToPascalCase(value)];    
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

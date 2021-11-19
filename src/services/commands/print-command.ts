@@ -14,7 +14,7 @@ export class PrintCommand implements Command {
         return { segments: ["print", para] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
 
         var result = this.textUtilsService.ReplaceBackslashTWithTab(para);
 
@@ -22,7 +22,7 @@ export class PrintCommand implements Command {
         
         context.newColumnInfo.headers = [];
 
-        return result;
+        return [result];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

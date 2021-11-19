@@ -9,10 +9,10 @@ export class SearchCommand implements Command {
         return { segments: ["Set the current search string to", para] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
         
         this.SetSearchString(para, context);
-        return value;
+        return [value];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

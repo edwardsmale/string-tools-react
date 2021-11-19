@@ -16,9 +16,9 @@ export class JoinCommand implements Command {
         return { segments: ["Output items separated with", formattedDelimiter] };
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
 
-        return this.ExecuteArray(this.textUtilsService.AsArray(value), para, negated, context)[0];
+        return [this.ExecuteArray(this.textUtilsService.AsArray(value), para, negated, context)[0]];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

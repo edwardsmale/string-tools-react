@@ -48,9 +48,9 @@ export class SelectCommand implements Command {
         }
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
         
-        return value;
+        return [value];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {

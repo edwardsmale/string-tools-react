@@ -36,7 +36,7 @@ export class MatchCommand implements Command {
         }
     }
 
-    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
+    ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string[] {
         
         const searchString = para || context.searchString;
 
@@ -53,7 +53,7 @@ export class MatchCommand implements Command {
 
         const isSuccess = negated ? !isMatch : isMatch;
 
-        return isSuccess ? value : null;
+        return isSuccess ? [value] : [];
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
