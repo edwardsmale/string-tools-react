@@ -32,6 +32,21 @@ import { RemoveLeadingCommand } from './services/commands/remove-leading-command
 import { RemoveTrailingCommand } from './services/commands/remove-trailing-command';
 import { TextPosService } from './services/text-pos-service';
 import { TextRange } from './interfaces/TextRange';
+import { TakeCommand } from './services/commands/take-command';
+import { SkipCommand } from './services/commands/skip-command';
+import { HeaderCommand } from './services/commands/header-command';
+import { SearchCommand } from './services/commands/search-command';
+import { RegexCommand } from './services/commands/regex-command';
+import { TsvCommand } from './services/commands/tsv-command';
+import { JoinCommand } from './services/commands/join-command';
+import { PrintCommand } from './services/commands/print-command';
+import { MatchCommand } from './services/commands/match-command';
+import { EncloseCommand } from './services/commands/enclose-command';
+import { CsvCommand } from './services/commands/csv-command';
+import { SelectCommand } from './services/commands/select-command';
+import { SplitCommand } from './services/commands/split-command';
+import { NoopCommand } from './services/commands/noop-command';
+import { ReplaceCommand } from './services/commands/replace-command';
 
 interface AppProps {
 }
@@ -88,21 +103,36 @@ class App extends React.Component<AppProps, AppState> {
       this.textUtilsService,
       this.sortService,
       this.contextService,
-      new CamelCommand(this.textUtilsService),
-      new PascalCommand(this.textUtilsService),
-      new KebabCommand(this.textUtilsService),
-      new UpperCommand(this.textUtilsService),
-      new LowerCommand(this.textUtilsService),
-      new DistinctCommand(),
       new BlankCommand(this.textUtilsService),
-      new TrimCommand(),
-      new TrimStartCommand(),
-      new TrimEndCommand(),
-      new RemoveCommand(),
+      new CamelCommand(this.textUtilsService),
+      new CsvCommand(this.textUtilsService),
+      new DistinctCommand(),
+      new EncloseCommand(),
       new EnsureLeadingCommand(this.textUtilsService),
       new EnsureTrailingCommand(this.textUtilsService),
+      new HeaderCommand(),
+      new JoinCommand(this.textUtilsService),
+      new KebabCommand(this.textUtilsService),
+      new LowerCommand(this.textUtilsService),
+      new MatchCommand(),
+      new NoopCommand(),
+      new PascalCommand(this.textUtilsService),
+      new PrintCommand(this.textUtilsService),
+      new RegexCommand(),
+      new RemoveCommand(),
       new RemoveLeadingCommand(this.textUtilsService),
-      new RemoveTrailingCommand(this.textUtilsService)
+      new RemoveTrailingCommand(this.textUtilsService),
+      new ReplaceCommand(this.textUtilsService),
+      new SearchCommand(),
+      new SelectCommand(this.textUtilsService),
+      new SkipCommand(),
+      new SplitCommand(this.textUtilsService),
+      new TakeCommand(),
+      new TrimCommand(),
+      new TrimEndCommand(),
+      new TrimStartCommand(),
+      new TsvCommand(this.textUtilsService),
+      new UpperCommand()
     );
 
     this.commandParsingService = new CommandParsingService(

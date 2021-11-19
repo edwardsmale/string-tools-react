@@ -1,29 +1,29 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
 
-export class RemoveCommand implements Command {
+export class SearchCommand implements Command {
 
    Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        return { segments: ["Remove text matching a regex"] };
+        this.SetSearchString(para, context);
+        return { segments: ["Set the current search string to", para] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
         
-        return value;  
+        this.SetSearchString(para, context);
+        return value;
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        let result: string[] = [];
+        this.SetSearchString(para, context);
+        return value;
+    }
 
-        const regExp = new RegExp(para);
+    private SetSearchString(para: string, context: Context) {
 
-        for (let i = 0; i < value.length; i++) {
-
-            result.push(value[i].replace(regExp, ""));
-        }
-
-        return result;
+        context.searchString = para;
+        context.regex = null;
     }
 }

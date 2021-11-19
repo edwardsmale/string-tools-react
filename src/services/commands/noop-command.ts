@@ -1,27 +1,20 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
 
-export class UpperCommand implements Command {
+export class NoopCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        return { segments: ["Upper-case the value(s)"] };
+        return { segments: ["Do nothing"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
         
-        return value.toUpperCase();   
+        return value;
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        let result: string[] = [];
-
-        for (let i = 0; i < value.length; i++) {
-
-            result.push(value[i].toUpperCase());
-        }
-
-        return result;
+        return value;
     }
 }

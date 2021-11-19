@@ -3,14 +3,14 @@ import { Context } from '../../interfaces/Context';
 
 export class DistinctCommand implements Command {
 
-    Explain(): Explanation {
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Delete duplicates"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
         
-         return value;
+        return value;
     }
 
     // Using an object and adding keys to it seems to be much faster than using Array.includes.

@@ -109,14 +109,18 @@ export class CommandService {
                         for (let j = 0; j < currentValues.length; j++) {
 
                             let resultRow: string[] = [];
-                            let subIndex = 0;
 
                             for (let k = 0; k < currentValues[j].length; k++) {
 
                                 if (indices.includes(k)) {
-                                    resultRow.push(subResult[j][subIndex++]);
+                                    
+                                    for (let l = 0; l < subResult[j].length; l++) {
+
+                                        resultRow.push(subResult[j][l]);                                    
+                                    }
                                 }
                                 else {
+                                    
                                     resultRow.push(currentValues[j][k]);
                                 }
                             }

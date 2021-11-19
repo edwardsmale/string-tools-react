@@ -9,7 +9,7 @@ export class BlankCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-    Explain(negated: boolean): Explanation {
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         if (negated) {
             return { segments: ["Exclude blank lines"] };   

@@ -5,40 +5,101 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { BlankCommand } from './commands/blank-command';
 import { CamelCommand } from './commands/camel-command';
-import { PascalCommand } from './commands/pascal-command';
-import { KebabCommand } from './commands/kebab-command';
-import { UpperCommand } from './commands/upper-command';
-import { LowerCommand } from './commands/lower-command';
+import { CsvCommand } from './commands/csv-command';
 import { DistinctCommand } from './commands/distinct-command';
-import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
-import { RemoveCommand } from './commands/remove-command';
+import { EncloseCommand } from './commands/enclose-command';
 import { EnsureLeadingCommand } from './commands/ensure-leading-command';
 import { EnsureTrailingCommand } from './commands/ensure-trailing-command';
+import { HeaderCommand } from './commands/header-command';
+import { JoinCommand } from './commands/join-command';
+import { KebabCommand } from './commands/kebab-command';
+import { LowerCommand } from './commands/lower-command';
+import { MatchCommand } from './commands/match-command';
+import { NoopCommand } from './commands/noop-command';
+import { PascalCommand } from './commands/pascal-command';
+import { PrintCommand } from './commands/print-command';
+import { RegexCommand } from './commands/regex-command';
+import { RemoveCommand } from './commands/remove-command';
 import { RemoveLeadingCommand } from './commands/remove-leading-command';
 import { RemoveTrailingCommand } from './commands/remove-trailing-command';
+import { ReplaceCommand } from './commands/replace-command';
+import { SearchCommand } from './commands/search-command';
+import { SelectCommand } from './commands/select-command';
+import { SplitCommand } from './commands/split-command';
+import { SkipCommand } from './commands/skip-command';
+import { TakeCommand } from './commands/take-command';
+import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
+import { TsvCommand } from './commands/tsv-command';
+import { UpperCommand } from './commands/upper-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService, private sortService: SortService, private contextService: ContextService, private camelCommand: CamelCommand, private pascalCommand: PascalCommand, private kebabCommand: KebabCommand, private upperCommand: UpperCommand, private lowerCommand: LowerCommand, private distinctCommand: DistinctCommand, private blankCommand: BlankCommand, private trimCommand: TrimCommand, private trimStartCommand: TrimStartCommand, private trimEndCommand: TrimEndCommand, private removeCommand: RemoveCommand, private ensureLeadingCommand: EnsureLeadingCommand, private ensureTrailingCcommand: EnsureTrailingCommand, private removeLeadingCommand: RemoveLeadingCommand, private removeTrailingCommand: RemoveTrailingCommand) {
+    constructor(private textUtilsService: TextUtilsService,
+        private sortService: SortService,
+        private contextService: ContextService,
+        private blankCommand: BlankCommand,
+        private camelCommand: CamelCommand,
+        private csvCommand: CsvCommand,
+        private distinctCommand: DistinctCommand,
+        private encloseCommand: EncloseCommand,
+        private ensureLeadingCommand: EnsureLeadingCommand,
+        private ensureTrailingCcommand: EnsureTrailingCommand,
+        private headerCommand: HeaderCommand,
+        private joinCommand: JoinCommand,
+        private kebabCommand: KebabCommand,
+        private lowerCommand: LowerCommand,
+        private matchCommand: MatchCommand,
+        private noopCommand: NoopCommand,
+        private pascalCommand: PascalCommand,
+        private printCommand: PrintCommand,
+        private regexCommand: RegexCommand,
+        private removeCommand: RemoveCommand,
+        private removeLeadingCommand: RemoveLeadingCommand,
+        private removeTrailingCommand: RemoveTrailingCommand,
+        private replaceCommand: ReplaceCommand,
+        private searchCommand: SearchCommand,
+        private selectCommand: SelectCommand,
+        private skipCommand: SkipCommand,
+        private splitCommand: SplitCommand,
+        private takeCommand: TakeCommand,
+        private trimCommand: TrimCommand,
+        private trimEndCommand: TrimEndCommand,
+        private trimStartCommand: TrimStartCommand,
+        private tsvCommand: TsvCommand,
+        private upperCommand: UpperCommand) {
 
-        this.textUtilsService = textUtilsService;
-        this.contextService = contextService;
-        this.sortService = sortService;
-        this.camelCommand = camelCommand;
-        this.pascalCommand = pascalCommand;
-        this.kebabCommand = kebabCommand;
-        this.upperCommand = upperCommand;
-        this.lowerCommand = lowerCommand;
-        this.distinctCommand = distinctCommand;
         this.blankCommand = blankCommand;
-        this.trimCommand = trimCommand;
-        this.trimStartCommand = trimStartCommand;
-        this.trimEndCommand = trimEndCommand;
-        this.removeCommand = removeCommand;
+        this.camelCommand = camelCommand;
+        this.contextService = contextService;
+        this.distinctCommand = distinctCommand;
+        this.encloseCommand = encloseCommand;
         this.ensureLeadingCommand = ensureLeadingCommand;
         this.ensureTrailingCcommand = ensureTrailingCcommand;
+        this.headerCommand = headerCommand;
+        this.joinCommand = joinCommand;
+        this.kebabCommand = kebabCommand;
+        this.lowerCommand = lowerCommand;
+        this.matchCommand = matchCommand;
+        this.noopCommand = noopCommand;
+        this.pascalCommand = pascalCommand;
+        this.printCommand = printCommand;
+        this.regexCommand = regexCommand;
+        this.removeCommand = removeCommand;
         this.removeLeadingCommand = removeLeadingCommand;
         this.removeTrailingCommand = removeTrailingCommand;
+        this.replaceCommand = replaceCommand;
+        this.searchCommand = searchCommand;
+        this.selectCommand = selectCommand;
+        this.skipCommand = skipCommand;
+        this.sortService = sortService;
+        this.splitCommand = splitCommand;
+        this.takeCommand = takeCommand;
+        this.textUtilsService = textUtilsService;
+        this.trimCommand = trimCommand;
+        this.trimEndCommand = trimEndCommand;
+        this.trimStartCommand = trimStartCommand;
+        this.tsvCommand = tsvCommand;
+        this.upperCommand = upperCommand;
     }
 
     FindCommandType = (name: string): CommandType | SortCommandType =>  {
@@ -61,10 +122,17 @@ export class CommandTypesService {
             para: [] as CommandParameter[],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                if (explain) {
-                    return { segments: [] };
-                } else {
-                    return value;
+                
+                if (explain) {      
+
+                    return this.noopCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
+
+                    return this.noopCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.noopCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -79,12 +147,17 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                context.regex = para;
-                context.searchString = null;
-                if (explain) {
-                    return { segments: ["Set the current regex to", para] };
-                } else {
-                    return value;
+
+                if (explain) {     
+
+                    return this.regexCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
+
+                    return this.regexCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.regexCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -99,12 +172,17 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                context.searchString = para;
-                context.regex = null;
-                if (explain) {
-                    return { segments: ["Set the current search string to", para] };
-                } else {
-                    return value;
+                
+                if (explain) {            
+                           
+                    return this.searchCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
+
+                    return this.searchCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.searchCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -120,58 +198,17 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                para = this.textUtilsService.ReplaceBackslashTWithTab(para);
-
-                if (explain) {
-                    if (context.regex) {
-                        return { segments: ["Replace text matching the regex", context.regex, "with", para] };
-                    } else if (context.searchString) {
-                        return { segments: ["Replace", context.searchString, "with", para] };
-                    } else {
-                        return { segments: ["*** This command only works if a regex or search string has been set by an earlier 'regex' or 'search' instruction."] };
-                    }
-                } else {
-                    if (Array.isArray(value)) {
-                        let newValue: string[] = [];
-                        const length = (value as string[]).length;
-
-                        if (context.regex) {
-
-                            const globalRegexReplace = this.textUtilsService.GlobalRegexReplace;
-
-                            for (let i = 0; i < length; i++) {
-
-                                newValue.push(globalRegexReplace(value[i], context.regex, para));
-                            }
-
-                            return newValue;
-                        }
-                        else if (context.searchString) {
-
-                            const globalStringReplace = this.textUtilsService.GlobalStringReplace;
-                            
-                            for (let i = 0; i < length; i++) {
-                                
-                                newValue.push(globalStringReplace(value[i], context.searchString, para));
-                            }
-
-                            return newValue;
-
-                        } else {
-                            
-                            return value;
-                        }
-
-                    } else {
-                        if (context.regex) {
-                            return this.textUtilsService.GlobalRegexReplace(value as string, context.regex, para);
-                        } else if (context.searchString) {
-                            return this.textUtilsService.GlobalStringReplace(value as string, context.searchString, para);
-                        } else {
-                            return value;
-                        }
-                    }
+                if (explain) {            
+                           
+                    return this.replaceCommand.Explain(para, negated, context);
                 }
+                else if (Array.isArray(value)) {
+
+                    return this.replaceCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.replaceCommand.ExecuteScalar(value as string, para, negated, context);
+                }                
             })
         },
         {
@@ -186,129 +223,17 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                value = this.textUtilsService.AsScalar(value);
+                if (explain) {     
 
-                if (!para && context.regex) {
-
-                    if (explain) {
-                        return { segments: ["Split the text using the regex", context.regex] };
-                    } else {
-                        return (value as string).split(new RegExp(context.regex));
-                    }
+                    return this.splitCommand.Explain(para, negated, context);
                 }
-                else if (!para && context.searchString) {
+                else if (Array.isArray(value)) {
 
-                    if (explain) {
-                        return { segments: ["Split the text on", context.searchString] };
-                    } else {
-                        return (value as string).split(context.searchString);
-                    }
+                    return this.splitCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
-                    var defaultDelimiter = ",";
-                    para = para === "\\t" ? "\t" : para;
-                    var delimiter = para || defaultDelimiter;
 
-                    if (explain) {
-
-                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false, true);
-
-                        return { segments: ["Split the text on every", formattedDelimiter] };
-
-                    } else {
-
-                        if (delimiter.length === 1 && "|^$*()\\/[].+".includes(delimiter)) {
-                            delimiter = "\\" + delimiter;
-                        }
-
-                        var splitValues = this.textUtilsService.Split(value as string, delimiter);
-
-                        context.newColumnInfo.numberOfColumns = splitValues.length;
-                        context.newColumnInfo.headers = null;
-
-                        return splitValues;
-                    }
-                }
-            })
-        },
-        {
-            name: "sort",
-            desc: "Sorts the items",
-            para: [
-                {
-                    name: "index",
-                    desc: "Index(es) of column to sort on"
-                }
-            ],
-            isArrayBased: false,
-            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                const indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
-
-                const sortArray = this.sortService.SortArray;
-                const sortArrays = this.sortService.SortArrays;
-
-                if (!indices.length) {
-
-                    const descending = para.toLowerCase().indexOf("desc") !== -1;
-                    
-                    if (explain) {
-                        if (descending) {
-                            return { segments: ["Sort the items in descending order"] };
-                        }
-                        else {
-                            return { segments: ["Sort the items"] };
-                        }
-                    } else {
-                        let sortedValues : string[];
-
-                        if (value.length === 1 && Array.isArray(value[0])) {
-                            
-                            sortedValues = sortArray(value[0] as string[]);
-                        } else {
-
-                            sortedValues = sortArray(value as string[]);
-                        }
-
-                        if (descending) {
-                            sortedValues = sortedValues.reverse();
-                        }
-
-                        return [sortedValues];
-                    }
-                } else {
-                    
-                    if (explain) {
-
-                        let positions: string[] = [];
-
-                        for (let i = 0; i < indices.length; i++) {
-
-                            positions.push(indices[i].description);
-                        }
-
-                        return { segments: ["Sort by", positions.join(", then by ")] };
-
-                    } else if (!para) {
-
-                        return this.sortService.SortLines(value as string[]);
-
-                    } else {
-
-                        // Negative indexes count back from the end.
-                        for (let i = 0; i < indices.length; i++) {
-
-                            if (indices[i].index < 0) {
-                                indices[i].index += value[0].length;
-                            }
-                        }
-
-                        return sortArrays(
-                            value as string[][], 
-                            indices,
-                            context
-                        );
-                    }
+                    return this.splitCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -321,11 +246,15 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.distinctCommand.Explain();
-
-                } else {
+                    return this.distinctCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.distinctCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+
+                    return this.distinctCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -340,24 +269,18 @@ export class CommandTypesService {
             ],
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                var n = parseInt(para, 10);
+
                 if (explain) {
-                    if (isNaN(n)) {
-                        return { segments: ["Skip n items"] };
-                    } else {
-                        return { segments: ["Skip", n, "item" + (n === 1 ? "" : "s")] };
-                    }
-                } else {
-                    if (isNaN(n)) {
-                        return value;
-                    }
-                    else {
-                        if (n >= 0) {
-                            return (value as string[]).slice(n);
-                        } else {
-                            return (value as string[]).slice(0, -n);
-                        }
-                    }
+
+                    return this.skipCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
+
+                    return this.skipCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+
+                    return this.skipCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -368,17 +291,18 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
-                if (!context.newColumnInfo.headers) {
-                    context.newColumnInfo.headers = (value as string[]);
+                if (explain) {    
+
+                    return this.headerCommand.Explain(para, negated, context);
                 }
+                 else if (Array.isArray(value)) {
 
-                if (explain) {
+                    return this.headerCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
 
-                    return { segments: ["Treat the first array of items as a header row"] };
-                } else {
-
-                    return (value as string[]);
-                } 
+                    return this.headerCommand.ExecuteScalar(value as string, para, negated, context);
+                }
             })
         },
         {
@@ -392,24 +316,17 @@ export class CommandTypesService {
             ],
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                var n = parseInt(para, 10);
-                if (explain) {
-                    if (isNaN(n)) {
-                        return { segments: ["Take the first n items and ignore the rest"] };
-                    } else {
-                        return { segments: ["Take the first", n, "item" + (n === 1 ? "" : "s") + " only"] };
-                    }
-                } else {
-                    if (isNaN(n)) {
-                        return value;
-                    }
-                    else {
-                        if (n >= 0) {
-                            return (value as string[]).slice(0, n);
-                        } else {
-                            return (value as string[]).slice(-n);
-                        }
-                    }
+
+                if (explain) {     
+
+                    return this.takeCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
+
+                    return this.takeCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+                    return this.takeCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -422,13 +339,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.blankCommand.Explain(negated);
-
-                } else if (Array.isArray(value)) {
+                    return this.blankCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.blankCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.blankCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -442,13 +360,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.trimCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
                     return this.trimCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.trimCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -462,13 +381,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimStartCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.trimStartCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.trimStartCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.trimStartCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -482,13 +402,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.trimEndCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.trimEndCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.trimEndCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.trimEndCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -502,13 +423,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.removeCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.removeCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.removeCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -522,13 +444,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.ensureLeadingCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.ensureLeadingCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
                     return this.ensureLeadingCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.ensureLeadingCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -542,13 +465,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.ensureTrailingCcommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.ensureTrailingCcommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.ensureTrailingCcommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.ensureTrailingCcommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -562,13 +486,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeLeadingCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.removeLeadingCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.removeLeadingCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.removeLeadingCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -582,13 +507,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.removeTrailingCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.removeTrailingCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.removeTrailingCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.removeTrailingCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -602,13 +528,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.camelCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.camelCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.camelCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.camelCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -622,13 +549,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.pascalCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.pascalCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.pascalCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.pascalCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -642,13 +570,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.kebabCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.kebabCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.kebabCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.kebabCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -662,13 +591,14 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.upperCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.upperCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.upperCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.upperCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
@@ -682,63 +612,15 @@ export class CommandTypesService {
 
                 if (explain) {
                     
-                    return this.lowerCommand.Explain();
-
-                } else if (Array.isArray(value)) {
+                    return this.lowerCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
                     return this.lowerCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
+
                     return this.lowerCommand.ExecuteScalar(value as string, para, negated, context);
-                }
-            })
-        },
-        {
-            name: "with",
-            desc: "Selects which parts of the results to operate on",
-            para: [] as CommandParameter[],
-            isArrayBased: true,
-            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
-
-                const indices = this.textUtilsService.ParseIntegers(para);
-
-                if (explain) {
-                    if (indices.some((i) => isNaN(i))) {
-
-                        return { segments: ["With the specified columns..."] };
-                    }
-                    else if (indices.some((i) => i < 0)) {
-
-                        let formattedIndices: string[] = [];
-
-                        for (let i = 0; i < indices.length; i++) {
-
-                            var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
-
-                            formattedIndices.push(formattedIndex);
-                        }
-
-                        let positions = this.textUtilsService.FormatList(formattedIndices);
-
-                        return { segments: ["With the columns", positions, "..."] };
-                    }
-                    else {
-
-                        let positions = this.textUtilsService.FormatList(indices);
-
-                        if (indices.length > 1) {
-
-                            return { segments: ["With the items at indexes", positions, "..."] };
-                        }
-                        else {
-                            return { segments: ["With the items at index", positions, "..."] };
-                        }
-                    }
-                } else {
-
-                    return value;
                 }
             })
         },
@@ -752,72 +634,19 @@ export class CommandTypesService {
                 }
             ],
             isArrayBased: true,
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
-
-                const indices = this.textUtilsService.ParseIntegers(para);
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
+                    
+                    return this.selectCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
-                    if (indices.some((i) => isNaN(i))) {
+                    return this.selectCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
 
-                        return { segments: ["Get the specified columns"] };
-                    }
-                    else if (indices.some((i) => i < 0)) {
-
-                        let formattedIndices: string[] = [];
-
-                        for (let i = 0; i < indices.length; i++) {
-
-                            var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
-
-                            formattedIndices.push(formattedIndex);
-                        }
-
-                        let positions = this.textUtilsService.FormatList(formattedIndices);
-
-                        return { segments: ["Get", positions] };
-                    }
-                    else {
-
-                        let positions = this.textUtilsService.FormatList(indices);
-
-                        if (indices.length > 1) {
-
-                            return { segments: ["Get the items at indexes", positions] };
-                        }
-                        else {
-                            return { segments: ["Get the items at index", positions] };
-                        }
-                    }
-                } else {
-
-                    let result: string[] = [];
-
-                    context.newColumnInfo.headers = [];
-                    context.newColumnInfo.numberOfColumns = 0;
-
-                    for (let i = 0; i < indices.length; i++) {
-
-                        var index = indices[i];
-
-                        if (index < 0) {
-                            index += value.length;
-                        }
-
-                        if (index >= 0 && index < value.length) {
-                            result.push(value[index]);
-
-                            if (context.columnInfo.headers) {
-                                context.newColumnInfo.headers.push(context.columnInfo.headers[index]);
-                            }
-
-                            context.newColumnInfo.numberOfColumns++;
-                        }
-                    }
-
-                    return result;
+                    return this.selectCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -833,101 +662,38 @@ export class CommandTypesService {
             isArrayBased: true,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                var searchString = para || context.searchString;
+                if (explain) {
+                    
+                    return this.matchCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
-                if (!searchString && context.regex) {
-                    if (explain) {
-                        if (negated) {
-                            return { segments: ["Only include items which don't match the regex", context.regex] };
-                        } else {
-                            return { segments: ["Only include items which match the regex", context.regex] };
-                        }
-                    } else {
-                        if (Array.isArray(value)) {
-                            if (negated) {
-                                return (value as string[]).filter(function (val: string) { return new RegExp(context.regex as string).test(val) === false; });
-                            } else {
-                                return (value as string[]).filter(function (val: string) { return new RegExp(context.regex as string).test(val) === true; });
-                            }
-                        } else {
-                            return new RegExp(context.regex).test(value as string) ? value : null;
-                        }
-                    }
+                    return this.matchCommand.ExecuteArray(value as string[], para, negated, context);
                 }
                 else {
-                    if (explain) {
-                        if (negated) {
-                            return { segments: ["Only include items that don't contain", searchString] };
-                        } else {
-                            return { segments: ["Only include items containing", searchString] };
-                        }
-                    } else {
-                        if (negated) {
-                            return (value as string[]).filter(function (val: string) { return val.includes(searchString as string) === false; });
-                        } else {
-                            return (value as string[]).filter(function (val: string) { return val.includes(searchString as string) === true; });
-                        }
-                    }
-                }
-            })
-        },
-        {
-            name: "flat",
-            desc: "Flattens an array of arrays into one array, or batches items into arrays of a given size",
-            para: [{
-                name: "Batch Size",
-                desc: "If set, converts into batches of this size"
-            }],
-            isArrayBased: true,
-            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                if (explain) {
-                    if (this.textUtilsService.IsIntegral(para)) {
-                        return { segments: ["Convert into arrays of", para, "items"] };
-                    } else {
-                        return { segments: ["Flatten an array of arrays into one array"] };
-                    }
-                } else {
-                    if (Array.isArray(value[0])) {
-                        let result = [];
 
-                        for (let i = 0; i < value.length; i++) {
-                            for (let j = 0; j < value[i].length; j++) {
-                                result.push(value[i][j]);
-                            }
-                        }
-                    }
-                    else {
-
-                        return value;
-                    }
+                    return this.matchCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
         {
             name: "enclose",
-            desc: "Put character(s) at the start and end of each item",
+            desc: "Puts the specified characters at the start and end of each item",
             para: [],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                var leftChar: string;
-                var rightChar: string;
-
-                if (para.length === 0) {
-                    leftChar = "(";
-                    rightChar = ")";
-                } else if (para.length === 1) {
-                    leftChar = para[0];
-                    rightChar = para[0];
-                } else {
-                    leftChar = para[0];
-                    rightChar = para[1];
-                }
 
                 if (explain) {
-                    return { segments: ["Enclose each item in", leftChar, "and", rightChar] };
-                } else {
-                    var scalarValue = this.textUtilsService.AsScalar(value);
-                    return leftChar + scalarValue + rightChar;
+                    
+                    return this.encloseCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
+
+                    return this.encloseCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+
+                    return this.encloseCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -937,12 +703,18 @@ export class CommandTypesService {
             para: [],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+                
                 if (explain) {
-                    return { segments: ["Output the items in tab-separated format"] };
-                } else {
-                    context.newColumnInfo.headers = [];
-                    value = this.textUtilsService.AsArray(value);
-                    return (value as string[]).join("\t");
+                    
+                    return this.tsvCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
+
+                    return this.tsvCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
+
+                    return this.tsvCommand.ExecuteScalar(value as string, para, negated, context);
                 }
             })
         },
@@ -977,95 +749,19 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                value = this.textUtilsService.AsArray(value);
-
-                var options = {
-                    isDoubleQuote: para.includes('"'),
-                    isSingleQuote: para.includes("'"),
-                    isAtString: para.includes("@"),
-                    isEscaped: para.includes("\\"),
-                    delimiter: para.replace(/["'\\@]+/, "") || ","
-                };
-
-                if (para.includes("\\t")) {
-                    options.delimiter = "\t";
-                }
 
                 if (explain) {
+                    
+                    return this.csvCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
-                    var explanation = "Output the items";
-
-                    if (options.delimiter === ",") {
-                        explanation += " in CSV format";
-                    } else {
-                        var formattedDelimiter = this.textUtilsService.FormatDelimiter(options.delimiter, true, false);
-                        explanation += " separated with " + formattedDelimiter;
-                    }
-
-                    if (options.isDoubleQuote) {
-                        explanation += ", with values in double quotes"
-
-                        if (options.isAtString) {
-                            explanation += " preceded by @"
-                        }
-
-                        if (options.isEscaped) {
-                            explanation += ", backslash-escaping any double quotes";
-                        } else {
-                            explanation += ", doubling-up any double quotes";
-                        }
-                    }
-                    else if (options.isSingleQuote) {
-                        explanation += ", with values in single quotes"
-
-                        if (options.isEscaped) {
-                            explanation += ", backslash-escaping any quotes";
-                        } else {
-                            explanation += ", doubling-up any quotes";
-                        }
-                    }
-
-                    return { segments: [explanation] };
-
-                } else {
-                    context.newColumnInfo.headers = [];
-
-                    var toDelimitedString = (value: string[], options: any) => {
-                        var result = [];
-
-                        for (let i = 0; i < value.length; i++) {
-                            var val = value[i];
-                            if (options.isDoubleQuote) { // || val.includes(options.delimiter)) {
-                                if (options.isEscaped) {
-                                    // Replace " with \"
-                                    val = val.replace(/"/g, '\\"');
-                                    val = '"' + val + '"';
-                                } else {
-                                    // Replace " with ""
-                                    val = val.replace(/"/g, '""');
-                                    val = '"' + val + '"';
-                                    if (options.isAtString) {
-                                        val = "@" + val;
-                                    }
-                                }
-                            } else if (options.isSingleQuote) {
-                                if (options.isEscaped) {
-                                    // Replace ' with \'
-                                    val = val.replace(/'/g, "\\'");
-                                    val = "'" + val + "'";
-                                } else {
-                                    // Replace ' with ''
-                                    val = val.replace(/'/g, "''");
-                                    val = "'" + val + "'";
-                                }
-                            }
-                            result.push(val);
-                        }
-                        return result.join(options.delimiter);
-                    };
+                    return this.csvCommand.ExecuteArray(value as string[], para, negated, context);
                 }
+                else {
 
-                return toDelimitedString((value as string[]), options);
+                    return this.csvCommand.ExecuteScalar(value as string, para, negated, context);
+                }   
             })
         },
         {
@@ -1079,21 +775,19 @@ export class CommandTypesService {
             ],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                value = this.textUtilsService.AsArray(value);
-                var defaultDelimiter = "";
-                para = this.textUtilsService.ReplaceBackslashTWithTab(para);
                 
-                var delimiter = para || defaultDelimiter;
-
                 if (explain) {
-                    var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, true, false);
+                    
+                    return this.joinCommand.Explain(para, negated, context);
+                } 
+                else if (Array.isArray(value)) {
 
-                    return { segments: ["Output items separated with", formattedDelimiter] };
-                } else {
-
-                    context.newColumnInfo.headers = [];
-                    return (value as string[]).join(delimiter);
+                    return this.joinCommand.ExecuteArray(value as string[], para, negated, context);
                 }
+                else {
+
+                    return this.joinCommand.ExecuteScalar(value as string, para, negated, context);
+                }                
             })
         },
         {
@@ -1102,44 +796,176 @@ export class CommandTypesService {
             para: [{ name: "<text>", desc: "What to print." }],
             isArrayBased: false,
             exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
+                
                 if (explain) {
-                    return { segments: ["print", para] };
-                } else {
-                    para = this.textUtilsService.ReplaceBackslashTWithTab(para);
-                    var result = para;
-                    var arrayValue = Array.isArray(value) ? (value as string[]) : (["", value] as string[]);
+                    
+                    return this.printCommand.Explain(para, negated, context);
+                }
+                else if (Array.isArray(value)) {
 
-                    // Replace $header
+                    return this.printCommand.ExecuteArray(value as string[], para, negated, context);
+                }
+                else {
 
-                    if (Array.isArray(context.columnInfo.headers)) {
+                    return this.printCommand.ExecuteScalar(value as string, para, negated, context);
+                } 
+            })
+        },
+        {
+            name: "with",
+            desc: "Selects which parts of the results to operate on",
+            para: [] as CommandParameter[],
+            isArrayBased: true,
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                        const headersOrderedByLength = this.textUtilsService.GetHeadersOrderedByLength(
-                            context.columnInfo.headers
-                        );
+                // This code is only called when generating the explanation.
+                // The code to execute this command is in command.service.ts.
 
-                        for (let i = 0; i < headersOrderedByLength.length; i++) {
+                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
 
-                            let header = headersOrderedByLength[i].header;
-                            let index = headersOrderedByLength[i].index;
+                const indices = this.textUtilsService.ParseIntegers(para);
 
-                            const regex = new RegExp("\\$" + header, "g");
-                            const replacement = arrayValue[index];
+                if (indices.some((i) => isNaN(i))) {
 
-                            result = result.replace(regex, replacement);
+                    return { segments: ["With the specified columns..."] };
+                }
+                else if (indices.some((i) => i < 0)) {
+
+                    let formattedIndices: string[] = [];
+
+                    for (let i = 0; i < indices.length; i++) {
+
+                        var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
+
+                        formattedIndices.push(formattedIndex);
+                    }
+
+                    let positions = this.textUtilsService.FormatList(formattedIndices);
+
+                    return { segments: ["With the columns", positions, "..."] };
+                }
+                else {
+
+                    let positions = this.textUtilsService.FormatList(indices);
+
+                    if (indices.length > 1) {
+
+                        return { segments: ["With the items at indexes", positions, "..."] };
+                    }
+                    else {
+                        return { segments: ["With the items at index", positions, "..."] };
+                    }
+                }
+            })
+        },
+        {
+            name: "sort",
+            desc: "Sorts the items",
+            para: [
+                {
+                    name: "index",
+                    desc: "Index(es) of column to sort on"
+                }
+            ],
+            isArrayBased: false,
+            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                const indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
+
+                const sortArray = this.sortService.SortArray;
+                const sortArrays = this.sortService.SortArrays;
+
+                if (!indices.length) {
+
+                    const descending = para.toLowerCase().indexOf("desc") !== -1;
+                    
+                    if (explain) {
+
+                        if (descending) {
+
+                            return { segments: ["Sort the items in descending order"] };
                         }
-                    }
+                        else {
 
-                    // Replace $[n]
-                    
-                    for (let i = 0; i < arrayValue.length; i++) {
-                        result = result.replace(new RegExp("\\$\\[" + i + "\\]", "g"), arrayValue[i]);
+                            return { segments: ["Sort the items"] };
+                        }
+                    } 
+                    else {
+
+                        let sortedValues : string[];
+
+                        if (value.length === 1 && Array.isArray(value[0])) {
+                            
+                            sortedValues = sortArray(value[0] as string[]);
+                        }
+                        else {
+
+                            sortedValues = sortArray(value as string[]);
+                        }
+
+                        if (descending) {
+
+                            sortedValues = sortedValues.reverse();
+                        }
+
+                        return [sortedValues];
                     }
-                    for (let i = 0; i < arrayValue.length; i++) {
-                        result = result.replace(new RegExp("\\$\\[-" + i + "\\]", "g"), arrayValue[arrayValue.length - i]);
-                    }
+                } 
+                else {
                     
-                    context.newColumnInfo.headers = [];
-                    return result;
+                    if (explain) {
+
+                        let positions: string[] = [];
+
+                        for (let i = 0; i < indices.length; i++) {
+
+                            positions.push(indices[i].description);
+                        }
+
+                        return { segments: ["Sort by", positions.join(", then by ")] };
+                    } 
+                    else if (!para) {
+
+                        return this.sortService.SortLines(value as string[]);
+                    } 
+                    else {
+
+                        // Negative indexes count back from the end.
+                        for (let i = 0; i < indices.length; i++) {
+
+                            if (indices[i].index < 0) {
+                                indices[i].index += value[0].length;
+                            }
+                        }
+
+                        return sortArrays(
+                            value as string[][], 
+                            indices,
+                            context
+                        );
+                    }
+                }
+            })
+        },
+        {
+            name: "flat",
+            desc: "Flattens an array of arrays into one array, or into batches of a specified size",
+            para: [{
+                name: "Batch Size",
+                desc: "If set, flattens into batches of this size"
+            }],
+            isArrayBased: true,
+            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+
+                // This code is only called when generating the explanation.
+                // The code to execute this command is in command.service.ts.
+                if (this.textUtilsService.IsPositiveInteger(para)) {
+
+                    return { segments: ["Flatten into batches of", para] };
+                } 
+                else {
+
+                    return { segments: ["Flatten into one array"] };
                 }
             })
         }

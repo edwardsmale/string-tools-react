@@ -1,27 +1,29 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
 
-export class UpperCommand implements Command {
+export class RegexCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        return { segments: ["Upper-case the value(s)"] };
+        this.SetRegex(para, context);
+        return { segments: ["Set the current regex to", para] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
         
-        return value.toUpperCase();   
+        this.SetRegex(para, context);
+        return value;
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        let result: string[] = [];
+        this.SetRegex(para, context);
+        return value;
+    }
 
-        for (let i = 0; i < value.length; i++) {
+    private SetRegex(para: string, context: Context) {
 
-            result.push(value[i].toUpperCase());
-        }
-
-        return result;
+        context.regex = para;
+        context.searchString = null;
     }
 }

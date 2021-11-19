@@ -1,29 +1,24 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
 
-export class RemoveCommand implements Command {
+export class HeaderCommand implements Command {
 
    Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        return { segments: ["Remove text matching a regex"] };
+        return { segments: ["Treat the first array of items as a header row"] };
     }
 
     ExecuteScalar(value: string, para: string, negated: boolean, context: Context): string {
         
-        return value;  
+        return value;
     }
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        let result: string[] = [];
-
-        const regExp = new RegExp(para);
-
-        for (let i = 0; i < value.length; i++) {
-
-            result.push(value[i].replace(regExp, ""));
+        if (!context.newColumnInfo.headers) {
+            context.newColumnInfo.headers = value as string[];
         }
 
-        return result;
+        return value;
     }
 }
