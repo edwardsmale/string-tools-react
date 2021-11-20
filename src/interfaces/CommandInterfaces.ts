@@ -27,7 +27,7 @@ export interface ScalarCommandType
     desc: string;
     para: CommandParameter[];
     isArrayBased: boolean;
-    exec: (value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | (string | string[])[] | null;
+    exec: (value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | null;
 }
 
 export interface ArrayCommandType
@@ -36,7 +36,7 @@ export interface ArrayCommandType
     desc: string;
     para: CommandParameter[];
     isArrayBased: boolean;
-    exec: (value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | (string | string[])[] | null;
+    exec: (value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | null;
 }
 
 export interface Command
@@ -52,7 +52,7 @@ export interface SortCommandType
     desc: string;
     para: CommandParameter[];
     isArrayBased: boolean;
-    exec: (value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | (string | string[])[];
+    exec: (value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[];
 }
 
 export interface Explanation

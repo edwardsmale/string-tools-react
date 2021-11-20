@@ -1,5 +1,6 @@
 import { TextUtilsService } from './text-utils.service';
 import { SortService } from './sort.service';
+import { ArrayService } from './array.service';
 import { ScalarCommandType, ArrayCommandType, CommandParameter, SortCommandType, CommandType } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
@@ -34,8 +35,10 @@ import { UpperCommand } from './commands/upper-command';
 
 export class CommandTypesService {
 
-    constructor(private textUtilsService: TextUtilsService,
+    constructor(
+        private textUtilsService: TextUtilsService,
         private sortService: SortService,
+        private arrayService: ArrayService,
         private contextService: ContextService,
         private blankCommand: BlankCommand,
         private camelCommand: CamelCommand,
@@ -92,6 +95,7 @@ export class CommandTypesService {
         this.selectCommand = selectCommand;
         this.skipCommand = skipCommand;
         this.sortService = sortService;
+        this.arrayService = arrayService;
         this.splitCommand = splitCommand;
         this.takeCommand = takeCommand;
         this.textUtilsService = textUtilsService;
@@ -892,15 +896,17 @@ export class CommandTypesService {
                     } 
                     else {
 
+                        const flattenedValues = this.arrayService.FlattenIfNecessary(value);
+
                         let sortedValues : string[];
 
-                        if (value.length === 1 && Array.isArray(value[0])) {
+                        if (flattenedValues.length === 1 && Array.isArray(flattenedValues[0])) {
                             
-                            sortedValues = sortArray(value[0] as string[]);
+                            sortedValues = sortArray(flattenedValues[0] as string[]);
                         }
                         else {
 
-                            sortedValues = sortArray(value as string[]);
+                            sortedValues = sortArray(flattenedValues as string[]);
                         }
 
                         if (descending) {
@@ -908,7 +914,7 @@ export class CommandTypesService {
                             sortedValues = sortedValues.reverse();
                         }
 
-                        return [sortedValues];
+                        return this.arrayService.Unflatten(sortedValues);
                     }
                 } 
                 else {
@@ -923,11 +929,7 @@ export class CommandTypesService {
                         }
 
                         return { segments: ["Sort by", positions.join(", then by ")] };
-                    } 
-                    else if (!para) {
-
-                        return this.sortService.SortLines(value as string[]);
-                    } 
+                    }
                     else {
 
                         // Negative indexes count back from the end.
