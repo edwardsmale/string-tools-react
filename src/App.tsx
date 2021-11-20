@@ -12,6 +12,7 @@ import { CommandTypesService } from './services/command-types.service';
 import { CommandService } from './services/command.service';
 import { ContextService } from './services/context.service';
 import { SortService } from './services/sort.service';
+import { ArrayService } from './services/array.service';
 import { TextUtilsService } from './services/text-utils.service';
 import { CodeCompressionService } from './services/code-compression.service';
 import { BlankCommand } from './services/commands/blank-command';
@@ -88,6 +89,7 @@ class App extends React.Component<AppProps, AppState> {
   commandParsingService: CommandParsingService;
   commandService: CommandService;
   sortService: SortService;
+  arrayService: ArrayService;
   textPosService: TextPosService;
 
   constructor(props: AppProps) {
@@ -98,10 +100,12 @@ class App extends React.Component<AppProps, AppState> {
     this.codeCompressionService = new CodeCompressionService();
     this.contextService = new ContextService(this.textUtilsService);
     this.sortService = new SortService(this.textUtilsService);
+    this.arrayService = new ArrayService();
 
     this.commandTypesService = new CommandTypesService(
       this.textUtilsService,
       this.sortService,
+      this.arrayService,
       this.contextService,
       new BlankCommand(this.textUtilsService),
       new CamelCommand(this.textUtilsService),
@@ -144,7 +148,9 @@ class App extends React.Component<AppProps, AppState> {
       this.textUtilsService,
       this.commandParsingService, 
       this.commandTypesService, 
-      this.contextService
+      this.contextService,
+      this.arrayService,
+      this.sortService
     );
 
     const input = `ReportConsole

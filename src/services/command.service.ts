@@ -3,15 +3,26 @@ import { CommandParsingService } from './command-parsing.service';
 import { CommandTypesService } from './command-types.service';
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
+import { ArrayService } from './array.service';
+import { SortService } from './sort.service';
 import { ScalarCommandType, ArrayCommandType, Explanation } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
-    constructor(private textUtilsService: TextUtilsService, private commandParsingService: CommandParsingService, private commandTypesService: CommandTypesService, private contextService: ContextService) {
+    constructor(
+        private textUtilsService: TextUtilsService,
+        private commandParsingService: CommandParsingService,
+        private commandTypesService: CommandTypesService,
+        private contextService: ContextService,
+        private arrayService: ArrayService,
+        private sortService: SortService
+    ) {
         this.textUtilsService = textUtilsService;
         this.commandParsingService = commandParsingService;
         this.commandTypesService = commandTypesService;
         this.contextService = contextService;
+        this.arrayService = arrayService;
+        this.sortService = sortService;
     }
 
     explainCommands(codeValue: string, lines: string[][], context: Context): Explanation[] {
@@ -137,7 +148,7 @@ export class CommandService {
 
                     if (!this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
 
-                        newValues[0] = this.FlattenValues(currentValues);
+                        newValues[0] = this.arrayService.FlattenIfNecessary(currentValues);
 
                         context.isArrayOfArrays = false;
 
@@ -186,42 +197,56 @@ export class CommandService {
                     }
                 } else if (parsedCommand.commandType.name === "sort") {
 
-                    var hasIndices = this.textUtilsService.ContainsSortOrderIndices(parsedCommand.para, context.columnInfo.headers);
+                    const indices = this.textUtilsService.ParseSortOrderIndices(parsedCommand.para, context.columnInfo.headers);
 
-                    if (!hasIndices) {
+                    const sortArray = this.sortService.SortArray;
+                    const sortArrays = this.sortService.SortArrays;
 
-                        const flattenedValues = this.FlattenValues(currentValues);
-
-                        const newLineValue = scalarCommandType.exec(
-                            flattenedValues,
-                            parsedCommand.para,
-                            parsedCommand.negated,
-                            context,     
-                            false
-                        );
-
-                        if (newLineValue !== null) {
-                            newValues = newLineValue as string[];
-                        }
-                    }
-                    else {
+                    if (!indices.length) {
+    
+                        const descending = parsedCommand.para.toLowerCase().indexOf("desc") !== -1;
                         
-                        const newLineValue = scalarCommandType.exec(
-                            currentValues as string[],
-                            parsedCommand.para,
-                            parsedCommand.negated,
-                            context,  
-                            false
-                        );
+                        const flattenedValues = this.arrayService.FlattenIfNecessary(currentValues);
 
-                        if (newLineValue !== null) {
-                            newValues = newLineValue as string[];
+                        let sortedValues : string[];
+
+                        if (flattenedValues.length === 1 && Array.isArray(flattenedValues[0])) {
+                            
+                            sortedValues = sortArray(flattenedValues[0] as string[]);
                         }
+                        else {
+
+                            sortedValues = sortArray(flattenedValues as string[]);
+                        }
+
+                        if (descending) {
+
+                            sortedValues = sortedValues.reverse();
+                        }
+
+                        newValues = this.arrayService.Unflatten(sortedValues);
+                    } 
+                    else {
+
+                        // Negative indices count back from the end.
+
+                        for (let i = 0; i < indices.length; i++) {
+
+                            if (indices[i].index < 0) {
+                                indices[i].index += currentValues[0].length;
+                            }
+                        }
+
+                        newValues = sortArrays(
+                            currentValues as string[][], 
+                            indices,
+                            context
+                        );
                     }
                 }
                 else if (parsedCommand.commandType.name === "distinct") {
 
-                    const flattenedValues = this.FlattenValues(currentValues);
+                    const flattenedValues = this.arrayService.FlattenIfNecessary(currentValues);
 
                     const newLineValue = scalarCommandType.exec(
                         flattenedValues,
@@ -229,10 +254,10 @@ export class CommandService {
                         parsedCommand.negated,
                         context,
                         false
-                    );
+                    ) as string[];
 
                     if (newLineValue !== null) {
-                        newValues = newLineValue as string[];
+                        newValues = this.arrayService.UnflattenIfNecessary(newLineValue);
                     }
                     
                 } else {
@@ -262,10 +287,10 @@ export class CommandService {
                             parsedCommand.negated,
                             context,
                             false
-                        );
+                        ) as string | string[] | null;
 
-                        if (newLineValue !== null) {
-                            newValues.push(newLineValue as string);
+                        if (!this.arrayService.IsNullOrEmptyArray(newLineValue)) {
+                            newValues.push(newLineValue as string | string[]);
                         }
                     }
                 }
@@ -282,12 +307,14 @@ export class CommandService {
             if (Array.isArray(currentValues[0])) {
 
                 for (let i = 0; i < currentValues.length; i++) {
+
                     output.push(currentValues[i] as string[]);
                 }
             }
             else {
 
                 for (let i = 0; i < currentValues.length; i++) {
+
                     output.push([currentValues[i] as string]);
                 }
             }
@@ -300,27 +327,6 @@ export class CommandService {
             output.push([ex.toString()]);
 
             return output;
-        }
-    }
-
-    private FlattenValues(currentValues: (string | string[])[]) : string[] {
-
-        if (!Array.isArray(currentValues[0])) {
-
-            return currentValues as string[];
-        }
-        else {
-
-            let flattened: string[] = [];
-
-            for (let j = 0; j < currentValues.length; j++) {
-
-                for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
-                    flattened.push(currentValues[j][k]);
-                }
-            }
-
-            return flattened;
         }
     }
 }

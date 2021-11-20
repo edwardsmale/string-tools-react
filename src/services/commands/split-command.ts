@@ -38,7 +38,6 @@ export class SplitCommand implements Command {
 
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        debugger;
         let result = [];
 
         for (let i = 0; i < value.length; i++) {
