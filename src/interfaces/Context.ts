@@ -6,4 +6,5 @@ export interface Context {
     columnInfo: ColumnInfo;
     newColumnInfo: ColumnInfo;
     withIndices: number[] | null;
+    isArrayOfArrays: boolean;
 }
