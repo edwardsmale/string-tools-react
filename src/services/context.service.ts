@@ -80,7 +80,8 @@ export class ContextService {
                 isColumnIntegral: null,
                 headers: null
             },
-            withIndices: null
+            withIndices: null,
+            isArrayOfArrays: false
         };
     }
 
@@ -92,7 +93,8 @@ export class ContextService {
             searchString: context.searchString,
             columnInfo: {...context.columnInfo },
             newColumnInfo: {...context.newColumnInfo },
-            withIndices: context.withIndices ? [...context.withIndices] : null
+            withIndices: context.withIndices ? [...context.withIndices] : null,
+            isArrayOfArrays: context.isArrayOfArrays
         };
     }
 }

@@ -64,7 +64,7 @@ export class CommandService {
 
                 if (scalarCommandType.name === "with") {
 
-                    if (Array.isArray(currentValues)) {
+                    if (context.isArrayOfArrays) {
 
                         let subCommands = [];
 
@@ -88,13 +88,15 @@ export class CommandService {
 
                         let subContext = this.contextService.CloneContext(context);
 
+                        subContext.isArrayOfArrays = false;
+
                         let subValues: (string | string[])[] = [];
                         
                         for (let j = 0; j < currentValues.length; j++) {
 
                             const selectCommandType = this.commandTypesService.FindCommandType("select") as ScalarCommandType;
 
-                            let selectedVal = selectCommandType.exec(
+                            const selectedVal = selectCommandType.exec(
                                 currentValues[j],
                                 parsedCommand.para,
                                 parsedCommand.negated,
@@ -133,12 +135,15 @@ export class CommandService {
                 }
                 else if (scalarCommandType.name === "flat") {
 
-                    if (!parsedCommand.para || !this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
+                    if (!this.textUtilsService.IsPositiveInteger(parsedCommand.para)) {
 
                         newValues[0] = this.FlattenValues(currentValues);
 
+                        context.isArrayOfArrays = false;
+
                     } else {
-                        let batchSize = parseInt(parsedCommand.para, 10);
+
+                        const batchSize = parseInt(parsedCommand.para, 10);
                         let batches = [];
 
                         let flattened: string[] = [];
@@ -176,15 +181,31 @@ export class CommandService {
                         }
 
                         newValues = batches;
+
+                        context.isArrayOfArrays = true;
                     }
-                } else {
+                } else if (parsedCommand.commandType.name === "sort") {
 
-                    // Not flat command.
+                    var hasIndices = this.textUtilsService.ContainsSortOrderIndices(parsedCommand.para, context.columnInfo.headers);
 
-                    // Iterate through the lines and apply the command.
+                    if (!hasIndices) {
 
-                    if (scalarCommandType.isArrayBased && !Array.isArray(currentValues[0])) {
+                        const flattenedValues = this.FlattenValues(currentValues);
 
+                        const newLineValue = scalarCommandType.exec(
+                            flattenedValues,
+                            parsedCommand.para,
+                            parsedCommand.negated,
+                            context,     
+                            false
+                        );
+
+                        if (newLineValue !== null) {
+                            newValues = newLineValue as string[];
+                        }
+                    }
+                    else {
+                        
                         const newLineValue = scalarCommandType.exec(
                             currentValues as string[],
                             parsedCommand.para,
@@ -197,47 +218,46 @@ export class CommandService {
                             newValues = newLineValue as string[];
                         }
                     }
-                    else if (parsedCommand.commandType.name === "sort") {
+                }
+                else if (parsedCommand.commandType.name === "distinct") {
 
-                        var hasIndices = this.textUtilsService.ContainsSortOrderIndices(parsedCommand.para, context.columnInfo.headers);
+                    const flattenedValues = this.FlattenValues(currentValues);
 
-                        if (!hasIndices) {
+                    const newLineValue = scalarCommandType.exec(
+                        flattenedValues,
+                        parsedCommand.para,
+                        parsedCommand.negated,
+                        context,
+                        false
+                    );
 
-                            const flattenedValues = this.FlattenValues(currentValues);
-
-                            const newLineValue = scalarCommandType.exec(
-                                flattenedValues,
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                context,     
-                                false
-                            );
-
-                            if (newLineValue !== null) {
-                                newValues = newLineValue as string[];
-                            }
-                        }
-                        else {
-                            
-                            const newLineValue = scalarCommandType.exec(
-                                currentValues as string[],
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                context,  
-                                false
-                            );
-    
-                            if (newLineValue !== null) {
-                                newValues = newLineValue as string[];
-                            }
-                        }
+                    if (newLineValue !== null) {
+                        newValues = newLineValue as string[];
                     }
-                    else if (parsedCommand.commandType.name === "distinct") {
+                    
+                } else {
 
-                        const flattenedValues = this.FlattenValues(currentValues);
+                    let startJ = 0;
+
+                    if (scalarCommandType.name === "header") {
+
+                        context.newColumnInfo.headers = null;
+
+                        scalarCommandType.exec(
+                            currentValues[0] as string,
+                            parsedCommand.para,
+                            parsedCommand.negated,
+                            context,
+                            false
+                        );
+
+                        startJ = 1;
+                    }
+
+                    for (let j = startJ; j < currentValues.length; j++) {
 
                         const newLineValue = scalarCommandType.exec(
-                            flattenedValues,
+                            currentValues[j] as string,
                             parsedCommand.para,
                             parsedCommand.negated,
                             context,
@@ -245,41 +265,7 @@ export class CommandService {
                         );
 
                         if (newLineValue !== null) {
-                            newValues = newLineValue as string[];
-                        }
-                        
-                    } else {
-
-                        let startJ = 0;
-
-                        if (scalarCommandType.name === "header") {
-
-                            context.newColumnInfo.headers = null;
-
-                            scalarCommandType.exec(
-                                currentValues[0] as string,
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                context,
-                                false
-                            );
-
-                            startJ = 1;
-                        }
-
-                        for (let j = startJ; j < currentValues.length; j++) {
-
-                            const newLineValue = scalarCommandType.exec(
-                                currentValues[j] as string,
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                context,
-                                false
-                            );
-
-                            if (newLineValue !== null) {
-                                newValues.push(newLineValue as string);
-                            }
+                            newValues.push(newLineValue as string);
                         }
                     }
                 }
@@ -317,7 +303,7 @@ export class CommandService {
         }
     }
 
-    private FlattenValues(currentValues: (string | string[])[]) : string | string[] {
+    private FlattenValues(currentValues: (string | string[])[]) : string[] {
 
         if (!Array.isArray(currentValues[0])) {
 
