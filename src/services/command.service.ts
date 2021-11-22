@@ -50,7 +50,7 @@ export class CommandService {
         return output;    
     }
 
-    processCommands(codeValue: string, lines: (string | string[])[], context: Context): string[][] {
+    processCommands(codeValue: string, lines: string[][], context: Context): string[][] {
 
         //try {
             let codeLines = this.textUtilsService.TextToLines(codeValue);
@@ -101,7 +101,7 @@ export class CommandService {
 
                         subContext.isArrayOfArrays = false;
 
-                        let subValues: (string | string[])[] = [];
+                        let subValues: string[][] = [];
                         
                         for (let j = 0; j < currentValues.length; j++) {
 
@@ -113,11 +113,9 @@ export class CommandService {
                                 parsedCommand.negated,
                                 subContext,
                                 false
-                            );
+                            ) as string[];
 
-                            if (typeof selectedVal === "string" || Array.isArray(selectedVal)) {
-                                subValues.push(selectedVal as string | string[]);
-                            }
+                            subValues.push(selectedVal);
                         }
 
                         const subResult = this.processCommands(subCode, subValues, subContext);
