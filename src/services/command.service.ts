@@ -55,7 +55,7 @@ export class CommandService {
         //try {
             let codeLines = this.textUtilsService.TextToLines(codeValue);
 
-            let currentValues: (string | string[])[] = lines;
+            let currentValues: string[][] = lines;
 
             context.newColumnInfo = {...context.columnInfo };
 
@@ -157,7 +157,7 @@ export class CommandService {
 
                     for (let j = 0; j < currentValues.length; j++) {
 
-                        for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
+                        for (let k = 0; k < currentValues[j].length; k++) {
 
                             batch.push(lines[j][k]);
 
@@ -200,7 +200,7 @@ export class CommandService {
                             }];
 
                             newValues = this.sortService.SortArrays(
-                                currentValues as string[][], 
+                                currentValues, 
                                 indices,
                                 context
                             );    
@@ -208,7 +208,7 @@ export class CommandService {
                         else {
 
                             let sortedValues = this.sortService.SortArray(
-                                currentValues as string[][]
+                                currentValues
                             );
 
                             if (descending) {
@@ -233,7 +233,7 @@ export class CommandService {
                             }
 
                             newValues = this.sortService.SortArrays(
-                                currentValues as string[][], 
+                                currentValues, 
                                 indices,
                                 context
                             );
@@ -241,7 +241,7 @@ export class CommandService {
                         else {
 
                             let sortedValues = this.sortService.SortArray(
-                                currentValues as string[][]
+                                currentValues
                             );
 
                             if (descending) {
@@ -309,7 +309,7 @@ export class CommandService {
                 context.columnInfo = { ...context.newColumnInfo};
             }
 
-            return currentValues as string[][];
+            return currentValues;
             
         // } catch (ex) {
 
