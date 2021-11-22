@@ -203,16 +203,14 @@ export class CommandService {
                                 currentValues, 
                                 indices,
                                 context
-                            );    
+                            );
                         }                   
                         else {
 
-                            const sortedValues = this.sortService.SortArray(
+                            newValues = this.sortService.SortArray(
                                 currentValues,
                                 descending
                             );
-
-                            newValues = sortedValues;
                         }
                     } 
                     else {
@@ -236,12 +234,10 @@ export class CommandService {
                         }
                         else {
 
-                            const sortedValues = this.sortService.SortArray(
+                            newValues = this.sortService.SortArray(
                                 currentValues,
                                 descending
                             );
-
-                            newValues = sortedValues;
                         }
                     }
                 }

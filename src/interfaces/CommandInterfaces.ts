@@ -19,7 +19,7 @@ export interface CommandType
     desc: string;
     para: CommandParameter[];
     isArrayBased: boolean;
-    exec: (value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | null;
+    exec: (value: string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string[] | null;
 }
 
 export interface Command
