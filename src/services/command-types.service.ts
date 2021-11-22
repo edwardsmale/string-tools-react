@@ -124,7 +124,6 @@ export class CommandTypesService {
             name: "noop",
             desc: "Does nothing",
             para: [] as CommandParameter[],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {      
@@ -146,7 +145,6 @@ export class CommandTypesService {
                     desc: "String defining the regex"
                 }
             ],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {     
@@ -168,7 +166,6 @@ export class CommandTypesService {
                     desc: "The search string to set"
                 }
             ],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {            
@@ -190,7 +187,6 @@ export class CommandTypesService {
                     desc: "The text to replace the matching text with"
                 }
             ],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {            
@@ -212,7 +208,6 @@ export class CommandTypesService {
                     desc: "The string upon which to split."
                 }
             ],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {     
@@ -229,7 +224,6 @@ export class CommandTypesService {
             name: "distinct",
             desc: "Deletes any duplicate items",
             para: [],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -251,7 +245,6 @@ export class CommandTypesService {
                     desc: "How many items to skip"
                 }
             ],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -268,7 +261,6 @@ export class CommandTypesService {
             name: "header",
             desc: "Treats the first array of items as a header row",
             para: [ ],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {    
@@ -290,7 +282,6 @@ export class CommandTypesService {
                     desc: "How many items to take"
                 }
             ],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {     
@@ -307,7 +298,6 @@ export class CommandTypesService {
             name: "blank",
             desc: "Matches blank lines only",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -324,7 +314,6 @@ export class CommandTypesService {
             name: "trim",
             desc: "Trims leading and trailing whitespace",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -341,7 +330,6 @@ export class CommandTypesService {
             name: "trimStart",
             desc: "Trims leading whitespace",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -358,7 +346,6 @@ export class CommandTypesService {
             name: "trimEnd",
             desc: "Trims trailing whitespace",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -375,7 +362,6 @@ export class CommandTypesService {
             name: "remove",
             desc: "Removes text matching a regex",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -392,7 +378,6 @@ export class CommandTypesService {
             name: "ensureLeading",
             desc: "Ensures each item starts with the specified string",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -409,7 +394,6 @@ export class CommandTypesService {
             name: "ensureTrailing",
             desc: "Ensures each item ends with the specified string",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -426,7 +410,6 @@ export class CommandTypesService {
             name: "removeLeading",
             desc: "Removes the specified string from the start of each item, if present",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -443,7 +426,6 @@ export class CommandTypesService {
             name: "removeTrailing",
             desc: "Removes the specified string from the end of each item, if present",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -460,7 +442,6 @@ export class CommandTypesService {
             name: "camel",
             desc: "Camel-cases the item(s)",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -477,7 +458,6 @@ export class CommandTypesService {
             name: "pascal",
             desc: "Pascal-cases the item(s)",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -494,7 +474,6 @@ export class CommandTypesService {
             name: "kebab",
             desc: "Kebab-cases the item(s)",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -511,7 +490,6 @@ export class CommandTypesService {
             name: "upper",
             desc: "Upper-cases the item(s)",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -528,7 +506,6 @@ export class CommandTypesService {
             name: "lower",
             desc: "Lower-cases the item(s)",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -550,7 +527,6 @@ export class CommandTypesService {
                     desc: "Zero-based. Negatives count back from the end."
                 }
             ],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -572,7 +548,6 @@ export class CommandTypesService {
                     desc: "The string which items must contain in order to be included"
                 }
             ],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -589,7 +564,6 @@ export class CommandTypesService {
             name: "enclose",
             desc: "Puts the specified characters at the start and end of each item",
             para: [],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -606,7 +580,6 @@ export class CommandTypesService {
             name: "tsv",
             desc: "Tab-separates text that has been split.",
             para: [],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {
@@ -648,7 +621,6 @@ export class CommandTypesService {
                     desc: "The character(s) to use as the delimiter."
                 }
             ],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -670,7 +642,6 @@ export class CommandTypesService {
                     desc: "The delimiter to insert between items."
                 }
             ],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {
@@ -687,7 +658,6 @@ export class CommandTypesService {
             name: "print",
             desc: "Prints output",
             para: [{ name: "<text>", desc: "What to print." }],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {
@@ -704,7 +674,6 @@ export class CommandTypesService {
             name: "with",
             desc: "Selects which parts of the results to operate on",
             para: [] as CommandParameter[],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 // This code is only called when generating the explanation.
@@ -756,7 +725,6 @@ export class CommandTypesService {
                     desc: "Index(es) of column to sort on"
                 }
             ],
-            isArrayBased: false,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 const indices = this.textUtilsService.ParseSortOrderIndices(
@@ -811,7 +779,6 @@ export class CommandTypesService {
                 name: "Batch Size",
                 desc: "If set, flattens into batches of this size"
             }],
-            isArrayBased: true,
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 // This code is only called when generating the explanation.
