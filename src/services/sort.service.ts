@@ -15,14 +15,19 @@ export class SortService {
         });
     }
 
-    SortArray = (values: string[][]): string[][] => {
+    SortArray = (values: string[][], descending: boolean): string[][] => {
 
-        const sortedValues = [...values].sort();
+        let sortedValues = [...values].sort();
 
         // If the last item is numeric, then all the values must be numeric (because
         // numbers come before letters in ASCII).
 
         if (!this.textUtilsService.IsNumeric(sortedValues[sortedValues.length - 1][0])) {
+
+            if (descending) {
+
+                sortedValues = sortedValues.reverse();
+            }
 
             return sortedValues;
         }
@@ -31,7 +36,17 @@ export class SortService {
         
         const numbers = (values.map(v => v[0]) as string[]).map(parseFloat);
 
-        return numbers.sort(function(a, b) { return a - b; }).map(function (num) { return num.toString(); }).map(n => [n]);
+        let sortedNumbers = numbers
+            .sort(function(a, b) { return a - b; })
+            .map(function (num) { return num.toString(); })
+            .map(n => [n]);
+
+        if (descending) {
+
+            sortedNumbers = sortedNumbers.reverse();
+        }
+
+        return sortedNumbers;
     }
 
     SortArrays = (values: string[][], indices: SortOrderIndex[], context: Context) => {
@@ -68,13 +83,14 @@ export class SortService {
             valuesAtIndex = valuesAtIndex.sort();
         }
 
-        if (!indices[0].ascending) {
+        if (indices[0].descending) {
             valuesAtIndex = valuesAtIndex.reverse();
         }
 
         var arrayOfArrays: string[][][] = [];
 
         for (let i: number = 0; i < valuesAtIndex.length; i++) {
+
             arrayOfArrays[valuesAtIndex[i] as any] = [] as string[][];
         }
 
