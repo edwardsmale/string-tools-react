@@ -18,8 +18,7 @@ export interface CommandType
     name: string;
     desc: string;
     para: CommandParameter[];
-    exec: (value: string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string[];
-    UpdateContext?(para: string, negated: boolean, context: Context): void;
+    Command: Command;
 }
 
 export interface Command

@@ -36,13 +36,11 @@ export class CommandService {
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
             const commandType = parsedCommand.commandType;
 
-            const explanation = commandType.exec(
-                lines,
+            const explanation = commandType.Command.Explain(
                 parsedCommand.para,
                 parsedCommand.negated,
-                context,
-                true
-            ) as Explanation;
+                context
+            );
 
             output.push(explanation);
         }
@@ -107,13 +105,12 @@ export class CommandService {
 
                             const selectCommandType = this.commandTypesService.FindCommandType("select");
 
-                            const selectedVal = selectCommandType.exec(
+                            const selectedVal = selectCommandType.Command.Execute(
                                 currentValues[j],
                                 parsedCommand.para,
                                 parsedCommand.negated,
-                                subContext,
-                                false
-                            ) as string[];
+                                subContext
+                            );
 
                             subValues.push(selectedVal);
                         }
@@ -280,13 +277,12 @@ export class CommandService {
 
                         for (let j = 0; j < currentValues.length; j++) {
 
-                            const newValue = commandType.exec(
+                            const newValue = commandType.Command.Execute(
                                 currentValues[j],
                                 parsedCommand.para,
                                 parsedCommand.negated,
-                                context,
-                                false
-                            ) as string[];
+                                context
+                            );
 
                             if (newValue.length) {
 
@@ -296,9 +292,9 @@ export class CommandService {
                     }
                 }
 
-                if (commandType.UpdateContext) {
+                if (commandType.Command.UpdateContext) {
 
-                    commandType.UpdateContext(parsedCommand.para, parsedCommand.negated, context);
+                    commandType.Command.UpdateContext(parsedCommand.para, parsedCommand.negated, context);
                 }
                 
                 this.contextService.UpdateContextDataTypes(context, newValues);
