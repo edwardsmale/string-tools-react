@@ -11,6 +11,8 @@ export class SplitCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
+        context.isArrayOfArrays = true;
+
         if (!para && context.regex) {
 
             return { segments: ["Split the text using the regex", context.regex] };
@@ -46,6 +48,8 @@ export class SplitCommand implements Command {
 
             result.push(...split);
         }
+
+        context.isArrayOfArrays = true;
 
         return result;
     }

@@ -55,6 +55,8 @@ export class CsvCommand implements Command {
             }
         }
 
+        context.isArrayOfArrays = false;
+
         return { segments: [explanation] };    
     }
 
@@ -68,6 +70,8 @@ export class CsvCommand implements Command {
         const options = this.parseOptions(para);
 
         context.newColumnInfo.headers = [];
+
+        context.isArrayOfArrays = false;
 
         return [this.toDelimitedString(value, options)];
     }

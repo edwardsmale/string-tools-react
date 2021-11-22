@@ -21,6 +21,10 @@ class ContextPopupContent extends React.Component<ContextPopupContentProps, Cont
         </colgroup>
         <tbody>
           <tr>
+            <td className="context-popup-content__key">Is Array Of Arrays</td>
+            <td className="context-popup-content__value">{this.props.context.isArrayOfArrays ? "True" : "False"}</td>
+          </tr>
+          <tr>
             <td className="context-popup-content__key">Search string</td>
             <td className="context-popup-content__value">{this.props.context.searchString}</td>
           </tr>

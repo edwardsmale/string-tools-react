@@ -874,17 +874,28 @@ export class CommandTypesService {
             isArrayBased: false,
             exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
-                const indices = this.textUtilsService.ParseSortOrderIndices(para, context.columnInfo.headers);
+                const indices = this.textUtilsService.ParseSortOrderIndices(
+                    para,
+                    context.columnInfo.headers
+                );
 
-                const sortArray = this.sortService.SortArray;
-                const sortArrays = this.sortService.SortArrays;
+                const descending = para.toLowerCase().indexOf("desc") !== -1;
 
                 if (!indices.length) {
 
-                    const descending = para.toLowerCase().indexOf("desc") !== -1;
-                    
-                    if (explain) {
+                    if (context.isArrayOfArrays) {
+                        
+                        if (descending) {
 
+                            return { segments: ["Sort by", "the item at index 0", "in", "descending", "order"] };
+                        }
+                        else {
+
+                            return { segments: ["Sort by", "the item at index 0"] };
+                        }
+                    }
+                    else {
+                        
                         if (descending) {
 
                             return { segments: ["Sort the items in descending order"] };
@@ -893,59 +904,18 @@ export class CommandTypesService {
 
                             return { segments: ["Sort the items"] };
                         }
-                    } 
-                    else {
-
-                        const flattenedValues = this.arrayService.FlattenIfNecessary(value);
-
-                        let sortedValues : string[];
-
-                        if (flattenedValues.length === 1 && Array.isArray(flattenedValues[0])) {
-                            
-                            sortedValues = sortArray(flattenedValues[0] as string[]);
-                        }
-                        else {
-
-                            sortedValues = sortArray(flattenedValues as string[]);
-                        }
-
-                        if (descending) {
-
-                            sortedValues = sortedValues.reverse();
-                        }
-
-                        return this.arrayService.Unflatten(sortedValues);
                     }
                 } 
                 else {
                     
-                    if (explain) {
+                    let positions: string[] = [];
 
-                        let positions: string[] = [];
+                    for (let i = 0; i < indices.length; i++) {
 
-                        for (let i = 0; i < indices.length; i++) {
-
-                            positions.push(indices[i].description);
-                        }
-
-                        return { segments: ["Sort by", positions.join(", then by ")] };
+                        positions.push(indices[i].description);
                     }
-                    else {
 
-                        // Negative indexes count back from the end.
-                        for (let i = 0; i < indices.length; i++) {
-
-                            if (indices[i].index < 0) {
-                                indices[i].index += value[0].length;
-                            }
-                        }
-
-                        return sortArrays(
-                            value as string[][], 
-                            indices,
-                            context
-                        );
-                    }
+                    return { segments: ["Sort by", positions.join(", then by ")] };
                 }
             })
         },
@@ -961,13 +931,20 @@ export class CommandTypesService {
 
                 // This code is only called when generating the explanation.
                 // The code to execute this command is in command.service.ts.
-                if (this.textUtilsService.IsPositiveInteger(para)) {
 
-                    return { segments: ["Flatten into batches of", para] };
-                } 
-                else {
+                const batchSize = this.textUtilsService.ParsePositiveInteger(para);
+
+                if (!batchSize) {
+
+                    context.isArrayOfArrays = false;
 
                     return { segments: ["Flatten into one array"] };
+
+                } else {
+                    
+                    context.isArrayOfArrays = true;
+
+                    return { segments: ["Flatten into batches of", batchSize] }
                 }
             })
         }

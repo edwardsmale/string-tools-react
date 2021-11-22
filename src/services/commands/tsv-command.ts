@@ -10,6 +10,10 @@ export class TsvCommand implements Command {
     }
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
+        
+        context.newColumnInfo.headers = [];
+
+        context.isArrayOfArrays = false;
 
         return { segments: ["Output the items in tab-separated format"] };
     }
@@ -22,6 +26,8 @@ export class TsvCommand implements Command {
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         context.newColumnInfo.headers = [];
+
+        context.isArrayOfArrays = false;
 
         return [value.join("\t")];
     }
