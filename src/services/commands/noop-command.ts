@@ -5,7 +5,7 @@ export class NoopCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        return { segments: ["Do nothing"] };
+        return { segments: [""] };
     }
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
