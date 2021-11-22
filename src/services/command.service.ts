@@ -185,7 +185,7 @@ export class CommandService {
                         context.columnInfo.headers
                     );
 
-                    const descending = parsedCommand.para.toLowerCase().indexOf("desc") !== -1;
+                    const descending = this.textUtilsService.ParseSortOrderIsDescending(parsedCommand.para);
 
                     if (!indices.length) {
 
@@ -271,7 +271,8 @@ export class CommandService {
                         newValues = this.arrayService.UnflattenIfNecessary(newLineValue);
                     }
                     
-                } else {
+                }
+                else {
 
                     let startJ = 0;
 
@@ -313,24 +314,7 @@ export class CommandService {
                 context.columnInfo = { ...context.newColumnInfo};
             }
 
-            let output: string[][] = [];  
-            
-            if (Array.isArray(currentValues[0])) {
-
-                for (let i = 0; i < currentValues.length; i++) {
-
-                    output.push(currentValues[i] as string[]);
-                }
-            }
-            else {
-
-                for (let i = 0; i < currentValues.length; i++) {
-
-                    output.push([currentValues[i] as string]);
-                }
-            }
-
-            return output;
+            return currentValues as string[][];
             
         // } catch (ex) {
 
