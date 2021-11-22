@@ -13,6 +13,8 @@ export class JoinCommand implements Command {
 
         const formattedDelimiter = this.GetFormattedDelimiter(para);
 
+        context.isArrayOfArrays = false;
+
         return { segments: ["Output items separated with", formattedDelimiter] };
     }
 
@@ -24,7 +26,9 @@ export class JoinCommand implements Command {
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         context.newColumnInfo.headers = [];
-        const delimiter = this.GetDelimiter(para);       
+        const delimiter = this.GetDelimiter(para);
+
+        context.isArrayOfArrays = false;
 
         return [value.join(delimiter)];
     }

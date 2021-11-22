@@ -15,23 +15,23 @@ export class SortService {
         });
     }
 
-    SortArray = (values: string[]) => {
+    SortArray = (values: string[][]): string[][] => {
 
         const sortedValues = [...values].sort();
 
         // If the last item is numeric, then all the values must be numeric (because
         // numbers come before letters in ASCII).
-           
-        if (!this.textUtilsService.IsNumeric(sortedValues[sortedValues.length - 1])) {
+
+        if (!this.textUtilsService.IsNumeric(sortedValues[sortedValues.length - 1][0])) {
 
             return sortedValues;
         }
 
         // Sort numerically.
         
-        const numbers = (values as string[]).map(parseFloat);
+        const numbers = (values.map(v => v[0]) as string[]).map(parseFloat);
 
-        return numbers.sort(function(a, b) { return a - b; }).map(function (num) { return num.toString(); });
+        return numbers.sort(function(a, b) { return a - b; }).map(function (num) { return num.toString(); }).map(n => [n]);
     }
 
     SortArrays = (values: string[][], indices: SortOrderIndex[], context: Context) => {

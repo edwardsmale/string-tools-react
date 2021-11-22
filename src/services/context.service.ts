@@ -12,13 +12,13 @@ export class ContextService {
         const isIntegral = this.textUtilsService.IsIntegral;
         const isNumeric = this.textUtilsService.IsNumeric;
 
-        if (!Array.isArray(currentValues[0])) {
+        if (!context.isArrayOfArrays) {
 
-            let vals = currentValues as string[];
+            let vals = currentValues as string[][];
 
             context.newColumnInfo.numberOfColumns = 1;
-            context.newColumnInfo.isColumnIntegral = [vals.every(val => isIntegral(val))];
-            context.newColumnInfo.isColumnNumeric = [vals.every(val => isNumeric(val))];
+            context.newColumnInfo.isColumnIntegral = [vals.every(val => isIntegral(val[0]))];
+            context.newColumnInfo.isColumnNumeric = [vals.every(val => isNumeric(val[0]))];
         }
         else {
 
@@ -42,6 +42,8 @@ export class ContextService {
                 isColumnIntegral[i] = true;
                 isColumnNumeric[i] = true;
             }
+
+            debugger;
 
             for (let i = 0; i < numberOfColumns; i++) {
 
