@@ -146,7 +146,6 @@ class App extends React.Component<AppProps, AppState> {
     );
 
     this.commandParsingService = new CommandParsingService(
-      this.textUtilsService,
       this.commandTypesService
     );
 

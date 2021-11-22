@@ -1,11 +1,10 @@
-import { TextUtilsService } from './text-utils.service';
 import { CommandTypesService } from './command-types.service';
 import { ParsedCommand } from "../interfaces/CommandInterfaces";
 
 export class CommandParsingService {
 
-  constructor(private textUtilsService : TextUtilsService, private commandTypesService : CommandTypesService) {
-    this.textUtilsService = textUtilsService;
+  constructor(private commandTypesService : CommandTypesService) {
+
     this.commandTypesService = commandTypesService;
   }
 
@@ -14,23 +13,23 @@ export class CommandParsingService {
     if (codeLine.length === 0) {
       
       return {
-        commandType: this.commandTypesService.FindCommandType("noop"),
+        command: this.commandTypesService.FindCommand("noop"),
         para: "",
         negated: false
       };
+
     } else {
       
-      var commandString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(0,codeLine.indexOf(" ")) : codeLine;
-      var paraString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(codeLine.indexOf(" ") + 1) : "";
+      const commandString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(0,codeLine.indexOf(" ")) : codeLine;
+      const paraString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(codeLine.indexOf(" ") + 1) : "";
 
-      var negated = commandString.includes("!");
-      var commandName = commandString.replace("!", "");
-      var commandType = this.commandTypesService.FindCommandType(commandName);
-      var para = paraString;
+      const negated = commandString.includes("!");
+      const commandName = commandString.replace("!", "");
+      const command = this.commandTypesService.FindCommand(commandName);
 
       return {
-        commandType: commandType,
-        para: para,
+        command: command,
+        para: paraString,
         negated: negated
       };
     }

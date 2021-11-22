@@ -5,7 +5,7 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { ArrayService } from './array.service';
 import { SortService } from './sort.service';
-import { CommandType, Explanation } from "../interfaces/CommandInterfaces";
+import { Command, Explanation } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
@@ -34,9 +34,9 @@ export class CommandService {
         for (let i = 0; i < codeLines.length; i++) {
 
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
-            const commandType = parsedCommand.commandType;
+            const command = parsedCommand.command;
 
-            const explanation = commandType.Command.Explain(
+            const explanation = command.Explain(
                 parsedCommand.para,
                 parsedCommand.negated,
                 context
@@ -67,7 +67,7 @@ export class CommandService {
                     codeLines[i]
                 );
 
-                const command = parsedCommand.commandType.Command;
+                const command = parsedCommand.command;
 
                 let newValues: string[][] = [];
 
@@ -103,9 +103,9 @@ export class CommandService {
                         
                         for (let j = 0; j < currentValues.length; j++) {
 
-                            const selectCommandType = this.commandTypesService.FindCommandType("select");
+                            const selectCommand = this.commandTypesService.FindCommand("select");
 
-                            const selectedVal = selectCommandType.Command.Execute(
+                            const selectedVal = selectCommand.Execute(
                                 currentValues[j],
                                 parsedCommand.para,
                                 parsedCommand.negated,

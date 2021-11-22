@@ -2,7 +2,7 @@ import { Context } from "./Context";
 
 export interface ParsedCommand
 {
-    commandType: CommandType;
+    command: Command;
     para: string;
     negated: boolean;
 }
@@ -11,11 +11,6 @@ export interface CommandParameter
 {
     name: string;
     desc: string;
-}
-
-export interface CommandType
-{
-    Command: Command;
 }
 
 export interface CommandHelp
