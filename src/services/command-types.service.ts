@@ -1,7 +1,7 @@
 import { TextUtilsService } from './text-utils.service';
 import { SortService } from './sort.service';
 import { ArrayService } from './array.service';
-import { CommandParameter, SortCommandType, CommandType } from "../interfaces/CommandInterfaces";
+import { CommandParameter, CommandType } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { BlankCommand } from './commands/blank-command';
@@ -106,7 +106,7 @@ export class CommandTypesService {
         this.upperCommand = upperCommand;
     }
 
-    FindCommandType = (name: string): CommandType | SortCommandType =>  {
+    FindCommandType = (name: string): CommandType =>  {
 
         for (let i = 0; i < this.CommandTypes.length; i++) {
 
@@ -119,7 +119,7 @@ export class CommandTypesService {
         return this.FindCommandType("noop");
     };
 
-    CommandTypes: (CommandType | SortCommandType)[] = [
+    CommandTypes: CommandType[] = [
         {
             name: "noop",
             desc: "Does nothing",
