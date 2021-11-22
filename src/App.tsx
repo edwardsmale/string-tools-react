@@ -48,6 +48,9 @@ import { SelectCommand } from './services/commands/select-command';
 import { SplitCommand } from './services/commands/split-command';
 import { NoopCommand } from './services/commands/noop-command';
 import { ReplaceCommand } from './services/commands/replace-command';
+import { WithCommand } from './services/commands/with-command';
+import { SortCommand } from './services/commands/sort-command';
+import { FlatCommand } from './services/commands/flat-command';
 
 interface AppProps {
 }
@@ -114,6 +117,7 @@ class App extends React.Component<AppProps, AppState> {
       new EncloseCommand(),
       new EnsureLeadingCommand(this.textUtilsService),
       new EnsureTrailingCommand(this.textUtilsService),
+      new FlatCommand(this.textUtilsService),
       new HeaderCommand(),
       new JoinCommand(this.textUtilsService),
       new KebabCommand(this.textUtilsService),
@@ -130,13 +134,15 @@ class App extends React.Component<AppProps, AppState> {
       new SearchCommand(),
       new SelectCommand(this.textUtilsService),
       new SkipCommand(),
+      new SortCommand(this.textUtilsService),
       new SplitCommand(this.textUtilsService),
       new TakeCommand(),
       new TrimCommand(),
       new TrimEndCommand(),
       new TrimStartCommand(),
       new TsvCommand(this.textUtilsService),
-      new UpperCommand()
+      new UpperCommand(),
+      new WithCommand(this.textUtilsService)
     );
 
     this.commandParsingService = new CommandParsingService(

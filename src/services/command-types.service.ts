@@ -32,6 +32,9 @@ import { TakeCommand } from './commands/take-command';
 import { TrimCommand, TrimEndCommand, TrimStartCommand } from './commands/trim-command';
 import { TsvCommand } from './commands/tsv-command';
 import { UpperCommand } from './commands/upper-command';
+import { WithCommand } from './commands/with-command';
+import { SortCommand } from './commands/sort-command';
+import { FlatCommand } from './commands/flat-command';
 
 export class CommandTypesService {
 
@@ -47,6 +50,7 @@ export class CommandTypesService {
         private encloseCommand: EncloseCommand,
         private ensureLeadingCommand: EnsureLeadingCommand,
         private ensureTrailingCcommand: EnsureTrailingCommand,
+        private flatCommand: FlatCommand,
         private headerCommand: HeaderCommand,
         private joinCommand: JoinCommand,
         private kebabCommand: KebabCommand,
@@ -63,13 +67,15 @@ export class CommandTypesService {
         private searchCommand: SearchCommand,
         private selectCommand: SelectCommand,
         private skipCommand: SkipCommand,
+        private sortCommand: SortCommand,
         private splitCommand: SplitCommand,
         private takeCommand: TakeCommand,
         private trimCommand: TrimCommand,
         private trimEndCommand: TrimEndCommand,
         private trimStartCommand: TrimStartCommand,
         private tsvCommand: TsvCommand,
-        private upperCommand: UpperCommand) {
+        private upperCommand: UpperCommand,
+        private withCommand: WithCommand) {
 
         this.blankCommand = blankCommand;
         this.camelCommand = camelCommand;
@@ -78,6 +84,7 @@ export class CommandTypesService {
         this.encloseCommand = encloseCommand;
         this.ensureLeadingCommand = ensureLeadingCommand;
         this.ensureTrailingCcommand = ensureTrailingCcommand;
+        this.flatCommand = flatCommand;
         this.headerCommand = headerCommand;
         this.joinCommand = joinCommand;
         this.kebabCommand = kebabCommand;
@@ -94,6 +101,7 @@ export class CommandTypesService {
         this.searchCommand = searchCommand;
         this.selectCommand = selectCommand;
         this.skipCommand = skipCommand;
+        this.sortCommand = sortCommand;
         this.sortService = sortService;
         this.arrayService = arrayService;
         this.splitCommand = splitCommand;
@@ -104,6 +112,7 @@ export class CommandTypesService {
         this.trimStartCommand = trimStartCommand;
         this.tsvCommand = tsvCommand;
         this.upperCommand = upperCommand;
+        this.withCommand = withCommand;
     }
 
     FindCommandType = (name: string): CommandType =>  {
@@ -124,17 +133,7 @@ export class CommandTypesService {
             name: "noop",
             desc: "",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                
-                if (explain) {      
-
-                    return this.noopCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.noopCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.noopCommand
         },
         {
             name: "regex",
@@ -145,17 +144,7 @@ export class CommandTypesService {
                     desc: "String defining the regex"
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {     
-
-                    return this.regexCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.regexCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.regexCommand
         },
         {
             name: "search",
@@ -166,17 +155,7 @@ export class CommandTypesService {
                     desc: "The search string to set"
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                
-                if (explain) {            
-                           
-                    return this.searchCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.searchCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.searchCommand
         },
         {
             name: "replace",
@@ -187,17 +166,7 @@ export class CommandTypesService {
                     desc: "The text to replace the matching text with"
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                
-                if (explain) {            
-                           
-                    return this.replaceCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.replaceCommand.Execute(value, para, negated, context);
-                }               
-            })
+            Command: this.replaceCommand
         },
         {
             name: "split",
@@ -208,33 +177,13 @@ export class CommandTypesService {
                     desc: "The string upon which to split."
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {     
-
-                    return this.splitCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.splitCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.splitCommand
         },
         {   
             name: "distinct",
             desc: "Deletes any duplicate items",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.distinctCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.distinctCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.distinctCommand
         },
         {
             name: "skip",
@@ -245,33 +194,13 @@ export class CommandTypesService {
                     desc: "How many items to skip"
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-
-                    return this.skipCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.skipCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.skipCommand
         },
         {
             name: "header",
             desc: "Treats the first array of items as a header row",
-            para: [ ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                
-                if (explain) {    
-
-                    return this.headerCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.headerCommand.Execute(value, para, negated, context);
-                }
-            })
+            para: [],
+            Command: this.headerCommand
         },
         {
             name: "take",
@@ -282,241 +211,91 @@ export class CommandTypesService {
                     desc: "How many items to take"
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {     
-
-                    return this.takeCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.takeCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.takeCommand
         },
         {
             name: "blank",
             desc: "Matches blank lines only",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.blankCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.blankCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.blankCommand
         },
         {
             name: "trim",
             desc: "Trims leading and trailing whitespace",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.trimCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.trimCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.trimCommand
         },
         {
             name: "trimStart",
             desc: "Trims leading whitespace",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.trimStartCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.trimStartCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.trimStartCommand
         },
         {
             name: "trimEnd",
             desc: "Trims trailing whitespace",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.trimEndCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.trimEndCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.trimEndCommand
         },
         {
             name: "remove",
             desc: "Removes text matching a regex",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.removeCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.removeCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.removeCommand
         },
         {
             name: "ensureLeading",
             desc: "Ensures each item starts with the specified string",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.ensureLeadingCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.ensureLeadingCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.ensureLeadingCommand
         },
         {
             name: "ensureTrailing",
             desc: "Ensures each item ends with the specified string",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.ensureTrailingCcommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.ensureTrailingCcommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.ensureTrailingCcommand
         },
         {
             name: "removeLeading",
             desc: "Removes the specified string from the start of each item, if present",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.removeLeadingCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.removeLeadingCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.removeLeadingCommand
         },
         {
             name: "removeTrailing",
             desc: "Removes the specified string from the end of each item, if present",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.removeTrailingCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.removeTrailingCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.removeTrailingCommand
         },
         {
             name: "camel",
             desc: "Camel-cases the item(s)",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.camelCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.camelCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.camelCommand
         },
         {
             name: "pascal",
             desc: "Pascal-cases the item(s)",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.pascalCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.pascalCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.pascalCommand
         },
         {
             name: "kebab",
             desc: "Kebab-cases the item(s)",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.kebabCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.kebabCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.kebabCommand
         },
         {
             name: "upper",
             desc: "Upper-cases the item(s)",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.upperCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.upperCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.upperCommand
         },
         {
             name: "lower",
             desc: "Lower-cases the item(s)",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.lowerCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.lowerCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.lowerCommand
         },
         {
             name: "select",
@@ -527,21 +306,7 @@ export class CommandTypesService {
                     desc: "Zero-based. Negatives count back from the end."
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.selectCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.selectCommand.Execute(value, para, negated, context);
-                }
-            }),
-            UpdateContext: (para: string, negated: boolean, context: Context) => {
-
-                this.selectCommand.UpdateContext(para, negated, context);
-            }
+            Command: this.selectCommand
         },
         {
             name: "match",
@@ -552,49 +317,19 @@ export class CommandTypesService {
                     desc: "The string which items must contain in order to be included"
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.matchCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.matchCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.matchCommand
         },
         {
             name: "enclose",
             desc: "Puts the specified characters at the start and end of each item",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.encloseCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.encloseCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.encloseCommand
         },
         {
             name: "tsv",
             desc: "Tab-separates text that has been split.",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                
-                if (explain) {
-                    
-                    return this.tsvCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.tsvCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.tsvCommand
         },
         {
             name: "csv",
@@ -625,17 +360,7 @@ export class CommandTypesService {
                     desc: "The character(s) to use as the delimiter."
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                if (explain) {
-                    
-                    return this.csvCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.csvCommand.Execute(value, para, negated, context);
-                }  
-            })
+            Command: this.csvCommand
         },
         {
             name: "join",
@@ -646,79 +371,19 @@ export class CommandTypesService {
                     desc: "The delimiter to insert between items."
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                
-                if (explain) {
-                    
-                    return this.joinCommand.Explain(para, negated, context);
-                } 
-                else {
-
-                    return this.joinCommand.Execute(value, para, negated, context);
-                }              
-            })
+            Command: this.joinCommand
         },
         {
             name: "print",
             desc: "Prints output",
             para: [{ name: "<text>", desc: "What to print." }],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-                
-                if (explain) {
-                    
-                    return this.printCommand.Explain(para, negated, context);
-                }
-                else {
-
-                    return this.printCommand.Execute(value, para, negated, context);
-                }
-            })
+            Command: this.printCommand
         },
         {
             name: "with",
             desc: "Selects which parts of the results to operate on",
             para: [],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                // This code is only called when generating the explanation.
-                // The code to execute this command is in command.service.ts.
-
-                para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
-
-                const indices = this.textUtilsService.ParseIntegers(para);
-
-                if (indices.some((i) => isNaN(i))) {
-
-                    return { segments: ["With the specified columns..."] };
-                }
-                else if (indices.some((i) => i < 0)) {
-
-                    let formattedIndices: string[] = [];
-
-                    for (let i = 0; i < indices.length; i++) {
-
-                        var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
-
-                        formattedIndices.push(formattedIndex);
-                    }
-
-                    let positions = this.textUtilsService.FormatList(formattedIndices);
-
-                    return { segments: ["With the columns", positions, "..."] };
-                }
-                else {
-
-                    let positions = this.textUtilsService.FormatList(indices);
-
-                    if (indices.length > 1) {
-
-                        return { segments: ["With the items at indexes", positions, "..."] };
-                    }
-                    else {
-                        return { segments: ["With the items at index", positions, "..."] };
-                    }
-                }
-            })
+            Command: this.withCommand
         },
         {
             name: "sort",
@@ -729,52 +394,7 @@ export class CommandTypesService {
                     desc: "Index(es) of column to sort on"
                 }
             ],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                const indices = this.textUtilsService.ParseSortOrderIndices(
-                    para,
-                    context.columnInfo.headers
-                );
-
-                const descending = para.toLowerCase().indexOf("desc") !== -1;
-
-                if (!indices.length) {
-
-                    if (context.isArrayOfArrays) {
-                        
-                        if (descending) {
-
-                            return { segments: ["Sort by", "the item at index 0", "in", "descending", "order"] };
-                        }
-                        else {
-
-                            return { segments: ["Sort by", "the item at index 0"] };
-                        }
-                    }
-                    else {
-                        
-                        if (descending) {
-
-                            return { segments: ["Sort the items in descending order"] };
-                        }
-                        else {
-
-                            return { segments: ["Sort the items"] };
-                        }
-                    }
-                } 
-                else {
-                    
-                    let positions: string[] = [];
-
-                    for (let i = 0; i < indices.length; i++) {
-
-                        positions.push(indices[i].description);
-                    }
-
-                    return { segments: ["Sort by", positions.join(", then by ")] };
-                }
-            })
+            Command: this.sortCommand
         },
         {
             name: "flat",
@@ -783,26 +403,7 @@ export class CommandTypesService {
                 name: "Batch Size",
                 desc: "If set, flattens into batches of this size"
             }],
-            exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
-
-                // This code is only called when generating the explanation.
-                // The code to execute this command is in command.service.ts.
-
-                const batchSize = this.textUtilsService.ParsePositiveInteger(para);
-
-                if (!batchSize) {
-
-                    context.isArrayOfArrays = false;
-
-                    return { segments: ["Flatten into one array"] };
-
-                } else {
-                    
-                    context.isArrayOfArrays = true;
-
-                    return { segments: ["Flatten into batches of", batchSize.toString()] }
-                }
-            })
+            Command: this.flatCommand
         }
     ];
 }
