@@ -18,13 +18,15 @@ export interface CommandType
     name: string;
     desc: string;
     para: CommandParameter[];
-    exec: (value: string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string[] | null;
+    exec: (value: string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string[];
+    UpdateContext?(para: string, negated: boolean, context: Context): void;
 }
 
 export interface Command
 {
     Explain(para: string, negated: boolean, context: Context): Explanation;
     Execute(value: string[], para: string, negated: boolean, context: Context): string[];
+    UpdateContext?(para: string, negated: boolean, context: Context): void;
 }
 
 export interface Explanation

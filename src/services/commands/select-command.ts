@@ -50,11 +50,23 @@ export class SelectCommand implements Command {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
-
-        const indices = this.textUtilsService.ParseIntegers(para);
+        const indices = this.ParseIndices(para, context);
 
         let result: string[] = [];
+
+        for (let i = 0; i < indices.length; i++) {
+
+            var index = indices[i];
+
+            result.push(value[index]);
+        }
+
+        return result;
+    }
+
+    UpdateContext(para: string, negated: boolean, context: Context): void {
+
+        const indices = this.ParseIndices(para, context);
 
         context.newColumnInfo.headers = [];
         context.newColumnInfo.numberOfColumns = 0;
@@ -63,22 +75,32 @@ export class SelectCommand implements Command {
 
             var index = indices[i];
 
-            if (index < 0) {
-                index += value.length;
+            if (context.columnInfo.headers) {
+
+                context.newColumnInfo.headers.push(context.columnInfo.headers[index]);
             }
 
-            if (index >= 0 && index < value.length) {
+            context.newColumnInfo.numberOfColumns++;
+        }        
+    }
 
-                result.push(value[index]);
+    private ParseIndices(para: string, context: Context) {
 
-                if (context.columnInfo.headers) {
-                    context.newColumnInfo.headers.push(context.columnInfo.headers[index]);
-                }
+        const indicesWithHeadersReplaced  = this.textUtilsService.ReplaceHeadersWithIndexes(
+            para,
+            context.columnInfo.headers
+        );
 
-                context.newColumnInfo.numberOfColumns++;
+        let indices = this.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
+
+        for (let i = 0; i < indices.length; i++) {
+
+            if (indices[i] < 0) {
+
+                indices[i] += context.columnInfo.numberOfColumns;
             }
         }
 
-        return result;
+        return indices.filter(i => i >= 0 && i < context.columnInfo.numberOfColumns);
     }
 }
