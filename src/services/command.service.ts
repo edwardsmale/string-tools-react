@@ -5,7 +5,7 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { ArrayService } from './array.service';
 import { SortService } from './sort.service';
-import { ScalarCommandType, Explanation } from "../interfaces/CommandInterfaces";
+import { CommandType, Explanation } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
@@ -34,9 +34,9 @@ export class CommandService {
         for (let i = 0; i < codeLines.length; i++) {
 
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
-            const scalarCommandType = parsedCommand.commandType as ScalarCommandType;
+            const commandType = parsedCommand.commandType as CommandType;
 
-            const explanation = scalarCommandType.exec(
+            const explanation = commandType.exec(
                 lines,
                 parsedCommand.para,
                 parsedCommand.negated,
@@ -69,11 +69,11 @@ export class CommandService {
                     codeLines[i]
                 );
 
-                const scalarCommandType = parsedCommand.commandType as ScalarCommandType;
+                const commandType = parsedCommand.commandType as CommandType;
 
                 let newValues: string[][] = [];
 
-                if (scalarCommandType.name === "with") {
+                if (commandType.name === "with") {
 
                     if (context.isArrayOfArrays) {
 
@@ -105,7 +105,7 @@ export class CommandService {
                         
                         for (let j = 0; j < currentValues.length; j++) {
 
-                            const selectCommandType = this.commandTypesService.FindCommandType("select") as ScalarCommandType;
+                            const selectCommandType = this.commandTypesService.FindCommandType("select") as CommandType;
 
                             const selectedVal = selectCommandType.exec(
                                 currentValues[j],
@@ -144,7 +144,7 @@ export class CommandService {
                         i = j - 1;
                     }
                 }
-                else if (scalarCommandType.name === "flat") {
+                else if (commandType.name === "flat") {
 
                     let batchSize = this.textUtilsService.ParsePositiveInteger(parsedCommand.para);
 
@@ -259,7 +259,7 @@ export class CommandService {
 
                     const flattenedValues = this.arrayService.FlattenIfNecessary(currentValues);
 
-                    const newLineValue = scalarCommandType.exec(
+                    const newLineValue = commandType.exec(
                         flattenedValues,
                         parsedCommand.para,
                         parsedCommand.negated,
@@ -276,11 +276,11 @@ export class CommandService {
 
                     let startJ = 0;
 
-                    if (scalarCommandType.name === "header") {
+                    if (commandType.name === "header") {
 
                         context.newColumnInfo.headers = null;
 
-                        scalarCommandType.exec(
+                        commandType.exec(
                             currentValues[0],
                             parsedCommand.para,
                             parsedCommand.negated,
@@ -293,7 +293,7 @@ export class CommandService {
 
                     for (let j = startJ; j < currentValues.length; j++) {
 
-                        const newLineValue = scalarCommandType.exec(
+                        const newLineValue = commandType.exec(
                             currentValues[j],
                             parsedCommand.para,
                             parsedCommand.negated,

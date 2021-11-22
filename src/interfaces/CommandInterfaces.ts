@@ -19,14 +19,6 @@ export interface CommandType
     desc: string;
     para: CommandParameter[];
     isArrayBased: boolean;
-}
-
-export interface ScalarCommandType
-{
-    name: string;
-    desc: string;
-    para: CommandParameter[];
-    isArrayBased: boolean;
     exec: (value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | null;
 }
 

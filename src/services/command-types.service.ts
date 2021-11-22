@@ -1,7 +1,7 @@
 import { TextUtilsService } from './text-utils.service';
 import { SortService } from './sort.service';
 import { ArrayService } from './array.service';
-import { ScalarCommandType, CommandParameter, SortCommandType, CommandType } from "../interfaces/CommandInterfaces";
+import { CommandParameter, SortCommandType, CommandType } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { BlankCommand } from './commands/blank-command';
@@ -119,7 +119,7 @@ export class CommandTypesService {
         return this.FindCommandType("noop");
     };
 
-    CommandTypes: (ScalarCommandType | SortCommandType)[] = [
+    CommandTypes: (CommandType | SortCommandType)[] = [
         {
             name: "noop",
             desc: "Does nothing",
