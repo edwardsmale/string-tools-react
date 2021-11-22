@@ -255,19 +255,30 @@ export class CommandService {
                 }
                 else if (parsedCommand.commandType.name === "distinct") {
 
-                    const flattenedValues = this.arrayService.FlattenIfNecessary(currentValues);
+                    // Using an object and adding keys to it seems to be much faster than using Array.includes.
 
-                    const newLineValue = commandType.exec(
-                        flattenedValues,
-                        parsedCommand.para,
-                        parsedCommand.negated,
-                        context,
-                        false
-                    ) as string[];
+                    let obj: any = {};
 
-                    if (newLineValue !== null) {
-                        newValues = this.arrayService.UnflattenIfNecessary(newLineValue);
-                    }                    
+                    let arr: string[] = [];
+
+                    for (let i = 0; i < currentValues.length; i++) {
+
+                        for (let j = 0; j < currentValues[i].length; j++) {
+
+                            if (!obj[currentValues[i][j]]) {
+
+                                obj[currentValues[i][j]] = "a";
+
+                                arr.push(currentValues[i][j]);
+                            }
+                        }
+
+                        if (arr.length > 0) {
+
+                            newValues.push(arr);
+                            arr = [];
+                        }
+                    }
                 }
                 else {
 
