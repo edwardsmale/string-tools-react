@@ -131,12 +131,9 @@ export class CommandTypesService {
 
                     return this.noopCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.noopCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
-                    return this.noopCommand.ExecuteScalar(value as string, para, negated, context);
+
+                    return this.noopCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -156,12 +153,9 @@ export class CommandTypesService {
 
                     return this.regexCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.regexCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
-                    return this.regexCommand.ExecuteScalar(value as string, para, negated, context);
+
+                    return this.regexCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -181,12 +175,9 @@ export class CommandTypesService {
                            
                     return this.searchCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.searchCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
-                    return this.searchCommand.ExecuteScalar(value as string, para, negated, context);
+
+                    return this.searchCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -206,13 +197,10 @@ export class CommandTypesService {
                            
                     return this.replaceCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.replaceCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
-                    return this.replaceCommand.ExecuteScalar(value as string, para, negated, context);
-                }                
+
+                    return this.replaceCommand.Execute(value as string[], para, negated, context);
+                }               
             })
         },
         {
@@ -231,13 +219,9 @@ export class CommandTypesService {
 
                     return this.splitCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.splitCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.splitCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.splitCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -246,19 +230,15 @@ export class CommandTypesService {
             desc: "Deletes any duplicate items",
             para: [],
             isArrayBased: true,
-            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
                     
                     return this.distinctCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.distinctCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.distinctCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.distinctCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -278,13 +258,9 @@ export class CommandTypesService {
 
                     return this.skipCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.skipCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.skipCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.skipCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -299,13 +275,9 @@ export class CommandTypesService {
 
                     return this.headerCommand.Explain(para, negated, context);
                 }
-                 else if (Array.isArray(value)) {
-
-                    return this.headerCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.headerCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.headerCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -325,12 +297,9 @@ export class CommandTypesService {
 
                     return this.takeCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.takeCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
-                    return this.takeCommand.ExecuteScalar(value as string, para, negated, context);
+
+                    return this.takeCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -345,13 +314,9 @@ export class CommandTypesService {
                     
                     return this.blankCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.blankCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.blankCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.blankCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -366,13 +331,9 @@ export class CommandTypesService {
                     
                     return this.trimCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.trimCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.trimCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.trimCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -387,13 +348,9 @@ export class CommandTypesService {
                     
                     return this.trimStartCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.trimStartCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.trimStartCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.trimStartCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -408,13 +365,9 @@ export class CommandTypesService {
                     
                     return this.trimEndCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.trimEndCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.trimEndCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.trimEndCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -429,13 +382,9 @@ export class CommandTypesService {
                     
                     return this.removeCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.removeCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.removeCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.removeCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -450,13 +399,9 @@ export class CommandTypesService {
                     
                     return this.ensureLeadingCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.ensureLeadingCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.ensureLeadingCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.ensureLeadingCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -471,13 +416,9 @@ export class CommandTypesService {
                     
                     return this.ensureTrailingCcommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.ensureTrailingCcommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.ensureTrailingCcommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.ensureTrailingCcommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -492,13 +433,9 @@ export class CommandTypesService {
                     
                     return this.removeLeadingCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.removeLeadingCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.removeLeadingCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.removeLeadingCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -513,13 +450,9 @@ export class CommandTypesService {
                     
                     return this.removeTrailingCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.removeTrailingCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.removeTrailingCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.removeTrailingCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -534,13 +467,9 @@ export class CommandTypesService {
                     
                     return this.camelCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.camelCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.camelCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.camelCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -555,13 +484,9 @@ export class CommandTypesService {
                     
                     return this.pascalCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.pascalCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.pascalCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.pascalCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -576,13 +501,9 @@ export class CommandTypesService {
                     
                     return this.kebabCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.kebabCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.kebabCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.kebabCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -597,13 +518,9 @@ export class CommandTypesService {
                     
                     return this.upperCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.upperCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.upperCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.upperCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -618,13 +535,9 @@ export class CommandTypesService {
                     
                     return this.lowerCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.lowerCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.lowerCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.lowerCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -644,13 +557,9 @@ export class CommandTypesService {
                     
                     return this.selectCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.selectCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.selectCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.selectCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -670,13 +579,9 @@ export class CommandTypesService {
                     
                     return this.matchCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.matchCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.matchCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.matchCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -691,13 +596,9 @@ export class CommandTypesService {
                     
                     return this.encloseCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.encloseCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.encloseCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.encloseCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -712,13 +613,9 @@ export class CommandTypesService {
                     
                     return this.tsvCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.tsvCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.tsvCommand.ExecuteScalar(value as string, para, negated, context);
+                    return this.tsvCommand.Execute(value as string[], para, negated, context);
                 }
             })
         },
@@ -758,14 +655,10 @@ export class CommandTypesService {
                     
                     return this.csvCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.csvCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.csvCommand.ExecuteScalar(value as string, para, negated, context);
-                }   
+                    return this.csvCommand.Execute(value as string[], para, negated, context);
+                }  
             })
         },
         {
@@ -784,14 +677,10 @@ export class CommandTypesService {
                     
                     return this.joinCommand.Explain(para, negated, context);
                 } 
-                else if (Array.isArray(value)) {
-
-                    return this.joinCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.joinCommand.ExecuteScalar(value as string, para, negated, context);
-                }                
+                    return this.joinCommand.Execute(value as string[], para, negated, context);
+                }              
             })
         },
         {
@@ -805,14 +694,10 @@ export class CommandTypesService {
                     
                     return this.printCommand.Explain(para, negated, context);
                 }
-                else if (Array.isArray(value)) {
-
-                    return this.printCommand.ExecuteArray(value as string[], para, negated, context);
-                }
                 else {
 
-                    return this.printCommand.ExecuteScalar(value as string, para, negated, context);
-                } 
+                    return this.printCommand.Execute(value as string[], para, negated, context);
+                }
             })
         },
         {
@@ -872,7 +757,7 @@ export class CommandTypesService {
                 }
             ],
             isArrayBased: false,
-            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 const indices = this.textUtilsService.ParseSortOrderIndices(
                     para,
@@ -927,7 +812,7 @@ export class CommandTypesService {
                 desc: "If set, flattens into batches of this size"
             }],
             isArrayBased: true,
-            exec: ((value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => {
+            exec: ((value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 // This code is only called when generating the explanation.
                 // The code to execute this command is in command.service.ts.
@@ -944,7 +829,7 @@ export class CommandTypesService {
                     
                     context.isArrayOfArrays = true;
 
-                    return { segments: ["Flatten into batches of", batchSize] }
+                    return { segments: ["Flatten into batches of", batchSize.toString()] }
                 }
             })
         }

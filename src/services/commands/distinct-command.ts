@@ -8,14 +8,9 @@ export class DistinctCommand implements Command {
         return { segments: ["Delete duplicates"] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return value;
-    }
-
     // Using an object and adding keys to it seems to be much faster than using Array.includes.
     
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
 
         let result: string[] = [];
 

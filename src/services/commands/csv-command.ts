@@ -60,12 +60,7 @@ export class CsvCommand implements Command {
         return { segments: [explanation] };    
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-
-        return value;
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         const options = this.parseOptions(para);
 

@@ -269,8 +269,7 @@ export class CommandService {
 
                     if (newLineValue !== null) {
                         newValues = this.arrayService.UnflattenIfNecessary(newLineValue);
-                    }
-                    
+                    }                    
                 }
                 else {
 

@@ -10,12 +10,7 @@ export class EncloseCommand implements Command {
         return { segments: ["Enclose each item in", enclosingChars.leftChar, "and", enclosingChars.rightChar] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return this.ExecuteArray(value, para, negated, context);
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         const enclosingChars = this.getEnclosingChars(para);
 

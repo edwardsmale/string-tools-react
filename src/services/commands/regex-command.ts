@@ -9,12 +9,7 @@ export class RegexCommand implements Command {
         return { segments: ["Set the current regex to", para] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return this.ExecuteArray(value, para, negated, context);
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         this.SetRegex(para, context);
         return value;

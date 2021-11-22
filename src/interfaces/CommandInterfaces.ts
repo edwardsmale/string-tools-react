@@ -25,8 +25,7 @@ export interface CommandType
 export interface Command
 {
     Explain(para: string, negated: boolean, context: Context): Explanation;
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[];
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[];
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[];
 }
 
 export interface Explanation
