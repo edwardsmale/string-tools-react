@@ -122,7 +122,7 @@ export class CommandTypesService {
     CommandTypes: CommandType[] = [
         {
             name: "noop",
-            desc: "Does nothing",
+            desc: "",
             para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
