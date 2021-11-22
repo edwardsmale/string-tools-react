@@ -3,6 +3,13 @@ import { Context } from '../../interfaces/Context';
 
 export class TrimCommand implements Command {
 
+    Name = "trim"
+
+    Help = {
+        Desc: "Trims leading and trailing whitespace",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Trim leading and trailing whitespace"] };
@@ -22,6 +29,13 @@ export class TrimCommand implements Command {
 
 export class TrimStartCommand implements Command {
 
+    Name = "trimStart"
+
+    Help = {
+        Desc: "Trims leading whitespace",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Trims leading whitespace"] };
@@ -40,6 +54,13 @@ export class TrimStartCommand implements Command {
 }
 
 export class TrimEndCommand implements Command {
+
+    Name = "trimEnd"
+
+    Help = {
+        Desc: "Trims trailing whitespace",
+        Para: []
+    }
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 

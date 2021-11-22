@@ -9,7 +9,14 @@ export class LowerCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-   Explain(para: string, negated: boolean, context: Context): Explanation {
+    Name = "lower"
+
+    Help = {
+        Desc: "Lower-cases the item(s)",
+        Para: []
+    }
+
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Lower-case the value(s)"] };
     }

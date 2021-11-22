@@ -3,7 +3,16 @@ import { Context } from '../../interfaces/Context';
 
 export class SearchCommand implements Command {
 
-   Explain(para: string, negated: boolean, context: Context): Explanation {
+    Name = "search"
+
+    Help = {
+        Desc: "Sets the current search string",
+        Para: [
+            { name: "Search String", desc: "The search string to set" }
+        ]
+    }
+
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         this.SetSearchString(para, context);
         return { segments: ["Set the current search string to", para] };

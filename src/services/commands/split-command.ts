@@ -9,6 +9,15 @@ export class SplitCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "split"
+
+    Help = {
+        Desc: "Splits the text up",
+        Para: [
+            { name: "Separator", desc: "The string upon which to split" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         context.isArrayOfArrays = true;

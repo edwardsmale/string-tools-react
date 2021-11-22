@@ -3,6 +3,13 @@ import { Context } from '../../interfaces/Context';
 
 export class MatchCommand implements Command {
 
+    Name = "match"
+
+    Help = {
+        Desc: "Only include items which match a regex or search string",
+        Para: [{ name: "Search String", desc: "The string which items must contain in order to be included" }]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         var searchString = para || context.searchString;

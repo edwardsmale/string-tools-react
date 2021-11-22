@@ -9,6 +9,13 @@ export class TsvCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "tsv"
+
+    Help = {
+        Desc: "Tab-separates text that has been split",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
         
         context.newColumnInfo.headers = [];

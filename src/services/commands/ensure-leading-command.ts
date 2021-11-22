@@ -9,6 +9,15 @@ export class EnsureLeadingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "ensureLeading"
+
+    Help = {
+        Desc: "Ensures each item starts with the specified string",
+        Para: [
+            { name: "string", desc: "" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Ensure each item starts with the specified string"] };

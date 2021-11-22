@@ -3,6 +3,15 @@ import { Context } from '../../interfaces/Context';
 
 export class RegexCommand implements Command {
 
+    Name = "regex"
+
+    Help = {
+        Desc: "Sets the current regex",
+        Para: [
+            { name: "Regex", desc: "A string defining the regex" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         this.SetRegex(para, context);

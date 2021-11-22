@@ -2,6 +2,15 @@ import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
 
 export class TakeCommand implements Command {
+    
+    Name = "take"
+
+    Help = {
+        Desc: "Takes the first N items only",
+        Para: [
+            { name: "N", desc: "The number of items to take" }
+        ]
+    }
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 

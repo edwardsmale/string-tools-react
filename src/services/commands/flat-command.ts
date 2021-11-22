@@ -10,7 +10,17 @@ export class FlatCommand implements Command {
     constructor(private textUtilsService: TextUtilsService) {
 
         this.textUtilsService = textUtilsService;
-    }    
+    }
+
+    Name = "flat"
+    
+    Help = {
+        Desc: "Flattens the array of arrays, or creates batches of the specified size",
+        Para: [
+            { name: "Batch Size (optional)",
+            desc: "If set, flattens into batches of this size"}
+        ]
+    }
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 

@@ -9,6 +9,19 @@ export class CsvCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "csv"
+
+    Help = {
+        Desc: "Joins the items together, in CSV format",
+        Para: [
+            { name: "'", desc: "Enclose values in single quotes." },
+            { name: '"', desc: "Enclose values in double quotes." },
+            { name: "@", desc: "When values are enclosed in double quotes, precede opening double quotes with the @ symbol." },
+            { name: "\\", desc: "When values are enclosed in double quotes, escape any double quotes within values with a backslash." },
+            { name: "<anything else>", desc: "The character(s) to use as the delimiter." }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         const options = this.parseOptions(para);

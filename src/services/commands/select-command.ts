@@ -9,6 +9,13 @@ export class SelectCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "select"
+
+    Help = {
+        Desc: "Returns values at selected indices",
+        Para: [{ name: "Column Indices", desc: "Zero-based. Negatives count back from the end." }]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);

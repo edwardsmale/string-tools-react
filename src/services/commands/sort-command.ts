@@ -10,7 +10,16 @@ export class SortCommand implements Command {
     constructor(private textUtilsService: TextUtilsService) {
 
         this.textUtilsService = textUtilsService;
-    }    
+    }
+
+    Name = "sort"
+    
+    Help = {
+        Desc: "Sorts the items",
+        Para: [
+            { name: "Column index(es) or header(s) (optional)", desc: "The columns to sort by" }
+        ]
+    }
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 

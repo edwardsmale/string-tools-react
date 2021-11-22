@@ -3,6 +3,13 @@ import { Context } from '../../interfaces/Context';
 
 export class EncloseCommand implements Command {
 
+    Name = "enclose"
+
+    Help = {
+        Desc: "Puts the specified characters at the start and end of each item",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         const enclosingChars = this.getEnclosingChars(para);

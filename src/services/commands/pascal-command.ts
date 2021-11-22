@@ -9,7 +9,14 @@ export class PascalCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-   Explain(para: string, negated: boolean, context: Context): Explanation {
+    Name = "pascal"
+
+    Help = {
+        Desc: "Pascal-cases the item(s)",
+        Para: []
+    }
+
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Pascal-case the value(s)"] };
     }

@@ -3,7 +3,14 @@ import { Context } from '../../interfaces/Context';
 
 export class HeaderCommand implements Command {
 
-   Explain(para: string, negated: boolean, context: Context): Explanation {
+    Name = "header"
+
+    Help = {
+        Desc: "Treats the first array of items as a header row",
+        Para: []
+    }
+
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Treat the first array of items as a header row"] };
     }

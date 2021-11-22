@@ -9,6 +9,13 @@ export class KebabCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "kebab"
+
+    Help = {
+        Desc: "Kebab-cases the item(s)",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Kebab-case the value(s)"] };

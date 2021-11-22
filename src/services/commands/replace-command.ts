@@ -9,6 +9,15 @@ export class ReplaceCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "replace"
+
+    Help = {
+        Desc: "Replaces text that matches the current regex or search string",
+        Para: [
+            { name: "Replacement text", desc: "The text to replace the matching text with" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         para = this.FormatPara(para);
