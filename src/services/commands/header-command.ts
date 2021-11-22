@@ -10,9 +10,7 @@ export class HeaderCommand implements Command {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        if (!context.newColumnInfo.headers) {
-            context.newColumnInfo.headers = value;
-        }
+        context.newColumnInfo.headers = value;
 
         return value;
     }

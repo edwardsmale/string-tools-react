@@ -537,7 +537,11 @@ export class CommandTypesService {
 
                     return this.selectCommand.Execute(value as string[], para, negated, context);
                 }
-            })
+            }),
+            UpdateContext: (para: string, negated: boolean, context: Context) => {
+
+                this.selectCommand.UpdateContext(para, negated, context);
+            }
         },
         {
             name: "match",

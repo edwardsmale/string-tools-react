@@ -34,7 +34,7 @@ export class CommandService {
         for (let i = 0; i < codeLines.length; i++) {
 
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
-            const commandType = parsedCommand.commandType as CommandType;
+            const commandType = parsedCommand.commandType;
 
             const explanation = commandType.exec(
                 lines,
@@ -69,7 +69,7 @@ export class CommandService {
                     codeLines[i]
                 );
 
-                const commandType = parsedCommand.commandType as CommandType;
+                const commandType = parsedCommand.commandType;
 
                 let newValues: string[][] = [];
 
@@ -105,7 +105,7 @@ export class CommandService {
                         
                         for (let j = 0; j < currentValues.length; j++) {
 
-                            const selectCommandType = this.commandTypesService.FindCommandType("select") as CommandType;
+                            const selectCommandType = this.commandTypesService.FindCommandType("select");
 
                             const selectedVal = selectCommandType.exec(
                                 currentValues[j],
@@ -270,37 +270,37 @@ export class CommandService {
                 }
                 else {
 
-                    let startJ = 0;
-
                     if (commandType.name === "header") {
 
-                        context.newColumnInfo.headers = null;
+                        context.newColumnInfo.headers = currentValues[0];
 
-                        commandType.exec(
-                            currentValues[0],
-                            parsedCommand.para,
-                            parsedCommand.negated,
-                            context,
-                            false
-                        );
-
-                        startJ = 1;
+                        newValues = currentValues.slice(1);
                     }
+                    else {
 
-                    for (let j = startJ; j < currentValues.length; j++) {
+                        for (let j = 0; j < currentValues.length; j++) {
 
-                        const newLineValue = commandType.exec(
-                            currentValues[j],
-                            parsedCommand.para,
-                            parsedCommand.negated,
-                            context,
-                            false
-                        );
+                            const newValue = commandType.exec(
+                                currentValues[j],
+                                parsedCommand.para,
+                                parsedCommand.negated,
+                                context,
+                                false
+                            ) as string[];
 
-                        newValues.push(newLineValue as string[]);
+                            if (newValue.length) {
+
+                                newValues.push(newValue);
+                            }
+                        }
                     }
                 }
 
+                if (commandType.UpdateContext) {
+
+                    commandType.UpdateContext(parsedCommand.para, parsedCommand.negated, context);
+                }
+                
                 this.contextService.UpdateContextDataTypes(context, newValues);
 
                 currentValues = newValues;
