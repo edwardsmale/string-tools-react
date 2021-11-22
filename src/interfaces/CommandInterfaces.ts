@@ -30,15 +30,6 @@ export interface ScalarCommandType
     exec: (value: string | string[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | null;
 }
 
-export interface ArrayCommandType
-{
-    name: string;
-    desc: string;
-    para: CommandParameter[];
-    isArrayBased: boolean;
-    exec: (value: (string | string[])[], para: string, negated: boolean, context: Context, explain: boolean) => Explanation | string | string[] | null;
-}
-
 export interface Command
 {
     Explain(para: string, negated: boolean, context: Context): Explanation;

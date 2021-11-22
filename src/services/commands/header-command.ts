@@ -16,7 +16,7 @@ export class HeaderCommand implements Command {
     ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         if (!context.newColumnInfo.headers) {
-            context.newColumnInfo.headers = value as string[];
+            context.newColumnInfo.headers = value;
         }
 
         return value;

@@ -43,8 +43,6 @@ export class ContextService {
                 isColumnNumeric[i] = true;
             }
 
-            debugger;
-
             for (let i = 0; i < numberOfColumns; i++) {
 
                 for (let j = 0; j < currentValues.length; j++) {

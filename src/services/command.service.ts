@@ -5,7 +5,7 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { ArrayService } from './array.service';
 import { SortService } from './sort.service';
-import { ScalarCommandType, ArrayCommandType, Explanation } from "../interfaces/CommandInterfaces";
+import { ScalarCommandType, Explanation } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
@@ -25,7 +25,7 @@ export class CommandService {
         this.sortService = sortService;
     }
 
-    explainCommands(codeValue: string, lines: string[][], context: Context): Explanation[] {
+    explainCommands(codeValue: string, lines: string[], context: Context): Explanation[] {
 
         let codeLines = this.textUtilsService.TextToLines(codeValue);
 
@@ -34,9 +34,9 @@ export class CommandService {
         for (let i = 0; i < codeLines.length; i++) {
 
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
-            const arrayCommandType = parsedCommand.commandType as ArrayCommandType;
-            
-            const explanation = arrayCommandType.exec(
+            const scalarCommandType = parsedCommand.commandType as ScalarCommandType;
+
+            const explanation = scalarCommandType.exec(
                 lines,
                 parsedCommand.para,
                 parsedCommand.negated,
@@ -281,7 +281,7 @@ export class CommandService {
                         context.newColumnInfo.headers = null;
 
                         scalarCommandType.exec(
-                            currentValues[0] as string,
+                            currentValues[0],
                             parsedCommand.para,
                             parsedCommand.negated,
                             context,
@@ -294,16 +294,14 @@ export class CommandService {
                     for (let j = startJ; j < currentValues.length; j++) {
 
                         const newLineValue = scalarCommandType.exec(
-                            currentValues[j] as string,
+                            currentValues[j],
                             parsedCommand.para,
                             parsedCommand.negated,
                             context,
                             false
-                        ) as string | string[] | null;
+                        );
 
-                        if (!this.arrayService.IsNullOrEmptyArray(newLineValue)) {
-                            newValues.push(newLineValue as string[]);
-                        }
+                        newValues.push(newLineValue as string[]);
                     }
                 }
 

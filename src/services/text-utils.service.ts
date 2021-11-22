@@ -351,6 +351,11 @@ export class TextUtilsService {
         return result;
     };
 
+    ParseSortOrderIsDescending(para: string) {
+
+        return para.toLowerCase().indexOf("desc") !== -1
+    }
+
     GetHeadersOrderedByLength = (headers: string[]) => {
 
         return headers.map(function (header, index) { 
