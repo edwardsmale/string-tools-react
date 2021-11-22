@@ -1,9 +1,4 @@
-import { TextUtilsService } from './text-utils.service';
-import { SortService } from './sort.service';
-import { ArrayService } from './array.service';
-import { CommandParameter, Command } from "../interfaces/CommandInterfaces";
-import { Context } from "../interfaces/Context";
-import { ContextService } from './context.service';
+import { Command } from "../interfaces/CommandInterfaces";
 import { BlankCommand } from './commands/blank-command';
 import { CamelCommand } from './commands/camel-command';
 import { CsvCommand } from './commands/csv-command';
@@ -39,10 +34,6 @@ import { FlatCommand } from './commands/flat-command';
 export class CommandTypesService {
 
     constructor(
-        private textUtilsService: TextUtilsService,
-        private sortService: SortService,
-        private arrayService: ArrayService,
-        private contextService: ContextService,
         private blankCommand: BlankCommand,
         private camelCommand: CamelCommand,
         private csvCommand: CsvCommand,
@@ -79,7 +70,6 @@ export class CommandTypesService {
 
         this.blankCommand = blankCommand;
         this.camelCommand = camelCommand;
-        this.contextService = contextService;
         this.distinctCommand = distinctCommand;
         this.encloseCommand = encloseCommand;
         this.ensureLeadingCommand = ensureLeadingCommand;
@@ -102,11 +92,8 @@ export class CommandTypesService {
         this.selectCommand = selectCommand;
         this.skipCommand = skipCommand;
         this.sortCommand = sortCommand;
-        this.sortService = sortService;
-        this.arrayService = arrayService;
         this.splitCommand = splitCommand;
         this.takeCommand = takeCommand;
-        this.textUtilsService = textUtilsService;
         this.trimCommand = trimCommand;
         this.trimEndCommand = trimEndCommand;
         this.trimStartCommand = trimStartCommand;

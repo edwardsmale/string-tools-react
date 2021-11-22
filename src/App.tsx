@@ -106,10 +106,6 @@ class App extends React.Component<AppProps, AppState> {
     this.arrayService = new ArrayService();
 
     this.commandTypesService = new CommandTypesService(
-      this.textUtilsService,
-      this.sortService,
-      this.arrayService,
-      this.contextService,
       new BlankCommand(this.textUtilsService),
       new CamelCommand(this.textUtilsService),
       new CsvCommand(this.textUtilsService),
