@@ -65,13 +65,13 @@ export class CommandService {
                     continue;
                 }
 
-                let parsedCommand = this.commandParsingService.ParseCodeLine(
+                const parsedCommand = this.commandParsingService.ParseCodeLine(
                     codeLines[i]
                 );
 
                 const scalarCommandType = parsedCommand.commandType as ScalarCommandType;
 
-                let newValues: (string | string[])[] = [];
+                let newValues: string[][] = [];
 
                 if (scalarCommandType.name === "with") {
 
@@ -302,7 +302,7 @@ export class CommandService {
                         ) as string | string[] | null;
 
                         if (!this.arrayService.IsNullOrEmptyArray(newLineValue)) {
-                            newValues.push(newLineValue as string | string[]);
+                            newValues.push(newLineValue as string[]);
                         }
                     }
                 }
