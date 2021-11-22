@@ -9,6 +9,15 @@ export class RemoveLeadingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "removeLeading"
+
+    Help = {
+        Desc: "Removes the specified string from the start of each item, if present",
+        Para: [
+            { name: "string", desc: "" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Remove the specified string from the start of each line, if present"] };

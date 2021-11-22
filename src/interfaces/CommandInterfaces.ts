@@ -15,14 +15,19 @@ export interface CommandParameter
 
 export interface CommandType
 {
-    name: string;
-    desc: string;
-    para: CommandParameter[];
     Command: Command;
+}
+
+export interface CommandHelp
+{
+    Desc: string;
+    Para: CommandParameter[];
 }
 
 export interface Command
 {
+    Name: string;
+    Help: CommandHelp;
     Explain(para: string, negated: boolean, context: Context): Explanation;
     Execute(value: string[], para: string, negated: boolean, context: Context): string[];
     UpdateContext?(para: string, negated: boolean, context: Context): void;

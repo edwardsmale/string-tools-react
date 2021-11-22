@@ -11,6 +11,15 @@ export class WithCommand implements Command {
 
         this.textUtilsService = textUtilsService;
     }    
+    
+    Name = "with"
+
+    Help = {
+        Desc: "Selects a column to operate on; subsequent indented commands will operate on this column only",
+        Para: [
+            { name: "column", desc: "The index or header of the column to operate on" }
+        ]
+    }
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 

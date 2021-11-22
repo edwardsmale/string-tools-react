@@ -9,6 +9,15 @@ export class RemoveTrailingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "removeTrailing"
+
+    Help = {
+        Desc: "Removes the specified string from the end of each item, if present",
+        Para: [
+            { name: "string", desc: "" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Remove the specified string from the end of each line, if present"] };

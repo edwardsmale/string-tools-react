@@ -67,11 +67,11 @@ export class CommandService {
                     codeLines[i]
                 );
 
-                const commandType = parsedCommand.commandType;
+                const command = parsedCommand.commandType.Command;
 
                 let newValues: string[][] = [];
 
-                if (commandType.name === "with") {
+                if (command.Name === "with") {
 
                     if (context.isArrayOfArrays) {
 
@@ -139,7 +139,7 @@ export class CommandService {
                         i = j - 1;
                     }
                 }
-                else if (commandType.name === "flat") {
+                else if (command.Name === "flat") {
 
                     let batchSize = this.textUtilsService.ParsePositiveInteger(parsedCommand.para);
 
@@ -173,7 +173,7 @@ export class CommandService {
 
                     context.isArrayOfArrays = batchSize > 1;
                 }
-                else if (parsedCommand.commandType.name === "sort") {
+                else if (command.Name === "sort") {
 
                     let indices = this.textUtilsService.ParseSortOrderIndices(
                         parsedCommand.para,
@@ -238,7 +238,7 @@ export class CommandService {
                         }
                     }
                 }
-                else if (parsedCommand.commandType.name === "distinct") {
+                else if (command.Name === "distinct") {
 
                     // Using an object and adding keys to it seems to be much faster than using Array.includes.
 
@@ -267,7 +267,7 @@ export class CommandService {
                 }
                 else {
 
-                    if (commandType.name === "header") {
+                    if (command.Name === "header") {
 
                         context.newColumnInfo.headers = currentValues[0];
 
@@ -277,7 +277,7 @@ export class CommandService {
 
                         for (let j = 0; j < currentValues.length; j++) {
 
-                            const newValue = commandType.Command.Execute(
+                            const newValue = command.Execute(
                                 currentValues[j],
                                 parsedCommand.para,
                                 parsedCommand.negated,
@@ -292,9 +292,9 @@ export class CommandService {
                     }
                 }
 
-                if (commandType.Command.UpdateContext) {
+                if (command.UpdateContext) {
 
-                    commandType.Command.UpdateContext(parsedCommand.para, parsedCommand.negated, context);
+                    command.UpdateContext(parsedCommand.para, parsedCommand.negated, context);
                 }
                 
                 this.contextService.UpdateContextDataTypes(context, newValues);

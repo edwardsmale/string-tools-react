@@ -9,6 +9,15 @@ export class PrintCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "print"
+
+    Help = {
+        Desc: "Prints output",
+        Para: [
+            { name: "<text>", desc: "What to print" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["print", para] };

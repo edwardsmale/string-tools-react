@@ -3,6 +3,13 @@ import { Context } from '../../interfaces/Context';
 
 export class NoopCommand implements Command {
 
+    Name = "noop"
+
+    Help = {
+        Desc: "",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: [""] };

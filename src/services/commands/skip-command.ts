@@ -3,6 +3,15 @@ import { Context } from '../../interfaces/Context';
 
 export class SkipCommand implements Command {
 
+    Name = "skip"
+
+    Help = {
+        Desc: "Skips the first N items",
+        Para: [
+            { name: "N", desc: "The number of items to skip" }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         var n = parseInt(para, 10);

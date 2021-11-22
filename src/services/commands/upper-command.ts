@@ -3,6 +3,13 @@ import { Context } from '../../interfaces/Context';
 
 export class UpperCommand implements Command {
 
+    Name = "upper"
+
+    Help = {
+        Desc: "Upper-cases the item(s)",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Upper-case the value(s)"] };

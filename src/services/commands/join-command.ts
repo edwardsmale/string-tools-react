@@ -9,6 +9,15 @@ export class JoinCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "join"
+
+    Help = {
+        Desc: "Joins the items together",
+        Para: [
+            { name: "delimiter", desc: "The delimiter to insert between items." }
+        ]
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         const formattedDelimiter = this.GetFormattedDelimiter(para);

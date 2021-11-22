@@ -9,6 +9,13 @@ export class BlankCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
+    Name = "blank"
+
+    Help = {
+        Desc: "Include blank lines only",
+        Para: []
+    }
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         if (negated) {
