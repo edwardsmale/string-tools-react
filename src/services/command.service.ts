@@ -155,43 +155,26 @@ export class CommandService {
                   
                     let batches = [];
 
-                    let flattened: string[] = [];
+                    let batch: string[] = [];
 
                     for (let j = 0; j < currentValues.length; j++) {
 
-                        if (Array.isArray(currentValues[j])) {
+                        for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
 
-                            for (let k = 0; k < (currentValues[j] as string[]).length; k++) {
+                            batch.push(lines[j][k]);
 
-                                const lines = this.textUtilsService.TextToLines(currentValues[j][k]);
-
-                                for (let l = 0; l < lines.length; l++) {
-                                    flattened.push(lines[l]);
-
-                                    if (flattened.length === batchSize) {
-                                        batches.push(flattened);
-                                        flattened = [];
-                                    }
-                                }
-                            }
-
-                        } else {
-                            flattened.push(currentValues[j] as string);
-
-                            if (flattened.length === batchSize) {
-                                batches.push(flattened);
-                                flattened = [];
+                            if (batch.length === batchSize) {
+                                batches.push(batch);
+                                batch = [];
                             }
                         }
                     }
 
-                    if (flattened.length) {
-                        batches.push(flattened);
+                    if (batch.length) {
+                        batches.push(batch);
                     }
 
                     newValues = batches;
-
-                    debugger;
 
                     context.isArrayOfArrays = batchSize > 1;
                 }
