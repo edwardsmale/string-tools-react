@@ -8,12 +8,7 @@ export class NoopCommand implements Command {
         return { segments: ["Do nothing"] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return value;
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         return value;
     }

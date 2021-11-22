@@ -14,12 +14,7 @@ export class PascalCommand implements Command {
         return { segments: ["Pascal-case the value(s)"] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return this.ExecuteArray(value, para, negated, context);  
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         let result: string[] = [];
 
@@ -31,7 +26,7 @@ export class PascalCommand implements Command {
         return result;
     }
 
-    ToPascalCase(value: string): string {
+    private ToPascalCase(value: string): string {
 
         const leadingWhitespace = this.textUtilsService.GetLeadingWhitespace(value);
         const trailingWhitespace = this.textUtilsService.GetTrailingWhitespace(value);

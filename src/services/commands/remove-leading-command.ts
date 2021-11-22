@@ -9,17 +9,12 @@ export class RemoveLeadingCommand implements Command {
         this.textUtilsService = textUtilsService;
     }
 
-   Explain(para: string, negated: boolean, context: Context): Explanation {
+    Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: ["Remove the specified string from the start of each line, if present"] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return this.ExecuteArray(value, para, negated, context); 
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         let result: string[] = [];
 

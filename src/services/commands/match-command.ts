@@ -36,12 +36,7 @@ export class MatchCommand implements Command {
         }
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return this.ExecuteArray(value, para, negated, context);
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         const searchString = para || context.searchString;
 

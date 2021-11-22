@@ -14,12 +14,7 @@ export class PrintCommand implements Command {
         return { segments: ["print", para] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-
-        return this.ExecuteArray(value, para, negated, context);
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         var result = this.textUtilsService.ReplaceBackslashTWithTab(para);
 

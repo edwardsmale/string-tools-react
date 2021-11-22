@@ -14,12 +14,7 @@ export class KebabCommand implements Command {
         return { segments: ["Kebab-case the value(s)"] };
     }
 
-    ExecuteScalar(value: string[], para: string, negated: boolean, context: Context): string[] {
-        
-        return this.ExecuteArray(value, para, negated, context); 
-    }
-
-    ExecuteArray(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         let result: string[] = [];
 
@@ -31,7 +26,7 @@ export class KebabCommand implements Command {
         return result;
     }
 
-    ToKebabCase(value: string): string {
+    private ToKebabCase(value: string): string {
 
         const leadingWhitespace = this.textUtilsService.GetLeadingWhitespace(value);
         const trailingWhitespace = this.textUtilsService.GetTrailingWhitespace(value);
