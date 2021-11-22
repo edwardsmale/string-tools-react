@@ -1,7 +1,7 @@
 import { TextUtilsService } from './text-utils.service';
 import { SortService } from './sort.service';
 import { ArrayService } from './array.service';
-import { CommandParameter, CommandType } from "../interfaces/CommandInterfaces";
+import { CommandParameter, Command } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { BlankCommand } from './commands/blank-command';
@@ -115,52 +115,52 @@ export class CommandTypesService {
         this.withCommand = withCommand;
     }
 
-    FindCommandType = (name: string): CommandType =>  {
+    FindCommand = (name: string): Command =>  {
 
-        for (let i = 0; i < this.CommandTypes.length; i++) {
+        for (let i = 0; i < this.Commands.length; i++) {
 
-            if (this.CommandTypes[i].Command.Name === name) {
+            if (this.Commands[i].Name === name) {
 
-                return this.CommandTypes[i];
+                return this.Commands[i];
             }
         }
 
-        return this.FindCommandType("noop");
+        return this.FindCommand("noop");
     };
 
-    CommandTypes: CommandType[] = [
-        { Command: this.noopCommand },
-        { Command: this.regexCommand },
-        { Command: this.searchCommand },
-        { Command: this.replaceCommand },
-        { Command: this.splitCommand },
-        { Command: this.distinctCommand },
-        { Command: this.skipCommand },
-        { Command: this.headerCommand },
-        { Command: this.takeCommand },
-        { Command: this.blankCommand },
-        { Command: this.trimCommand },
-        { Command: this.trimStartCommand },
-        { Command: this.trimEndCommand },
-        { Command: this.removeCommand },
-        { Command: this.ensureLeadingCommand },
-        { Command: this.ensureTrailingCcommand },
-        { Command: this.removeLeadingCommand },
-        { Command: this.removeTrailingCommand },
-        { Command: this.camelCommand },
-        { Command: this.pascalCommand },
-        { Command: this.kebabCommand },
-        { Command: this.upperCommand },
-        { Command: this.lowerCommand },
-        { Command: this.selectCommand },
-        { Command: this.matchCommand },
-        { Command: this.encloseCommand },
-        { Command: this.tsvCommand },
-        { Command: this.csvCommand },
-        { Command: this.joinCommand },
-        { Command: this.printCommand },
-        { Command: this.withCommand },
-        { Command: this.sortCommand },
-        { Command: this.flatCommand }
+    Commands: Command[] = [
+        this.blankCommand,
+        this.camelCommand,
+        this.csvCommand,
+        this.distinctCommand,
+        this.encloseCommand,
+        this.ensureLeadingCommand,
+        this.ensureTrailingCcommand,
+        this.flatCommand,
+        this.headerCommand,
+        this.joinCommand,
+        this.kebabCommand,
+        this.lowerCommand,
+        this.matchCommand,
+        this.noopCommand,
+        this.pascalCommand,
+        this.printCommand,
+        this.regexCommand,
+        this.removeCommand,
+        this.removeLeadingCommand,
+        this.removeTrailingCommand,
+        this.replaceCommand,
+        this.searchCommand,
+        this.selectCommand,
+        this.skipCommand,
+        this.sortCommand,
+        this.splitCommand,
+        this.takeCommand,
+        this.trimCommand,
+        this.trimEndCommand,
+        this.trimStartCommand,
+        this.tsvCommand,
+        this.upperCommand,
+        this.withCommand
     ];
 }
