@@ -123,7 +123,7 @@ export class CommandTypesService {
         {
             name: "noop",
             desc: "Does nothing",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
                 
                 if (explain) {      
@@ -132,7 +132,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.noopCommand.Execute(value as string[], para, negated, context);
+                    return this.noopCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -153,7 +153,7 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.regexCommand.Execute(value as string[], para, negated, context);
+                    return this.regexCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -174,7 +174,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.searchCommand.Execute(value as string[], para, negated, context);
+                    return this.searchCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -195,7 +195,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.replaceCommand.Execute(value as string[], para, negated, context);
+                    return this.replaceCommand.Execute(value, para, negated, context);
                 }               
             })
         },
@@ -216,7 +216,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.splitCommand.Execute(value as string[], para, negated, context);
+                    return this.splitCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -232,7 +232,7 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.distinctCommand.Execute(value as string[], para, negated, context);
+                    return this.distinctCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -253,7 +253,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.skipCommand.Execute(value as string[], para, negated, context);
+                    return this.skipCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -269,7 +269,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.headerCommand.Execute(value as string[], para, negated, context);
+                    return this.headerCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -290,14 +290,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.takeCommand.Execute(value as string[], para, negated, context);
+                    return this.takeCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "blank",
             desc: "Matches blank lines only",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -306,14 +306,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.blankCommand.Execute(value as string[], para, negated, context);
+                    return this.blankCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "trim",
             desc: "Trims leading and trailing whitespace",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -322,14 +322,14 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.trimCommand.Execute(value as string[], para, negated, context);
+                    return this.trimCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "trimStart",
             desc: "Trims leading whitespace",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -338,14 +338,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.trimStartCommand.Execute(value as string[], para, negated, context);
+                    return this.trimStartCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "trimEnd",
             desc: "Trims trailing whitespace",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -354,14 +354,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.trimEndCommand.Execute(value as string[], para, negated, context);
+                    return this.trimEndCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "remove",
             desc: "Removes text matching a regex",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -370,14 +370,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.removeCommand.Execute(value as string[], para, negated, context);
+                    return this.removeCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "ensureLeading",
             desc: "Ensures each item starts with the specified string",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -386,14 +386,14 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.ensureLeadingCommand.Execute(value as string[], para, negated, context);
+                    return this.ensureLeadingCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "ensureTrailing",
             desc: "Ensures each item ends with the specified string",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -402,14 +402,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.ensureTrailingCcommand.Execute(value as string[], para, negated, context);
+                    return this.ensureTrailingCcommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "removeLeading",
             desc: "Removes the specified string from the start of each item, if present",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -418,14 +418,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.removeLeadingCommand.Execute(value as string[], para, negated, context);
+                    return this.removeLeadingCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "removeTrailing",
             desc: "Removes the specified string from the end of each item, if present",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -434,14 +434,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.removeTrailingCommand.Execute(value as string[], para, negated, context);
+                    return this.removeTrailingCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "camel",
             desc: "Camel-cases the item(s)",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -450,14 +450,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.camelCommand.Execute(value as string[], para, negated, context);
+                    return this.camelCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "pascal",
             desc: "Pascal-cases the item(s)",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -466,14 +466,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.pascalCommand.Execute(value as string[], para, negated, context);
+                    return this.pascalCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "kebab",
             desc: "Kebab-cases the item(s)",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -482,14 +482,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.kebabCommand.Execute(value as string[], para, negated, context);
+                    return this.kebabCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "upper",
             desc: "Upper-cases the item(s)",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -498,14 +498,14 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.upperCommand.Execute(value as string[], para, negated, context);
+                    return this.upperCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "lower",
             desc: "Lower-cases the item(s)",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 if (explain) {
@@ -514,7 +514,7 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.lowerCommand.Execute(value as string[], para, negated, context);
+                    return this.lowerCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -535,7 +535,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.selectCommand.Execute(value as string[], para, negated, context);
+                    return this.selectCommand.Execute(value, para, negated, context);
                 }
             }),
             UpdateContext: (para: string, negated: boolean, context: Context) => {
@@ -560,7 +560,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.matchCommand.Execute(value as string[], para, negated, context);
+                    return this.matchCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -576,7 +576,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.encloseCommand.Execute(value as string[], para, negated, context);
+                    return this.encloseCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -592,7 +592,7 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.tsvCommand.Execute(value as string[], para, negated, context);
+                    return this.tsvCommand.Execute(value, para, negated, context);
                 }
             })
         },
@@ -633,7 +633,7 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.csvCommand.Execute(value as string[], para, negated, context);
+                    return this.csvCommand.Execute(value, para, negated, context);
                 }  
             })
         },
@@ -654,7 +654,7 @@ export class CommandTypesService {
                 } 
                 else {
 
-                    return this.joinCommand.Execute(value as string[], para, negated, context);
+                    return this.joinCommand.Execute(value, para, negated, context);
                 }              
             })
         },
@@ -670,14 +670,14 @@ export class CommandTypesService {
                 }
                 else {
 
-                    return this.printCommand.Execute(value as string[], para, negated, context);
+                    return this.printCommand.Execute(value, para, negated, context);
                 }
             })
         },
         {
             name: "with",
             desc: "Selects which parts of the results to operate on",
-            para: [] as CommandParameter[],
+            para: [],
             exec: ((value: string[], para: string, negated: boolean, context: Context, explain: boolean) => {
 
                 // This code is only called when generating the explanation.
