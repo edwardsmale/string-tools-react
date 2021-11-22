@@ -195,7 +195,7 @@ export class CommandService {
 
                             indices = [{
                                 index: 0,
-                                ascending: true,
+                                descending: descending,
                                 description: "the item at index 0"
                             }];
 
@@ -207,14 +207,10 @@ export class CommandService {
                         }                   
                         else {
 
-                            let sortedValues = this.sortService.SortArray(
-                                currentValues
+                            const sortedValues = this.sortService.SortArray(
+                                currentValues,
+                                descending
                             );
-
-                            if (descending) {
-
-                                sortedValues = sortedValues.reverse();
-                            }
 
                             newValues = sortedValues;
                         }
@@ -240,14 +236,10 @@ export class CommandService {
                         }
                         else {
 
-                            let sortedValues = this.sortService.SortArray(
-                                currentValues
+                            const sortedValues = this.sortService.SortArray(
+                                currentValues,
+                                descending
                             );
-
-                            if (descending) {
-
-                                sortedValues = sortedValues.reverse();
-                            }
 
                             newValues = sortedValues;
                         }

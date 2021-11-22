@@ -1,5 +1,5 @@
 export interface SortOrderIndex {
     index: number;
-    ascending: boolean;
+    descending: boolean;
     description: string;
 }

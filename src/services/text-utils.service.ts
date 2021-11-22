@@ -319,7 +319,7 @@ export class TextUtilsService {
                 continue;
             }
 
-            const asc = !lower.endsWith("desc") && !lower.endsWith("descending");
+            const descending = lower.endsWith("desc") || lower.endsWith("descending");
 
             const int = parseInt(split[i], 10);
 
@@ -327,23 +327,23 @@ export class TextUtilsService {
 
                 result.push({
                     index: int,
-                    ascending: asc,
-                    description: this.FormatIndex(int, asc)
+                    descending: descending,
+                    description: this.FormatIndex(int, descending)
                 });
             } 
             else if (Array.isArray(headers) && headers.includes(val)) {
 
                 result.push({
                     index: headers.indexOf(val),
-                    ascending: asc,
-                    description: val + (asc ? "" : " descending")
+                    descending: descending,
+                    description: val + (descending ? "" : " descending")
                 });
             }
             else {
                 result.push({
                     index: -1,
-                    ascending: asc,
-                    description: val + (asc ? "" : " descending")
+                    descending: descending,
+                    description: val + (descending ? "" : " descending")
                 });
             }
         }
@@ -353,7 +353,9 @@ export class TextUtilsService {
 
     ParseSortOrderIsDescending(para: string) {
 
-        return para.toLowerCase().indexOf("desc") !== -1
+        const lower = para.toLowerCase();
+
+        return lower.endsWith("desc") || lower.endsWith("descending");
     }
 
     GetHeadersOrderedByLength = (headers: string[]) => {
