@@ -20,8 +20,10 @@ export class CommandParsingService {
 
     } else {
       
-      const commandString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(0,codeLine.indexOf(" ")) : codeLine;
-      const paraString = codeLine.indexOf(" ") !== -1 ? codeLine.substr(codeLine.indexOf(" ") + 1) : "";
+      const indexOfSpace = codeLine.indexOf(" ");
+
+      const commandString = indexOfSpace !== -1 ? codeLine.substr(0, indexOfSpace) : codeLine;
+      const para = indexOfSpace !== -1 ? codeLine.substr(indexOfSpace + 1) : "";
 
       const negated = commandString.includes("!");
       const commandName = commandString.replace("!", "");
@@ -29,7 +31,7 @@ export class CommandParsingService {
 
       return {
         command: command,
-        para: paraString,
+        para: para,
         negated: negated
       };
     }
