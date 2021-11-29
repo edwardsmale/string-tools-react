@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class EnsureTrailingCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "ensureTrailing"
@@ -31,14 +31,14 @@ export class EnsureTrailingCommand implements Command {
 
             for (let i = 0; i < value.length; i++) {
 
-                result.push(this.textUtilsService.EnsureTrailing(value[i], para));
+                result.push(this.services.textUtilsService.EnsureTrailing(value[i], para));
             }
         }
         else {
 
             for (let i = 0; i < value.length; i++) {
 
-                result.push(this.textUtilsService.RemoveTrailing(value[i], para));
+                result.push(this.services.textUtilsService.RemoveTrailing(value[i], para));
             }
         }
 

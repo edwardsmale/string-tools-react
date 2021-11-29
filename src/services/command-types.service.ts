@@ -30,124 +30,87 @@ import { UpperCommand } from './commands/upper-command';
 import { WithCommand } from './commands/with-command';
 import { SortCommand } from './commands/sort-command';
 import { FlatCommand } from './commands/flat-command';
+import { Services } from "./services";
 
 export class CommandTypesService {
 
-    constructor(
-        private blankCommand: BlankCommand,
-        private camelCommand: CamelCommand,
-        private csvCommand: CsvCommand,
-        private distinctCommand: DistinctCommand,
-        private encloseCommand: EncloseCommand,
-        private ensureLeadingCommand: EnsureLeadingCommand,
-        private ensureTrailingCcommand: EnsureTrailingCommand,
-        private flatCommand: FlatCommand,
-        private headerCommand: HeaderCommand,
-        private joinCommand: JoinCommand,
-        private kebabCommand: KebabCommand,
-        private lowerCommand: LowerCommand,
-        private matchCommand: MatchCommand,
-        private noopCommand: NoopCommand,
-        private pascalCommand: PascalCommand,
-        private printCommand: PrintCommand,
-        private regexCommand: RegexCommand,
-        private removeCommand: RemoveCommand,
-        private removeLeadingCommand: RemoveLeadingCommand,
-        private removeTrailingCommand: RemoveTrailingCommand,
-        private replaceCommand: ReplaceCommand,
-        private searchCommand: SearchCommand,
-        private selectCommand: SelectCommand,
-        private skipCommand: SkipCommand,
-        private sortCommand: SortCommand,
-        private splitCommand: SplitCommand,
-        private takeCommand: TakeCommand,
-        private trimCommand: TrimCommand,
-        private trimEndCommand: TrimEndCommand,
-        private trimStartCommand: TrimStartCommand,
-        private tsvCommand: TsvCommand,
-        private upperCommand: UpperCommand,
-        private withCommand: WithCommand) {
-
-        this.blankCommand = blankCommand;
-        this.camelCommand = camelCommand;
-        this.distinctCommand = distinctCommand;
-        this.encloseCommand = encloseCommand;
-        this.ensureLeadingCommand = ensureLeadingCommand;
-        this.ensureTrailingCcommand = ensureTrailingCcommand;
-        this.flatCommand = flatCommand;
-        this.headerCommand = headerCommand;
-        this.joinCommand = joinCommand;
-        this.kebabCommand = kebabCommand;
-        this.lowerCommand = lowerCommand;
-        this.matchCommand = matchCommand;
-        this.noopCommand = noopCommand;
-        this.pascalCommand = pascalCommand;
-        this.printCommand = printCommand;
-        this.regexCommand = regexCommand;
-        this.removeCommand = removeCommand;
-        this.removeLeadingCommand = removeLeadingCommand;
-        this.removeTrailingCommand = removeTrailingCommand;
-        this.replaceCommand = replaceCommand;
-        this.searchCommand = searchCommand;
-        this.selectCommand = selectCommand;
-        this.skipCommand = skipCommand;
-        this.sortCommand = sortCommand;
-        this.splitCommand = splitCommand;
-        this.takeCommand = takeCommand;
-        this.trimCommand = trimCommand;
-        this.trimEndCommand = trimEndCommand;
-        this.trimStartCommand = trimStartCommand;
-        this.tsvCommand = tsvCommand;
-        this.upperCommand = upperCommand;
-        this.withCommand = withCommand;
+    constructor(private services: Services) {
+        
+        this.services = services;
     }
 
-    FindCommand = (name: string): Command =>  {
+    CreateCommand = (name: string): Command =>  {
 
-        for (let i = 0; i < this.Commands.length; i++) {
-
-            if (this.Commands[i].Name === name) {
-
-                return this.Commands[i];
-            }
+        switch (name) {
+            case "blank": return new BlankCommand(this.services);
+            case "camel": return new CamelCommand(this.services);
+            case "csv": return new CsvCommand(this.services);
+            case "distinct": return new DistinctCommand(this.services);
+            case "enclose": return new EncloseCommand(this.services);
+            case "ensureleading": return new EnsureLeadingCommand(this.services);
+            case "ensuretrailing": return new EnsureTrailingCommand(this.services);
+            case "flat": return new FlatCommand(this.services);
+            case "header": return new HeaderCommand(this.services);
+            case "join": return new JoinCommand(this.services);
+            case "kebab": return new KebabCommand(this.services);
+            case "lower": return new LowerCommand(this.services);
+            case "match": return new MatchCommand(this.services);
+            case "pascal": return new PascalCommand(this.services);
+            case "print": return new PrintCommand(this.services);
+            case "regex": return new RegexCommand(this.services);
+            case "remove": return new RemoveCommand(this.services);
+            case "removeleading": return new RemoveLeadingCommand(this.services);
+            case "removetrailing": return new RemoveTrailingCommand(this.services);
+            case "replace": return new ReplaceCommand(this.services);
+            case "search": return new SearchCommand(this.services);
+            case "select": return new SelectCommand(this.services);
+            case "skip": return new SkipCommand(this.services);
+            case "sort": return new SortCommand(this.services);
+            case "split": return new SplitCommand(this.services);
+            case "take": return new TakeCommand(this.services);
+            case "trim": return new TrimCommand(this.services);
+            case "trimend": return new TrimEndCommand(this.services);
+            case "trimstart": return new TrimStartCommand(this.services);
+            case "tsv": return new TsvCommand(this.services);
+            case "upper": return new UpperCommand(this.services);
+            case "with": return new WithCommand(this.services);
+            default: return new NoopCommand(this.services);
         }
-
-        return this.FindCommand("noop");
     };
 
     Commands: Command[] = [
-        this.blankCommand,
-        this.camelCommand,
-        this.csvCommand,
-        this.distinctCommand,
-        this.encloseCommand,
-        this.ensureLeadingCommand,
-        this.ensureTrailingCcommand,
-        this.flatCommand,
-        this.headerCommand,
-        this.joinCommand,
-        this.kebabCommand,
-        this.lowerCommand,
-        this.matchCommand,
-        this.noopCommand,
-        this.pascalCommand,
-        this.printCommand,
-        this.regexCommand,
-        this.removeCommand,
-        this.removeLeadingCommand,
-        this.removeTrailingCommand,
-        this.replaceCommand,
-        this.searchCommand,
-        this.selectCommand,
-        this.skipCommand,
-        this.sortCommand,
-        this.splitCommand,
-        this.takeCommand,
-        this.trimCommand,
-        this.trimEndCommand,
-        this.trimStartCommand,
-        this.tsvCommand,
-        this.upperCommand,
-        this.withCommand
+        new BlankCommand(this.services),
+        new CamelCommand(this.services),
+        new CsvCommand(this.services),
+        new DistinctCommand(),
+        new EncloseCommand(),
+        new EnsureLeadingCommand(this.services),
+        new EnsureTrailingCommand(this.services),
+        new FlatCommand(this.services),
+        new HeaderCommand(),
+        new JoinCommand(this.services),
+        new KebabCommand(this.services),
+        new LowerCommand(this.services),
+        new MatchCommand(),
+        new NoopCommand(),
+        new PascalCommand(this.services),
+        new PrintCommand(this.services),
+        new RegexCommand(),
+        new RemoveCommand(),
+        new RemoveLeadingCommand(this.services),
+        new RemoveTrailingCommand(this.services),
+        new ReplaceCommand(this.services),
+        new SearchCommand(),
+        new SelectCommand(this.services),
+        new SkipCommand(),
+        new SortCommand(this.services),
+        new SplitCommand(this.services),
+        new TakeCommand(),
+        new TrimCommand(),
+        new TrimEndCommand(),
+        new TrimStartCommand(),
+        new TsvCommand(this.services),
+        new UpperCommand(),
+        new WithCommand(this.services),
     ];
 }

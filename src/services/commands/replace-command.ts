@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class ReplaceCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "replace"
@@ -46,7 +46,7 @@ export class ReplaceCommand implements Command {
 
         if (context.regex) {
 
-            const globalRegexReplace = this.textUtilsService.GlobalRegexReplace;
+            const globalRegexReplace = this.services.textUtilsService.GlobalRegexReplace;
 
             for (let i = 0; i < length; i++) {
 
@@ -57,7 +57,7 @@ export class ReplaceCommand implements Command {
         }
         else if (context.searchString) {
 
-            const globalStringReplace = this.textUtilsService.GlobalStringReplace;
+            const globalStringReplace = this.services.textUtilsService.GlobalStringReplace;
             
             for (let i = 0; i < length; i++) {
                 
@@ -74,6 +74,6 @@ export class ReplaceCommand implements Command {
 
     private FormatPara(para: string) {
 
-        return this.textUtilsService.ReplaceBackslashTWithTab(para);
+        return this.services.textUtilsService.ReplaceBackslashTWithTab(para);
     }
 }

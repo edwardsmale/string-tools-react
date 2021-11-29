@@ -1,8 +1,14 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
+import { Services } from '../services';
 
 export class SkipCommand implements Command {
 
+    constructor(private services: Services) {
+
+        this.services = services;
+    }
+    
     Name = "skip"
 
     Help = {

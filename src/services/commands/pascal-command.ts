@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class PascalCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "pascal"
@@ -35,8 +35,8 @@ export class PascalCommand implements Command {
 
     private ToPascalCase(value: string): string {
 
-        const leadingWhitespace = this.textUtilsService.GetLeadingWhitespace(value);
-        const trailingWhitespace = this.textUtilsService.GetTrailingWhitespace(value);
+        const leadingWhitespace = this.services.textUtilsService.GetLeadingWhitespace(value);
+        const trailingWhitespace = this.services.textUtilsService.GetTrailingWhitespace(value);
 
         let newValue = leadingWhitespace;
 

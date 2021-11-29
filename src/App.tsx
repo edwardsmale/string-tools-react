@@ -51,6 +51,7 @@ import { ReplaceCommand } from './services/commands/replace-command';
 import { WithCommand } from './services/commands/with-command';
 import { SortCommand } from './services/commands/sort-command';
 import { FlatCommand } from './services/commands/flat-command';
+import { Services } from './services/services';
 
 interface AppProps {
 }
@@ -104,46 +105,8 @@ class App extends React.Component<AppProps, AppState> {
     this.contextService = new ContextService(this.textUtilsService);
     this.sortService = new SortService(this.textUtilsService);
     this.arrayService = new ArrayService();
-
-    this.commandTypesService = new CommandTypesService(
-      new BlankCommand(this.textUtilsService),
-      new CamelCommand(this.textUtilsService),
-      new CsvCommand(this.textUtilsService),
-      new DistinctCommand(),
-      new EncloseCommand(),
-      new EnsureLeadingCommand(this.textUtilsService),
-      new EnsureTrailingCommand(this.textUtilsService),
-      new FlatCommand(this.textUtilsService),
-      new HeaderCommand(),
-      new JoinCommand(this.textUtilsService),
-      new KebabCommand(this.textUtilsService),
-      new LowerCommand(this.textUtilsService),
-      new MatchCommand(),
-      new NoopCommand(),
-      new PascalCommand(this.textUtilsService),
-      new PrintCommand(this.textUtilsService),
-      new RegexCommand(),
-      new RemoveCommand(),
-      new RemoveLeadingCommand(this.textUtilsService),
-      new RemoveTrailingCommand(this.textUtilsService),
-      new ReplaceCommand(this.textUtilsService),
-      new SearchCommand(),
-      new SelectCommand(this.textUtilsService),
-      new SkipCommand(),
-      new SortCommand(this.textUtilsService),
-      new SplitCommand(this.textUtilsService),
-      new TakeCommand(),
-      new TrimCommand(),
-      new TrimEndCommand(),
-      new TrimStartCommand(),
-      new TsvCommand(this.textUtilsService),
-      new UpperCommand(),
-      new WithCommand(this.textUtilsService)
-    );
-
-    this.commandParsingService = new CommandParsingService(
-      this.commandTypesService
-    );
+    this.commandTypesService = new CommandTypesService(new Services());
+    this.commandParsingService = new CommandParsingService(this.commandTypesService);
 
     this.commandService = new CommandService(
       this.textUtilsService,
@@ -416,6 +379,8 @@ match`;
     if (this.executeCodeTimeout) {
       clearTimeout(this.executeCodeTimeout);
     }
+
+    
 
     const that = this;
     

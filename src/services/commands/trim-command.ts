@@ -1,7 +1,13 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
+import { Services } from '../services';
 
 export class TrimCommand implements Command {
+
+    constructor(private services: Services) {
+
+        this.services = services;
+    }
 
     Name = "trim"
 
@@ -29,6 +35,11 @@ export class TrimCommand implements Command {
 
 export class TrimStartCommand implements Command {
 
+    constructor(private services: Services) {
+
+        this.services = services;
+    }
+    
     Name = "trimStart"
 
     Help = {
@@ -54,6 +65,11 @@ export class TrimStartCommand implements Command {
 }
 
 export class TrimEndCommand implements Command {
+
+    constructor(private services: Services) {
+
+        this.services = services;
+    }
 
     Name = "trimEnd"
 

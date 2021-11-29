@@ -5,7 +5,7 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { ArrayService } from './array.service';
 import { SortService } from './sort.service';
-import { Command, Explanation } from "../interfaces/CommandInterfaces";
+import { Command, Explanation, ParsedCommand } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
@@ -51,21 +51,27 @@ export class CommandService {
     processCommands(codeValue: string, lines: string[][], context: Context): string[][] {
 
         //try {
-            let codeLines = this.textUtilsService.TextToLines(codeValue);
+
+            const codeLines = this.textUtilsService.TextToLines(codeValue);
+
+            let parsedCommands: ParsedCommand[] = [];
+
+            for (let i = 0; i < codeLines.length; i++) {
+
+                const parsedCommand = this.commandParsingService.ParseCodeLine(
+                    codeLines[i]
+                );
+
+                parsedCommands.push(parsedCommand);
+            }
 
             let currentValues: string[][] = lines;
 
             context.newColumnInfo = {...context.columnInfo };
 
-            for (let i = 0; i < codeLines.length; i++) {
+            for (let i = 0; i < parsedCommands.length; i++) {
 
-                if (!codeLines[i].trim()) {
-                    continue;
-                }
-
-                const parsedCommand = this.commandParsingService.ParseCodeLine(
-                    codeLines[i]
-                );
+                const parsedCommand = parsedCommands[i];
 
                 const command = parsedCommand.command;
 
@@ -103,7 +109,7 @@ export class CommandService {
                         
                         for (let j = 0; j < currentValues.length; j++) {
 
-                            const selectCommand = this.commandTypesService.FindCommand("select");
+                            const selectCommand = this.commandTypesService.CreateCommand("select");
 
                             const selectedVal = selectCommand.Execute(
                                 currentValues[j],

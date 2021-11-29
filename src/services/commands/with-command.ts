@@ -1,16 +1,16 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class WithCommand implements Command {
 
     // This class is only called when generating the explanation.
     // The code to execute this command is in command.service.ts.
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
-    }    
+        this.services = services;
+    }  
     
     Name = "with"
 
@@ -23,9 +23,9 @@ export class WithCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
+        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
 
-        const indices = this.textUtilsService.ParseIntegers(para);
+        const indices = this.services.textUtilsService.ParseIntegers(para);
 
         if (indices.some((i) => isNaN(i))) {
 
@@ -37,18 +37,18 @@ export class WithCommand implements Command {
 
             for (let i = 0; i < indices.length; i++) {
 
-                var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
+                var formattedIndex = this.services.textUtilsService.FormatIndex(indices[i], true);
 
                 formattedIndices.push(formattedIndex);
             }
 
-            let positions = this.textUtilsService.FormatList(formattedIndices);
+            let positions = this.services.textUtilsService.FormatList(formattedIndices);
 
             return { segments: ["With the columns", positions, "..."] };
         }
         else {
 
-            let positions = this.textUtilsService.FormatList(indices);
+            let positions = this.services.textUtilsService.FormatList(indices);
 
             if (indices.length > 1) {
 

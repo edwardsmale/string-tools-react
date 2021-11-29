@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class PrintCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
-        
-        this.textUtilsService = textUtilsService;
+    constructor(private services: Services) {
+
+        this.services = services;
     }
 
     Name = "print"
@@ -25,13 +25,13 @@ export class PrintCommand implements Command {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        var result = this.textUtilsService.ReplaceBackslashTWithTab(para);
+        var result = this.services.textUtilsService.ReplaceBackslashTWithTab(para);
 
         // Replace $header
 
         if (Array.isArray(context.columnInfo.headers)) {
 
-            const headersOrderedByLength = this.textUtilsService.GetHeadersOrderedByLength(
+            const headersOrderedByLength = this.services.textUtilsService.GetHeadersOrderedByLength(
                 context.columnInfo.headers
             );
 

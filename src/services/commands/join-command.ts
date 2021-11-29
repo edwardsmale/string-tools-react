@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class JoinCommand implements Command {
     
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "join"
@@ -41,14 +41,14 @@ export class JoinCommand implements Command {
         
         const delimiter = this.GetDelimiter(para);
 
-        return this.textUtilsService.FormatDelimiter(delimiter, true, false);
+        return this.services.textUtilsService.FormatDelimiter(delimiter, true, false);
     }
 
     private GetDelimiter(para: string) {
 
         const defaultDelimiter = "";
 
-        para = this.textUtilsService.ReplaceBackslashTWithTab(para);
+        para = this.services.textUtilsService.ReplaceBackslashTWithTab(para);
         
         return para || defaultDelimiter;
     }
