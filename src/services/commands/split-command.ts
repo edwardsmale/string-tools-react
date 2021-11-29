@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class SplitCommand implements Command {
     
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "split"
@@ -36,7 +36,7 @@ export class SplitCommand implements Command {
             para = para === "\\t" ? "\t" : para;
             var delimiter = para || defaultDelimiter;
 
-            var formattedDelimiter = this.textUtilsService.FormatDelimiter(delimiter, false, true);
+            var formattedDelimiter = this.services.textUtilsService.FormatDelimiter(delimiter, false, true);
 
             return { segments: ["Split the text on every", formattedDelimiter] };
         }
@@ -77,7 +77,7 @@ export class SplitCommand implements Command {
                 delimiter = "\\" + delimiter;
             }
 
-            var splitValues = this.textUtilsService.Split(value as string, delimiter);
+            var splitValues = this.services.textUtilsService.Split(value as string, delimiter);
 
             context.newColumnInfo.numberOfColumns = splitValues.length;
             context.newColumnInfo.headers = null;

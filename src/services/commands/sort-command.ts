@@ -1,15 +1,15 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class SortCommand implements Command {
 
     // This class is only called when generating the explanation.
     // The code to execute this command is in command.service.ts.
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "sort"
@@ -23,7 +23,7 @@ export class SortCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        const indices = this.textUtilsService.ParseSortOrderIndices(
+        const indices = this.services.textUtilsService.ParseSortOrderIndices(
             para,
             context.columnInfo.headers
         );

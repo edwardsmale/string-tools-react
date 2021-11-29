@@ -1,15 +1,15 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class FlatCommand implements Command {
 
     // This class is only called when generating the explanation.
     // The code to execute this command is in command.service.ts.
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "flat"
@@ -24,7 +24,7 @@ export class FlatCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        const batchSize = this.textUtilsService.ParsePositiveInteger(para);
+        const batchSize = this.services.textUtilsService.ParsePositiveInteger(para);
 
         if (!batchSize) {
 

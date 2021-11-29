@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class CsvCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
         
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "csv"
@@ -34,7 +34,7 @@ export class CsvCommand implements Command {
 
         } else {
 
-            var formattedDelimiter = this.textUtilsService.FormatDelimiter(options.delimiter, true, false);
+            var formattedDelimiter = this.services.textUtilsService.FormatDelimiter(options.delimiter, true, false);
             explanation += " separated with " + formattedDelimiter;
         }
 

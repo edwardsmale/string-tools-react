@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class BlankCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "blank"
@@ -32,7 +32,7 @@ export class BlankCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            const isBlank = this.textUtilsService.IsNullOrWhitespace(value[i]);
+            const isBlank = this.services.textUtilsService.IsNullOrWhitespace(value[i]);
 
             if (isBlank === !negated) {
 

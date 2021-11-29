@@ -1,12 +1,12 @@
 import { Explanation, Command } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { TextUtilsService } from '../text-utils.service';
+import { Services } from '../services';
 
 export class SelectCommand implements Command {
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private services: Services) {
 
-        this.textUtilsService = textUtilsService;
+        this.services = services;
     }
 
     Name = "select"
@@ -18,9 +18,9 @@ export class SelectCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        para = this.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
+        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
 
-        const indices = this.textUtilsService.ParseIntegers(para);
+        const indices = this.services.textUtilsService.ParseIntegers(para);
 
         if (indices.some((i) => isNaN(i))) {
 
@@ -32,18 +32,18 @@ export class SelectCommand implements Command {
 
             for (let i = 0; i < indices.length; i++) {
 
-                var formattedIndex = this.textUtilsService.FormatIndex(indices[i], true);
+                var formattedIndex = this.services.textUtilsService.FormatIndex(indices[i], true);
 
                 formattedIndices.push(formattedIndex);
             }
 
-            const positions = this.textUtilsService.FormatList(formattedIndices);
+            const positions = this.services.textUtilsService.FormatList(formattedIndices);
 
             return { segments: ["Get", positions] };
         }
         else {
 
-            const positions = this.textUtilsService.FormatList(indices);
+            const positions = this.services.textUtilsService.FormatList(indices);
 
             if (indices.length > 1) {
 
@@ -93,12 +93,12 @@ export class SelectCommand implements Command {
 
     private ParseIndices(para: string, context: Context) {
 
-        const indicesWithHeadersReplaced  = this.textUtilsService.ReplaceHeadersWithIndexes(
+        const indicesWithHeadersReplaced  = this.services.textUtilsService.ReplaceHeadersWithIndexes(
             para,
             context.columnInfo.headers
         );
 
-        let indices = this.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
+        let indices = this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
 
         for (let i = 0; i < indices.length; i++) {
 

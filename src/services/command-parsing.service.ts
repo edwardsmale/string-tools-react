@@ -13,7 +13,7 @@ export class CommandParsingService {
     if (codeLine.length === 0) {
       
       return {
-        command: this.commandTypesService.FindCommand("noop"),
+        command: this.commandTypesService.CreateCommand("noop"),
         para: "",
         negated: false
       };
@@ -27,7 +27,7 @@ export class CommandParsingService {
 
       const negated = commandString.includes("!");
       const commandName = commandString.replace("!", "");
-      const command = this.commandTypesService.FindCommand(commandName);
+      const command = this.commandTypesService.CreateCommand(commandName);
 
       return {
         command: command,
