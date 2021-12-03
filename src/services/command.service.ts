@@ -27,16 +27,15 @@ export class CommandService {
 
     explainCommands(codeValue: string, lines: string[], context: Context): Explanation[] {
 
-        let codeLines = this.textUtilsService.TextToLines(codeValue);
+        const codeLines = this.textUtilsService.TextToLines(codeValue);
 
         let output: Explanation[] = []; 
 
         for (let i = 0; i < codeLines.length; i++) {
 
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
-            const command = parsedCommand.command;
 
-            const explanation = command.Explain(
+            const explanation = parsedCommand.command.Explain(
                 parsedCommand.para,
                 parsedCommand.negated,
                 context
@@ -54,16 +53,44 @@ export class CommandService {
 
             const codeLines = this.textUtilsService.TextToLines(codeValue);
 
-            let parsedCommands: ParsedCommand[] = [];
+            const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines);
 
-            for (let i = 0; i < codeLines.length; i++) {
+            let updatedLines: string[][] = [];
 
-                const parsedCommand = this.commandParsingService.ParseCodeLine(
-                    codeLines[i]
-                );
+            for (let l = 0; l < lines.length; l++) {
 
-                parsedCommands.push(parsedCommand);
+                const originalLine = lines[l];
+                let line = originalLine;
+
+                for (let c = 0; c < parsedCommands.length; c++) {
+
+                    const parsedCommand = parsedCommands[c];
+                    const command = parsedCommand.command;
+
+                    line = command.Execute(
+                        line,
+                        parsedCommand.para,
+                        parsedCommand.negated,
+                        context
+                    );
+
+                    if (command.UpdateContext) {
+
+                        command.UpdateContext(
+                            parsedCommand.para,
+                            parsedCommand.negated,
+                            context
+                        );
+                    }
+                }
+
+                updatedLines.push(line);
             }
+
+            return updatedLines;
+
+
+
 
             let currentValues: string[][] = lines;
 
@@ -319,5 +346,19 @@ export class CommandService {
 
         //     return output;
         // }
+    }
+
+    private ParseCommands(codeLines: string[]) {
+        let parsedCommands: ParsedCommand[] = [];
+
+        for (let i = 0; i < codeLines.length; i++) {
+
+            const parsedCommand = this.commandParsingService.ParseCodeLine(
+                codeLines[i]
+            );
+
+            parsedCommands.push(parsedCommand);
+        }
+        return parsedCommands;
     }
 }

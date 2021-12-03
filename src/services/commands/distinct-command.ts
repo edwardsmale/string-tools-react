@@ -4,9 +4,13 @@ import { Services } from '../services';
 
 export class DistinctCommand implements Command {
 
+    private seenValues: any;
+
     constructor(private services: Services) {
 
         this.services = services;
+
+        this.seenValues = {};
     }
 
     Name = "distinct"
@@ -23,8 +27,18 @@ export class DistinctCommand implements Command {
     
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
 
-         // The implementation is in command.service.ts.
+        let result: string[] = [];
 
-        return value;
+        for (let i = 0; i < value.length; i++) {
+
+            if (!this.seenValues[value[i]]) {
+
+                result.push(value[i]);
+
+                this.seenValues[value[i]] = "a";
+            }
+        }
+
+        return result;
     }
 }

@@ -12,7 +12,7 @@ interface HelpPopupContentState {
 class HelpPopupContent extends React.Component<HelpPopupContentProps, HelpPopupContentState> {
 
   render() {
-    const commandTypes = this.props.commandTypesService.Commands
+    const commandTypes = this.props.commandTypesService.GetAllCommands()
       .sort(function (a, b) { return a.Name.localeCompare(b.Name); });
 
     return <div className="help-popup-content">
