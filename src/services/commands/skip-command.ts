@@ -4,6 +4,8 @@ import { Services } from '../services';
 
 export class SkipCommand implements Command {
 
+    private skipped: number = 0;
+
     constructor(private services: Services) {
 
         this.services = services;
@@ -34,12 +36,32 @@ export class SkipCommand implements Command {
         var n = parseInt(para, 10);
 
         if (isNaN(n)) {
+
+            return value;
+        }
+        else if (context.isArrayOfArrays) {
+
+            return value.slice(n);
+        } 
+        else if (this.skipped > n) {
             
             return value;
         }
         else {
 
-            return n >= 0 ? value.slice(n) : value.slice(0, -n);
+            let result: string[] = [];
+
+            for (let i = 0; i < value.length; i++) {
+
+                this.skipped++;
+
+                if (this.skipped > n) {
+
+                    result.push(value[i]);
+                }
+            }
+
+            return result;
         }
     }
 }

@@ -4,6 +4,8 @@ import { Services } from '../services';
 
 export class TakeCommand implements Command {
 
+    private taken: number = 0;
+
     constructor(private services: Services) {
 
         this.services = services;
@@ -37,9 +39,25 @@ export class TakeCommand implements Command {
 
             return value;
         }
+        else if (context.isArrayOfArrays) {
+
+            return value.slice(0, n);
+        }
         else {
 
-            return n >= 0 ? value.slice(0, n) : value.slice(-n);
+            let result: string[] = [];
+
+            for (let i = 0; i < value.length; i++) {
+
+                this.taken++;
+
+                if (this.taken <= n) {
+
+                    result.push(value[i]);
+                }
+            }
+
+            return result;
         }
     }
 }
