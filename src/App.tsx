@@ -190,6 +190,7 @@ match`;
       darkmode: true
     };
 
+    this.updateHashTimeout = null;
     this.executeCodeTimeout = null;
 
     this.removeInputPaneText = this.removeInputPaneText.bind(this);
@@ -278,7 +279,7 @@ match`;
 
     this.UpdateWidthsAndHeights();   
 
-    window.addEventListener("hashchange", this.LocationHashChanged);
+    //window.addEventListener("hashchange", this.LocationHashChanged);
     
     if (window.location.hash) {
       
@@ -293,7 +294,7 @@ match`;
 
   componentWillUnmount() {
 
-    window.removeEventListener("hashchange", this.LocationHashChanged);
+    //window.removeEventListener("hashchange", this.LocationHashChanged);
     window.removeEventListener("keydown", this.keyDown);
     window.removeEventListener("keydown", this.keyDown);
     window.removeEventListener('resize', this.UpdateWidthsAndHeights);
@@ -335,15 +336,26 @@ match`;
     this.setInputPane(result);
   }
 
+  private updateHashTimeout: number | null;
+
   handleCodeWindowInput(code: string) {
 
     this.setState({code: code});
         
     this.codeWindowValue = code;
 
-    const compressedCode = this.codeCompressionService.CompressCode(code);
+    if (this.updateHashTimeout) {
+      clearTimeout(this.updateHashTimeout);
+    }
+
+    const that = this;
+
+    window.setTimeout(function () {
+
+      const compressedCode = that.codeCompressionService.CompressCode(code);
     
-    window.location.hash = "#" + compressedCode;
+      window.location.hash = "#" + compressedCode;
+    }, 500);
   }
   
   private previousCodeWindowCode: string = "";
@@ -379,8 +391,6 @@ match`;
     if (this.executeCodeTimeout) {
       clearTimeout(this.executeCodeTimeout);
     }
-
-    
 
     const that = this;
     
