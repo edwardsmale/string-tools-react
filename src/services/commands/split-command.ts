@@ -61,11 +61,11 @@ export class SplitCommand implements Command {
         }
 
         context.isArrayOfArrays = true;
-        context.newColumnInfo.headers = null;
-        
+        context.columnInfo.headers = null;
+
         context.withIndices = this.services.arrayService.CreateRange(
             0,
-            context.newColumnInfo.numberOfColumns
+            context.columnInfo.numberOfColumns
         );
 
         return result;
@@ -92,7 +92,7 @@ export class SplitCommand implements Command {
 
             var splitValues = this.services.textUtilsService.Split(value as string, delimiter);
 
-            context.newColumnInfo.numberOfColumns = Math.max(context.newColumnInfo.numberOfColumns, splitValues.length);
+            context.columnInfo.numberOfColumns = Math.max(context.columnInfo.numberOfColumns, splitValues.length);
 
             return splitValues;
         }

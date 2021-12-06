@@ -67,10 +67,6 @@ export class CommandService {
                 context.withIndices = [...originalContext.withIndices];
                 context.columnInfo.numberOfColumns = originalContext.columnInfo.numberOfColumns;
 
-                // TODO: Can we ditch newColumnInfo now?
-
-                context.newColumnInfo = {...context.columnInfo };
-
                 for (let c = 0; c < parsedCommands.length; c++) {
 
                     const parsedCommand = parsedCommands[c];
@@ -90,9 +86,7 @@ export class CommandService {
                             parsedCommand.negated,
                             context
                         );
-                    }
-
-                    context.columnInfo = { ...context.newColumnInfo};  
+                    } 
                     
                     if (!line.length) {
 
@@ -112,8 +106,6 @@ export class CommandService {
 
 
             let currentValues: string[][] = lines;
-
-            context.newColumnInfo = {...context.columnInfo };
 
             for (let i = 0; i < parsedCommands.length; i++) {
 

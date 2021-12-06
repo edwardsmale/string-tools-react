@@ -75,8 +75,7 @@ export class SelectCommand implements Command {
 
         const indices = this.ParseIndices(para, context);
 
-        context.newColumnInfo.headers = [];
-        context.newColumnInfo.numberOfColumns = 0;
+        let newHeaders: string[] = [];
 
         for (let i = 0; i < indices.length; i++) {
 
@@ -84,15 +83,16 @@ export class SelectCommand implements Command {
 
             if (context.columnInfo.headers) {
 
-                context.newColumnInfo.headers.push(context.columnInfo.headers[index]);
+                newHeaders.push(context.columnInfo.headers[index]);
             }
-
-            context.newColumnInfo.numberOfColumns++;
         }
+
+        context.columnInfo.headers = newHeaders;
+        context.columnInfo.numberOfColumns = indices.length;
 
         context.withIndices = this.services.arrayService.CreateRange(
             0,
-            context.newColumnInfo.numberOfColumns - 1
+            context.columnInfo.numberOfColumns - 1
         )
     }
 

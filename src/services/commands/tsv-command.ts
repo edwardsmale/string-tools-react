@@ -18,7 +18,7 @@ export class TsvCommand implements Command {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
         
-        context.newColumnInfo.headers = [];
+        context.columnInfo.headers = [];
 
         context.isArrayOfArrays = false;
 
@@ -27,7 +27,7 @@ export class TsvCommand implements Command {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        context.newColumnInfo.headers = [];
+        context.columnInfo.headers = [];
 
         context.isArrayOfArrays = false;
 

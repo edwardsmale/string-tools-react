@@ -77,7 +77,7 @@ export class CsvCommand implements Command {
         
         const options = this.parseOptions(para);
 
-        context.newColumnInfo.headers = [];
+        context.columnInfo.headers = [];
 
         context.isArrayOfArrays = false;
 

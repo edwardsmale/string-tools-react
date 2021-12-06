@@ -38,15 +38,15 @@ export class HeaderCommand implements Command {
                 }
             }
             
-            context.newColumnInfo.headers = this.headers;
+            context.columnInfo.headers = this.headers;
 
             this.headersAcquired = true;
 
             return [];
         }
         else {
-            
-            context.newColumnInfo.headers = this.headers;
+
+            context.columnInfo.headers = this.headers;
 
             return value;
         }

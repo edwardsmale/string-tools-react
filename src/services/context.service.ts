@@ -19,9 +19,9 @@ export class ContextService {
 
             const vals = currentValues as string[][];
 
-            context.newColumnInfo.numberOfColumns = 1;
-            context.newColumnInfo.isColumnIntegral = [vals.every(val => isIntegral(val[0]))];
-            context.newColumnInfo.isColumnNumeric = [vals.every(val => isNumeric(val[0]))];
+            context.columnInfo.numberOfColumns = 1;
+            context.columnInfo.isColumnIntegral = [vals.every(val => isIntegral(val[0]))];
+            context.columnInfo.isColumnNumeric = [vals.every(val => isNumeric(val[0]))];
         }
         else {
 
@@ -58,9 +58,9 @@ export class ContextService {
                 }
             }
 
-            context.newColumnInfo.numberOfColumns = numberOfColumns;
-            context.newColumnInfo.isColumnIntegral = isColumnIntegral;
-            context.newColumnInfo.isColumnNumeric = isColumnNumeric;
+            context.columnInfo.numberOfColumns = numberOfColumns;
+            context.columnInfo.isColumnIntegral = isColumnIntegral;
+            context.columnInfo.isColumnNumeric = isColumnNumeric;
         }
     }
 
@@ -70,12 +70,6 @@ export class ContextService {
             regex: null,
             searchString: null,
             columnInfo: {
-                numberOfColumns: 1,
-                isColumnNumeric: null,
-                isColumnIntegral: null,
-                headers: null
-            },
-            newColumnInfo: {
                 numberOfColumns: 1,
                 isColumnNumeric: null,
                 isColumnIntegral: null,
@@ -93,7 +87,6 @@ export class ContextService {
             regex: context.regex,
             searchString: context.searchString,
             columnInfo: {...context.columnInfo },
-            newColumnInfo: {...context.newColumnInfo },
             withIndices: [...context.withIndices],
             isArrayOfArrays: context.isArrayOfArrays
         };

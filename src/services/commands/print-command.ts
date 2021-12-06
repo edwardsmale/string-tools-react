@@ -49,7 +49,7 @@ export class PrintCommand implements Command {
 
         result = this.ReplacePositionals(result, value);
         
-        context.newColumnInfo.headers = [];
+        context.columnInfo.headers = [];
 
         return [result];
     }

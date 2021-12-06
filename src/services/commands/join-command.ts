@@ -29,7 +29,7 @@ export class JoinCommand implements Command {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        context.newColumnInfo.headers = [];
+        context.columnInfo.headers = [];
         const delimiter = this.GetDelimiter(para);
 
         context.isArrayOfArrays = false;
