@@ -48,12 +48,25 @@ export class SplitCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            const split = this.splitScalar(value[i], para, negated, context);
+            if (context.withIndices.includes(i)) {
 
-            result.push(...split);
+                const split = this.splitScalar(value[i], para, negated, context);
+
+                result.push(...split);
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         context.isArrayOfArrays = true;
+        context.newColumnInfo.headers = null;
+        
+        context.withIndices = this.services.arrayService.CreateRange(
+            0,
+            context.newColumnInfo.numberOfColumns
+        );
 
         return result;
     }
@@ -79,8 +92,7 @@ export class SplitCommand implements Command {
 
             var splitValues = this.services.textUtilsService.Split(value as string, delimiter);
 
-            context.newColumnInfo.numberOfColumns = splitValues.length;
-            context.newColumnInfo.headers = null;
+            context.newColumnInfo.numberOfColumns = Math.max(context.newColumnInfo.numberOfColumns, splitValues.length);
 
             return splitValues;
         }

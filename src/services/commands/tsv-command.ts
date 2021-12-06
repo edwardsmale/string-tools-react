@@ -31,6 +31,15 @@ export class TsvCommand implements Command {
 
         context.isArrayOfArrays = false;
 
-        return [value.join("\t")];
+        let values: string[] = [];
+
+        for (let i = 0; i < context.withIndices.length; i++) {
+
+            const index = context.withIndices[i];
+
+            values.push(value[index]);
+        }
+
+        return [values.join("\t")];
     }
 }

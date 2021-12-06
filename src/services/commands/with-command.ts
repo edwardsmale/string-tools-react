@@ -25,6 +25,11 @@ export class WithCommand implements Command {
 
         para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
 
+        if (para === "*") {
+
+            return { segments: ["With all the columns..."] };
+        }
+
         const indices = this.services.textUtilsService.ParseIntegers(para);
 
         if (indices.some((i) => isNaN(i))) {
@@ -48,7 +53,7 @@ export class WithCommand implements Command {
         }
         else {
 
-            let positions = this.services.textUtilsService.FormatList(indices);
+            const positions = this.services.textUtilsService.FormatList(indices);
 
             if (indices.length > 1) {
 
@@ -62,6 +67,26 @@ export class WithCommand implements Command {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        throw "WithCommand.Execute should not be called";
+        if (context.isArrayOfArrays) {
+
+            if (para === "*") {
+
+                context.withIndices = this.services.arrayService.CreateRange(
+                    0,
+                    context.columnInfo.numberOfColumns
+                );
+            }
+            else {
+
+                const indices = this.services.textUtilsService.ParseIntegers(para);
+
+                context.withIndices = this.services.arrayService.ResolveNegativeIndices(
+                    indices,
+                    context.columnInfo.numberOfColumns
+                );
+            }
+        }
+        
+        return value;
     }
 }

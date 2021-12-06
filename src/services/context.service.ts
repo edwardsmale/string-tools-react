@@ -1,10 +1,13 @@
 import { TextUtilsService } from './text-utils.service';
 import { Context } from "../interfaces/Context";
+import { ArrayService } from './array.service';
 
 export class ContextService {
 
-    constructor(private textUtilsService: TextUtilsService) {
+    constructor(private textUtilsService: TextUtilsService, private arrayService: ArrayService) {
+        
         this.textUtilsService = textUtilsService;
+        this.arrayService = arrayService;
     }
 
     UpdateContextDataTypes(context: Context, currentValues: (string | string[])[]) {
@@ -14,7 +17,7 @@ export class ContextService {
 
         if (!context.isArrayOfArrays) {
 
-            let vals = currentValues as string[][];
+            const vals = currentValues as string[][];
 
             context.newColumnInfo.numberOfColumns = 1;
             context.newColumnInfo.isColumnIntegral = [vals.every(val => isIntegral(val[0]))];
@@ -22,9 +25,7 @@ export class ContextService {
         }
         else {
 
-            let numberOfColumns: number;
-
-            numberOfColumns = 0;
+            let numberOfColumns: number = 0;
 
             for (let i = 0; i < currentValues.length; i++) {
 
@@ -80,7 +81,7 @@ export class ContextService {
                 isColumnIntegral: null,
                 headers: null
             },
-            withIndices: null,
+            withIndices: [0],
             isArrayOfArrays: false
         };
     }
@@ -93,7 +94,7 @@ export class ContextService {
             searchString: context.searchString,
             columnInfo: {...context.columnInfo },
             newColumnInfo: {...context.newColumnInfo },
-            withIndices: context.withIndices ? [...context.withIndices] : null,
+            withIndices: [...context.withIndices],
             isArrayOfArrays: context.isArrayOfArrays
         };
     }

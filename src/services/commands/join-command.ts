@@ -34,7 +34,17 @@ export class JoinCommand implements Command {
 
         context.isArrayOfArrays = false;
 
-        return [value.join(delimiter)];
+        let result: string[] = [];
+
+        for (let i = 0; i < value.length; i++) {
+
+            if (context.withIndices.includes(i)) {
+
+                result.push(value[i]);
+            }
+        }
+
+        return [result.join(delimiter)];
     }
 
     private GetFormattedDelimiter(para: string) {

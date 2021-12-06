@@ -102,9 +102,9 @@ class App extends React.Component<AppProps, AppState> {
     this.textUtilsService = new TextUtilsService();
     this.textPosService = new TextPosService(this.textUtilsService);
     this.codeCompressionService = new CodeCompressionService();
-    this.contextService = new ContextService(this.textUtilsService);
-    this.sortService = new SortService(this.textUtilsService);
     this.arrayService = new ArrayService();
+    this.contextService = new ContextService(this.textUtilsService, this.arrayService);
+    this.sortService = new SortService(this.textUtilsService);
     this.commandTypesService = new CommandTypesService(new Services());
     this.commandParsingService = new CommandParsingService(this.commandTypesService);
 

@@ -5,6 +5,6 @@ export interface Context {
     searchString: string | null;
     columnInfo: ColumnInfo;
     newColumnInfo: ColumnInfo;
-    withIndices: number[] | null;
+    withIndices: number[];
     isArrayOfArrays: boolean;
 }

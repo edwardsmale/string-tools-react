@@ -31,14 +31,28 @@ export class RemoveLeadingCommand implements Command {
 
             for (let i = 0; i < value.length; i++) {
 
-                result.push(this.services.textUtilsService.EnsureLeading(value[i], para));
+                if (context.withIndices.includes(i)) {
+
+                    result.push(this.services.textUtilsService.EnsureLeading(value[i], para));
+                }
+                else {
+
+                    result.push(value[i]);
+                }
             }
         }
         else {
 
             for (let i = 0; i < value.length; i++) {
 
-                result.push(this.services.textUtilsService.RemoveLeading(value[i], para));
+                if (context.withIndices.includes(i)) {
+
+                    result.push(this.services.textUtilsService.RemoveLeading(value[i], para));
+                }
+                else {
+
+                    result.push(value[i]);
+                }
             }
         }
 

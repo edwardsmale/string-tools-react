@@ -27,7 +27,14 @@ export class LowerCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            result.push(value[i].toLowerCase());
+            if (context.withIndices.includes(i)) {
+
+                result.push(value[i].toLowerCase());
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;

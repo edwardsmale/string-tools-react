@@ -50,7 +50,14 @@ export class ReplaceCommand implements Command {
 
             for (let i = 0; i < length; i++) {
 
-                newValue.push(globalRegexReplace(value[i], context.regex, para));
+                if (context.withIndices.includes(i)) {
+
+                    newValue.push(globalRegexReplace(value[i], context.regex, para));
+                }
+                else {
+
+                    newValue.push(value[i]);
+                }
             }
 
             return newValue;
@@ -61,7 +68,14 @@ export class ReplaceCommand implements Command {
             
             for (let i = 0; i < length; i++) {
                 
-                newValue.push(globalStringReplace(value[i], context.searchString, para));
+                if (context.withIndices.includes(i)) {
+                    
+                    newValue.push(globalStringReplace(value[i], context.searchString, para));
+                }
+                else {
+
+                    newValue.push(value[i]);
+                }
             }
 
             return newValue;

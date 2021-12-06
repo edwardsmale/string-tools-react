@@ -27,7 +27,21 @@ export class EncloseCommand implements Command {
         
         const enclosingChars = this.getEnclosingChars(para);
 
-        return value.map(val => enclosingChars.leftChar + val + enclosingChars.rightChar);
+        let result: string[] = [];
+
+        for (let i = 0; i < value.length; i++) {
+
+            if (context.withIndices.includes(i)) {
+
+                result.push(enclosingChars.leftChar + value[i] + enclosingChars.rightChar);
+            }
+            else {
+
+                result.push(value[i]);
+            }
+        }
+
+        return result;
     }
 
     private getEnclosingChars(para: string) {

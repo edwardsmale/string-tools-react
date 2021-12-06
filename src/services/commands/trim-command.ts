@@ -26,7 +26,15 @@ export class TrimCommand implements Command {
         let result: string[] = [];
 
         for (let i = 0; i < value.length; i++) {
-            result.push(value[i].trim());
+
+            if (context.withIndices.includes(i)) {
+
+                result.push(value[i].trim());
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;
@@ -57,7 +65,15 @@ export class TrimStartCommand implements Command {
         let result: string[] = [];
 
         for (let i = 0; i < value.length; i++) {
-            result.push(value[i].trimStart());            
+
+            if (context.withIndices.includes(i)) {
+
+                result.push(value[i].trimStart());
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;
@@ -88,7 +104,15 @@ export class TrimEndCommand implements Command {
         let result: string[] = [];
 
         for (let i = 0; i < value.length; i++) {
-            result.push(value[i].trimEnd());            
+
+            if (context.withIndices.includes(i)) {
+
+                result.push(value[i].trimEnd());
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;

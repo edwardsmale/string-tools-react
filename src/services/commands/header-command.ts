@@ -4,6 +4,9 @@ import { Services } from '../services';
 
 export class HeaderCommand implements Command {
 
+    private headersAcquired: boolean = false;
+    private headers: string[] = [];
+
     constructor(private services: Services) {
 
         this.services = services;
@@ -23,8 +26,29 @@ export class HeaderCommand implements Command {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        context.newColumnInfo.headers = value;
+        if (!this.headersAcquired) {
 
-        return value;
+            this.headers = [];
+
+            for (let i = 0; i < value.length; i++) {
+            
+                if (context.withIndices.includes(i)) {
+
+                    this.headers.push(value[i]);
+                }
+            }
+            
+            context.newColumnInfo.headers = this.headers;
+
+            this.headersAcquired = true;
+
+            return [];
+        }
+        else {
+            
+            context.newColumnInfo.headers = this.headers;
+
+            return value;
+        }
     }
 }

@@ -55,17 +55,60 @@ export class MatchCommand implements Command {
 
         const includeSuccesses = !negated;
 
-        if (!searchString && context.regex) {
+        if (context.isArrayOfArrays) {
 
-            return value.filter(function (val: string) { 
-                return new RegExp(context.regex as string).test(val) === includeSuccesses; 
-            });
+            let match = true;
+
+            if (!searchString && context.regex) {
+
+                const regexp = new RegExp(context.regex);
+
+                for (let i = 0; i < context.withIndices.length; i++) {
+
+                    const index = context.withIndices[i];
+
+                    if (regexp.test(value[index]) !== includeSuccesses) {
+
+                        match = false;
+                    }
+                }
+            }
+            else {
+
+                for (let i = 0; i < context.withIndices.length; i++) {
+
+                    const index = context.withIndices[i];
+
+                    if (value[index].includes(searchString as string) !== includeSuccesses) {
+
+                        match = false;
+                    }
+                }
+            }
+
+            if (match) {
+                return value;
+            }
+            else {
+                return [];
+            }
         }
         else {
 
-            return value.filter(function (val: string) { 
-                return val.includes(searchString as string) === includeSuccesses; 
-            });
+            if (!searchString && context.regex) {
+
+                const regexp = new RegExp(context.regex);
+
+                return value.filter(function (val: string) { 
+                    return regexp.test(val) === includeSuccesses; 
+                });
+            }
+            else {
+
+                return value.filter(function (val: string) { 
+                    return val.includes(searchString as string) === includeSuccesses; 
+                });
+            }
         }
     }
 }

@@ -32,9 +32,16 @@ export class BlankCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            const isBlank = this.services.textUtilsService.IsNullOrWhitespace(value[i]);
+            if (context.withIndices.includes(i)) {
 
-            if (isBlank === !negated) {
+                const isBlank = this.services.textUtilsService.IsNullOrWhitespace(value[i]);
+
+                if (isBlank === !negated) {
+    
+                    result.push(value[i]);
+                }
+            }
+            else {
 
                 result.push(value[i]);
             }

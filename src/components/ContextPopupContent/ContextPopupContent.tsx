@@ -53,6 +53,10 @@ class ContextPopupContent extends React.Component<ContextPopupContentProps, Cont
               
             </td>
           </tr>
+          <tr>
+            <td className="context-popup-content__key">With Indices</td>
+            <td className="context-popup-content__value">{this.props.context.withIndices.join(", ")}</td>
+          </tr>
         </tbody>
       </table>
         

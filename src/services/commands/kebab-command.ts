@@ -27,7 +27,14 @@ export class KebabCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            result.push(this.ToKebabCase(value[i]));
+            if (context.withIndices.includes(i)) {
+
+                result.push(this.ToKebabCase(value[i]));
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;

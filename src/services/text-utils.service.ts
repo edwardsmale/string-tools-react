@@ -536,7 +536,12 @@ export class TextUtilsService {
 
     CapitaliseFirstLetter = (value: string): string => {
 
-        return value[0].toUpperCase() + value.slice(1);
+        if (!value) {
+            return value;
+        }
+        else {
+            return value[0].toUpperCase() + value.slice(1);
+        }
     }
 
     GetSubText(lines: string[], textSelection: TextRange) : string {

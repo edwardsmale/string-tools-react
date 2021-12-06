@@ -81,7 +81,7 @@ export class CsvCommand implements Command {
 
         context.isArrayOfArrays = false;
 
-        return [this.toDelimitedString(value, options)];
+        return [this.toDelimitedString(value, options, context)];
     }
 
     private parseOptions(para: string) {
@@ -101,50 +101,53 @@ export class CsvCommand implements Command {
         return options;
     }
 
-    private toDelimitedString = (value: string[], options: any) => {
+    private toDelimitedString = (value: string[], options: any, context: Context) => {
 
         let result = [];
 
         for (let i = 0; i < value.length; i++) {
 
-            var val = value[i];
+            if (context.withIndices.includes(i)) {
+                
+                var val = value[i];
 
-            if (options.isDoubleQuote) {
+                if (options.isDoubleQuote) {
 
-                if (options.isEscaped) {
+                    if (options.isEscaped) {
 
-                    // Replace " with \"
-                    val = val.replace(/"/g, '\\"');
-                    val = '"' + val + '"';
+                        // Replace " with \"
+                        val = val.replace(/"/g, '\\"');
+                        val = '"' + val + '"';
 
-                } else {
+                    } else {
 
-                    // Replace " with ""
-                    val = val.replace(/"/g, '""');
-                    val = '"' + val + '"';
+                        // Replace " with ""
+                        val = val.replace(/"/g, '""');
+                        val = '"' + val + '"';
 
-                    if (options.isAtString) {
-                        val = "@" + val;
+                        if (options.isAtString) {
+                            val = "@" + val;
+                        }
+                    }
+                } 
+                else if (options.isSingleQuote) {
+
+                    if (options.isEscaped) {
+
+                        // Replace ' with \'
+                        val = val.replace(/'/g, "\\'");
+                        val = "'" + val + "'";
+                    } 
+                    else {
+
+                        // Replace ' with ''
+                        val = val.replace(/'/g, "''");
+                        val = "'" + val + "'";
                     }
                 }
-            } 
-            else if (options.isSingleQuote) {
 
-                if (options.isEscaped) {
-
-                    // Replace ' with \'
-                    val = val.replace(/'/g, "\\'");
-                    val = "'" + val + "'";
-                } 
-                else {
-
-                    // Replace ' with ''
-                    val = val.replace(/'/g, "''");
-                    val = "'" + val + "'";
-                }
+                result.push(val);
             }
-
-            result.push(val);
         }
 
         return result.join(options.delimiter);

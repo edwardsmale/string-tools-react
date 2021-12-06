@@ -27,7 +27,14 @@ export class PascalCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            result.push(this.ToPascalCase(value[i]));
+            if (context.withIndices.includes(i)) {
+
+                result.push(this.ToPascalCase(value[i]));
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;

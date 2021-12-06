@@ -31,14 +31,28 @@ export class RemoveTrailingCommand implements Command {
 
             for (let i = 0; i < value.length; i++) {
 
-                result.push(this.services.textUtilsService.EnsureTrailing(value[i], para));
+                if (context.withIndices.includes(i)) {
+
+                    result.push(this.services.textUtilsService.EnsureTrailing(value[i], para));
+                }
+                else {
+
+                    result.push(value[i]);
+                }
             }
         }
         else {
 
             for (let i = 0; i < value.length; i++) {
 
-                result.push(this.services.textUtilsService.RemoveTrailing(value[i], para));
+                if (context.withIndices.includes(i)) {
+
+                    result.push(this.services.textUtilsService.RemoveTrailing(value[i], para));
+                }
+                else {
+
+                    result.push(value[i]);
+                }
             }
         }
 

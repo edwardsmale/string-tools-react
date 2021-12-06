@@ -27,7 +27,14 @@ export class UpperCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            result.push(value[i].toUpperCase());
+            if (context.withIndices.includes(i)) {
+
+                result.push(value[i].toUpperCase());
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;

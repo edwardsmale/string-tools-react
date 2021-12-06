@@ -31,11 +31,18 @@ export class DistinctCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (!this.seenValues[value[i]]) {
+            if (context.withIndices.includes(i)) {
+
+                if (!this.seenValues[value[i]]) {
+
+                    result.push(value[i]);
+
+                    this.seenValues[value[i]] = "a";
+                }
+            }
+            else {
 
                 result.push(value[i]);
-
-                this.seenValues[value[i]] = "a";
             }
         }
 

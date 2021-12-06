@@ -57,10 +57,19 @@ export class CommandService {
 
             let updatedLines: string[][] = [];
 
+            const originalContext = this.contextService.CloneContext(context);
+
             for (let l = 0; l < lines.length; l++) {
 
                 const originalLine = lines[l];
                 let line = originalLine;
+
+                context.withIndices = [...originalContext.withIndices];
+                context.columnInfo.numberOfColumns = originalContext.columnInfo.numberOfColumns;
+
+                // TODO: Can we ditch newColumnInfo now?
+
+                context.newColumnInfo = {...context.columnInfo };
 
                 for (let c = 0; c < parsedCommands.length; c++) {
 
@@ -82,9 +91,19 @@ export class CommandService {
                             context
                         );
                     }
+
+                    context.columnInfo = { ...context.newColumnInfo};  
+                    
+                    if (!line.length) {
+
+                        break;
+                    }
                 }
 
-                updatedLines.push(line);
+                if (line.length) {
+                    
+                    updatedLines.push(line);
+                }
             }
 
             return updatedLines;
@@ -104,109 +123,7 @@ export class CommandService {
 
                 let newValues: string[][] = [];
 
-                if (command.Name === "with") {
-
-                    if (context.isArrayOfArrays) {
-
-                        let subCommands = [];
-
-                        let j = i + 1;
-
-                        while (j < codeLines.length && codeLines[j].startsWith("  ")) {
-
-                            subCommands.push(codeLines[j].replace("  ", ""));
-
-                            j++;
-                        }
-
-                        const subCode = subCommands.join("\n");
-
-                        const subPara = this.textUtilsService.ReplaceHeadersWithIndexes(
-                            parsedCommand.para,
-                            context.columnInfo.headers
-                        );
-
-                        const indices = this.textUtilsService.ParseIntegers(subPara);
-
-                        let subContext = this.contextService.CloneContext(context);
-
-                        subContext.isArrayOfArrays = false;
-
-                        let subValues: string[][] = [];
-                        
-                        for (let j = 0; j < currentValues.length; j++) {
-
-                            const selectCommand = this.commandTypesService.CreateCommand("select");
-
-                            const selectedVal = selectCommand.Execute(
-                                currentValues[j],
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                subContext
-                            );
-
-                            subValues.push(selectedVal);
-                        }
-
-                        const subResult = this.processCommands(subCode, subValues, subContext);
-
-                        for (let j = 0; j < currentValues.length; j++) {
-
-                            let resultRow: string[] = [];
-
-                            for (let k = 0; k < currentValues[j].length; k++) {
-
-                                if (indices.includes(k)) {
-                                    
-                                    resultRow.push(subResult[j].join("\n"));
-                                }
-                                else {
-                                    
-                                    resultRow.push(currentValues[j][k]);
-                                }
-                            }
-
-                            newValues.push(resultRow);
-                        }
-
-                        i = j - 1;
-                    }
-                }
-                else if (command.Name === "flat") {
-
-                    let batchSize = this.textUtilsService.ParsePositiveInteger(parsedCommand.para);
-
-                    if (batchSize === null) {
-
-                        batchSize = 1;
-                    }
-                  
-                    let batches = [];
-
-                    let batch: string[] = [];
-
-                    for (let j = 0; j < currentValues.length; j++) {
-
-                        for (let k = 0; k < currentValues[j].length; k++) {
-
-                            batch.push(lines[j][k]);
-
-                            if (batch.length === batchSize) {
-                                batches.push(batch);
-                                batch = [];
-                            }
-                        }
-                    }
-
-                    if (batch.length) {
-                        batches.push(batch);
-                    }
-
-                    newValues = batches;
-
-                    context.isArrayOfArrays = batchSize > 1;
-                }
-                else if (command.Name === "sort") {
+                if (command.Name === "sort") {
 
                     let indices = this.textUtilsService.ParseSortOrderIndices(
                         parsedCommand.para,
@@ -271,70 +188,6 @@ export class CommandService {
                         }
                     }
                 }
-                else if (command.Name === "distinct") {
-
-                    // Using an object and adding keys to it seems to be much faster than using Array.includes.
-
-                    let obj: any = {};
-
-                    let arr: string[] = [];
-
-                    for (let i = 0; i < currentValues.length; i++) {
-
-                        for (let j = 0; j < currentValues[i].length; j++) {
-
-                            if (!obj[currentValues[i][j]]) {
-
-                                obj[currentValues[i][j]] = "a";
-
-                                arr.push(currentValues[i][j]);
-                            }
-                        }
-
-                        if (arr.length > 0) {
-
-                            newValues.push(arr);
-                            arr = [];
-                        }
-                    }
-                }
-                else {
-
-                    if (command.Name === "header") {
-
-                        context.newColumnInfo.headers = currentValues[0];
-
-                        newValues = currentValues.slice(1);
-                    }
-                    else {
-
-                        for (let j = 0; j < currentValues.length; j++) {
-
-                            const newValue = command.Execute(
-                                currentValues[j],
-                                parsedCommand.para,
-                                parsedCommand.negated,
-                                context
-                            );
-
-                            if (newValue.length) {
-
-                                newValues.push(newValue);
-                            }
-                        }
-                    }
-                }
-
-                if (command.UpdateContext) {
-
-                    command.UpdateContext(parsedCommand.para, parsedCommand.negated, context);
-                }
-                
-                this.contextService.UpdateContextDataTypes(context, newValues);
-
-                currentValues = newValues;
-
-                context.columnInfo = { ...context.newColumnInfo};
             }
 
             return currentValues;
@@ -349,6 +202,7 @@ export class CommandService {
     }
 
     private ParseCommands(codeLines: string[]) {
+
         let parsedCommands: ParsedCommand[] = [];
 
         for (let i = 0; i < codeLines.length; i++) {
@@ -359,6 +213,7 @@ export class CommandService {
 
             parsedCommands.push(parsedCommand);
         }
+
         return parsedCommands;
     }
 }

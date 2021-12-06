@@ -88,7 +88,12 @@ export class SelectCommand implements Command {
             }
 
             context.newColumnInfo.numberOfColumns++;
-        }        
+        }
+
+        context.withIndices = this.services.arrayService.CreateRange(
+            0,
+            context.newColumnInfo.numberOfColumns - 1
+        )
     }
 
     private ParseIndices(para: string, context: Context) {
@@ -102,7 +107,7 @@ export class SelectCommand implements Command {
 
         for (let i = 0; i < indices.length; i++) {
 
-            if (indices[i] < 0) {
+            while (indices[i] < 0) {
 
                 indices[i] += context.columnInfo.numberOfColumns;
             }

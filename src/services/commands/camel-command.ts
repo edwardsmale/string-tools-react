@@ -27,7 +27,14 @@ export class CamelCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            result.push(this.ToCamelCase(value[i]));
+            if (context.withIndices.includes(i)) {
+
+                result.push(this.ToCamelCase(value[i]));
+            }
+            else {
+                
+                result.push(value[i]);
+            }
         }
 
         return result;
@@ -44,7 +51,7 @@ export class CamelCommand implements Command {
 
             return index === 0 ? word.toLowerCase() : word.toUpperCase();
 
-          }).replace(/\s+/g, "");
+        }).replace(/\s+/g, "");
 
         newValue += trailingWhitespace;
 

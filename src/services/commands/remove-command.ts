@@ -31,7 +31,14 @@ export class RemoveCommand implements Command {
 
         for (let i = 0; i < value.length; i++) {
 
-            result.push(value[i].replace(regExp, ""));
+            if (context.withIndices.includes(i)) {
+
+                result.push(value[i].replace(regExp, ""));
+            }
+            else {
+
+                result.push(value[i]);
+            }
         }
 
         return result;
