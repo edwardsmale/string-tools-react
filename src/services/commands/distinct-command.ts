@@ -1,17 +1,9 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class DistinctCommand implements Command {
+export class DistinctCommand extends IndividualLineCommand {
 
-    private seenValues: any;
-
-    constructor(private services: Services) {
-
-        this.services = services;
-
-        this.seenValues = {};
-    }
+    private seenValues: any = {};
 
     Name = "distinct"
 

@@ -1,16 +1,7 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, WholeInputCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class FlatCommand implements Command {
-
-    // This class is only called when generating the explanation.
-    // The code to execute this command is in command.service.ts.
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
+export class FlatCommand extends WholeInputCommand {
 
     Name = "flat"
     
@@ -40,8 +31,10 @@ export class FlatCommand implements Command {
         }
     }
 
-    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[][], para: string, negated: boolean, context: Context): string[][] {
         
-        throw "FlatCommand.Execute should not be called";
+        // TODO: Implement flat command
+
+        return value;
     }
 }

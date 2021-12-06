@@ -1,15 +1,9 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class SkipCommand implements Command {
+export class SkipCommand extends IndividualLineCommand {
 
     private skipped: number = 0;
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
     
     Name = "skip"
 

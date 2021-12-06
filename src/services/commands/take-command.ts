@@ -1,15 +1,9 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class TakeCommand implements Command {
+export class TakeCommand extends IndividualLineCommand {
 
     private taken: number = 0;
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
     
     Name = "take"
 

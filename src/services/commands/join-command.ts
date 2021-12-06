@@ -1,14 +1,8 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class JoinCommand implements Command {
+export class JoinCommand extends IndividualLineCommand {
     
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
-
     Name = "join"
 
     Help = {

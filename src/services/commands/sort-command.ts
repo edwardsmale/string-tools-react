@@ -1,16 +1,8 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, WholeInputCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
 import { Services } from '../services';
 
-export class SortCommand implements Command {
-
-    // This class is only called when generating the explanation.
-    // The code to execute this command is in command.service.ts.
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
+export class SortCommand extends WholeInputCommand {
 
     Name = "sort"
     
@@ -68,8 +60,71 @@ export class SortCommand implements Command {
         }
     }
 
-    Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
+    Execute(value: string[][], para: string, negated: boolean, context: Context): string[][] {
         
-        throw "SortCommand.Execute should not be called";
+        let indices = this.services.textUtilsService.ParseSortOrderIndices(
+            para,
+            context.columnInfo.headers
+        );
+
+        const descending = this.services.textUtilsService.ParseSortOrderIsDescending(para);
+
+        if (!indices.length) {
+
+            if (context.isArrayOfArrays) {
+
+                // TODO: Decide how to sort an array of arrays when no indices are specified.
+
+                // For now just sort by index 0.
+
+                indices = [{
+                    index: 0,
+                    descending: descending,
+                    description: "the item at index 0"
+                }];
+
+                value = this.services.sortService.SortArrays(
+                    value, 
+                    indices,
+                    context
+                );
+            }                   
+            else {
+
+                value = this.services.sortService.SortArray(
+                    value,
+                    descending
+                );
+            }
+        } 
+        else {
+
+            if (context.isArrayOfArrays) {
+
+                // Negative indices count back from the end.
+
+                for (let i = 0; i < indices.length; i++) {
+
+                    if (indices[i].index < 0) {
+                        indices[i].index += value[0].length;
+                    }
+                }
+
+                value = this.services.sortService.SortArrays(
+                    value, 
+                    indices,
+                    context
+                );
+            }
+            else {
+
+                value = this.services.sortService.SortArray(
+                    value,
+                    descending
+                );
+            }
+        }
+
+        return value;
     }
 }

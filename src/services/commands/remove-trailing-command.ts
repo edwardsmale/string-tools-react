@@ -1,13 +1,7 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class RemoveTrailingCommand implements Command {
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
+export class RemoveTrailingCommand extends IndividualLineCommand {
 
     Name = "removeTrailing"
 

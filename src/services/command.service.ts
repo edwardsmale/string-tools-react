@@ -5,7 +5,7 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { ArrayService } from './array.service';
 import { SortService } from './sort.service';
-import { Command, Explanation, ParsedCommand } from "../interfaces/CommandInterfaces";
+import { Command, IndividualLineCommand, WholeInputCommand, Explanation, ParsedCommand } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 
@@ -51,138 +51,47 @@ export class CommandService {
 
         //try {
 
+            let updatedLines = lines;
+
             const codeLines = this.textUtilsService.TextToLines(codeValue);
 
             const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines);
 
-            let updatedLines: string[][] = [];
+            let startCommandIndex = 0;
 
-            const originalContext = this.contextService.CloneContext(context);
+            while (true) {
 
-            for (let l = 0; l < lines.length; l++) {
+                let indexOfNextWholeInputCommand = parsedCommands.length;
 
-                const originalLine = lines[l];
-                let line = originalLine;
-
-                context.withIndices = [...originalContext.withIndices];
-                context.columnInfo.numberOfColumns = originalContext.columnInfo.numberOfColumns;
-
-                for (let c = 0; c < parsedCommands.length; c++) {
-
-                    const parsedCommand = parsedCommands[c];
-                    const command = parsedCommand.command;
-
-                    line = command.Execute(
-                        line,
-                        parsedCommand.para,
-                        parsedCommand.negated,
-                        context
-                    );
-
-                    if (command.UpdateContext) {
-
-                        command.UpdateContext(
-                            parsedCommand.para,
-                            parsedCommand.negated,
-                            context
-                        );
-                    } 
-                    
-                    if (!line.length) {
-
+                for (let c = startCommandIndex; c < parsedCommands.length; c++) {
+        
+                    if (parsedCommands[c].command.IsWholeInputCommand) {
+        
+                        indexOfNextWholeInputCommand = c;
                         break;
                     }
                 }
 
-                if (line.length) {
-                    
-                    updatedLines.push(line);
+                updatedLines = this.processIndividualLineCommands(
+                    parsedCommands.slice(startCommandIndex, indexOfNextWholeInputCommand),
+                    updatedLines,
+                    context
+                );
+
+                if (indexOfNextWholeInputCommand === parsedCommands.length) {
+                    break;
                 }
+
+                updatedLines = this.processWholeInputCommand(
+                    parsedCommands[indexOfNextWholeInputCommand],
+                    updatedLines,
+                    context
+                );
+
+                startCommandIndex = indexOfNextWholeInputCommand + 1;
             }
 
             return updatedLines;
-
-
-
-
-            let currentValues: string[][] = lines;
-
-            for (let i = 0; i < parsedCommands.length; i++) {
-
-                const parsedCommand = parsedCommands[i];
-
-                const command = parsedCommand.command;
-
-                let newValues: string[][] = [];
-
-                if (command.Name === "sort") {
-
-                    let indices = this.textUtilsService.ParseSortOrderIndices(
-                        parsedCommand.para,
-                        context.columnInfo.headers
-                    );
-
-                    const descending = this.textUtilsService.ParseSortOrderIsDescending(parsedCommand.para);
-
-                    if (!indices.length) {
-
-                        if (context.isArrayOfArrays) {
-
-                            // TODO: Decide how to sort an array of arrays when no indices are specified.
-
-                            // For now just sort by index 0.
-
-                            indices = [{
-                                index: 0,
-                                descending: descending,
-                                description: "the item at index 0"
-                            }];
-
-                            newValues = this.sortService.SortArrays(
-                                currentValues, 
-                                indices,
-                                context
-                            );
-                        }                   
-                        else {
-
-                            newValues = this.sortService.SortArray(
-                                currentValues,
-                                descending
-                            );
-                        }
-                    } 
-                    else {
-
-                        if (context.isArrayOfArrays) {
-
-                            // Negative indices count back from the end.
-
-                            for (let i = 0; i < indices.length; i++) {
-
-                                if (indices[i].index < 0) {
-                                    indices[i].index += currentValues[0].length;
-                                }
-                            }
-
-                            newValues = this.sortService.SortArrays(
-                                currentValues, 
-                                indices,
-                                context
-                            );
-                        }
-                        else {
-
-                            newValues = this.sortService.SortArray(
-                                currentValues,
-                                descending
-                            );
-                        }
-                    }
-                }
-            }
-
-            return currentValues;
             
         // } catch (ex) {
 
@@ -191,6 +100,65 @@ export class CommandService {
 
         //     return output;
         // }
+    }
+
+    private processIndividualLineCommands(parsedCommands: ParsedCommand[], lines: string[][], context: Context): string[][] {
+
+        let updatedLines: string[][] = [];
+        
+        for (let l = 0; l < lines.length; l++) {
+
+            const originalLine = lines[l];
+            let line = originalLine;
+
+            context.withIndices = [0];
+            context.columnInfo.numberOfColumns = 1;
+
+            for (let c = 0; c < parsedCommands.length; c++) {
+
+                const parsedCommand = parsedCommands[c];
+                const command = parsedCommand.command as IndividualLineCommand;
+
+                line = command.Execute(
+                    line,
+                    parsedCommand.para,
+                    parsedCommand.negated,
+                    context
+                );
+
+                if (command.UpdateContext) {
+
+                    command.UpdateContext(
+                        parsedCommand.para,
+                        parsedCommand.negated,
+                        context
+                    );
+                }
+                
+                if (!line || !line.length) {
+
+                    break;
+                }
+            }
+
+            if (line && line.length) {
+                
+                updatedLines.push(line);
+            }
+        }
+
+        return updatedLines;
+    }
+
+    private processWholeInputCommand(parsedCommand: ParsedCommand, lines: string[][], context: Context): string[][] {
+
+        return (parsedCommand.command as WholeInputCommand)
+            .Execute(
+                lines,
+                parsedCommand.para,
+                parsedCommand.negated,
+                context
+            );
     }
 
     private ParseCommands(codeLines: string[]) {

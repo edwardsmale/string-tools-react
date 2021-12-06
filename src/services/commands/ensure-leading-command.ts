@@ -1,13 +1,7 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class EnsureLeadingCommand implements Command {
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
+export class EnsureLeadingCommand extends IndividualLineCommand {
 
     Name = "ensureLeading"
 

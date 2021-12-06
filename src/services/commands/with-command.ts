@@ -1,16 +1,7 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class WithCommand implements Command {
-
-    // This class is only called when generating the explanation.
-    // The code to execute this command is in command.service.ts.
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }  
+export class WithCommand extends IndividualLineCommand {
     
     Name = "with"
 

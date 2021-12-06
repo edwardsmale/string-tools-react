@@ -1,14 +1,8 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class SplitCommand implements Command {
+export class SplitCommand extends IndividualLineCommand {
     
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
-
     Name = "split"
 
     Help = {

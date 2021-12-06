@@ -1,13 +1,7 @@
-import { Explanation, Command } from '../../interfaces/CommandInterfaces';
+import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
-export class TrimCommand implements Command {
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
+export class TrimCommand extends IndividualLineCommand {
 
     Name = "trim"
 
@@ -41,12 +35,7 @@ export class TrimCommand implements Command {
     }
 }
 
-export class TrimStartCommand implements Command {
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
+export class TrimStartCommand extends IndividualLineCommand {
     
     Name = "trimStart"
 
@@ -80,12 +69,7 @@ export class TrimStartCommand implements Command {
     }
 }
 
-export class TrimEndCommand implements Command {
-
-    constructor(private services: Services) {
-
-        this.services = services;
-    }
+export class TrimEndCommand extends IndividualLineCommand {
 
     Name = "trimEnd"
 
