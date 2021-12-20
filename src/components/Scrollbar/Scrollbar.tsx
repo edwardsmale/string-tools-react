@@ -100,7 +100,12 @@ class Scrollbar extends React.Component<ScrollbarProps, ScrollbarState> {
 
   getGutterBeforeBarLength() {
 
-    return this.getPosition(this.props.mousePos, this.props.isMouseDown);
+    if (this.state.mouseDownPos !== null) {
+      return this.getPosition(this.props.mousePos, this.props.isMouseDown);
+    }
+    else {
+      return 100.0 * this.props.getScrollPosition() / this.props.contentLength;
+    }
   }
 
   render () {  
