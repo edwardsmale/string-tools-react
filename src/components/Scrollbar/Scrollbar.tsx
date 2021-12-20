@@ -41,7 +41,7 @@ class Scrollbar extends React.Component<ScrollbarProps, ScrollbarState> {
 
   enforceRange(pos: number) {
 
-    pos = Math.min(pos, this.props.contentLength - this.props.visibleLength);
+    pos = Math.min(pos, 100 - this.getLength());
     pos = Math.max(pos, 0);    
 
     return pos;
@@ -67,7 +67,6 @@ class Scrollbar extends React.Component<ScrollbarProps, ScrollbarState> {
   }
 
   getLength() { 
-    
     return Math.max(100.0 * this.props.visibleLength / this.props.contentLength, 5);
   }
 
@@ -87,25 +86,20 @@ class Scrollbar extends React.Component<ScrollbarProps, ScrollbarState> {
 
         this.setState({ mouseDownPos: null });
 
-        return this.enforceRange(this.props.getScrollPosition());
+        return this.enforceRange(100.0 * this.props.getScrollPosition() / this.props.contentLength);
       }
       else {
 
-        return this.enforceRange(this.props.getScrollPosition() + diff);
+        return this.enforceRange(100.0 * this.props.getScrollPosition() / this.props.contentLength + diff);
       }
     }
 
-    return this.enforceRange(this.props.getScrollPosition());
+    return this.enforceRange(100.0 * this.props.getScrollPosition() / this.props.contentLength);
   }
 
   getGutterBeforeBarLength() {
 
-    if (this.state.mouseDownPos !== null) {
-      return this.getPosition(this.props.mousePos, this.props.isMouseDown);
-    }
-    else {
-      return 100.0 * this.props.getScrollPosition() / this.props.contentLength;
-    }
+    return this.getPosition(this.props.mousePos, this.props.isMouseDown);
   }
 
   render () {  

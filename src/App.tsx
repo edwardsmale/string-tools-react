@@ -318,7 +318,7 @@ match`;
     this.executeCode(this.codeWindowValue, false);
 
     window.addEventListener("keydown", this.keyDown);
-    window.addEventListener('resize', this.UpdateWidthsAndHeights)
+    window.addEventListener("resize", this.UpdateWidthsAndHeights)
   }
 
   componentWillUnmount() {
@@ -614,7 +614,8 @@ match`;
               <div className="popup-links__separator">|</div>
               <div className="popup-links__link popup-links__help-link" onClick={this.openHelpPopup}>help</div>
             </div>
-          <div className="string-tools__top-section" style={ { height: this.state.topSectionHeight + "rem" }}>
+          <div className="string-tools__top-section"
+               style={ { height: this.state.topSectionHeight + "rem", maxHeight: this.state.topSectionHeight + "rem", overflow: "hidden" }}>
             <div className="string-tools__code-window-container" style={ { width: this.state.codeWindowWidth + "rem" }}>
               <CodeWindow onInput={this.handleCodeWindowInput}
                           onSelect={this.handleCodeWindowSelect}
