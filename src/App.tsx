@@ -449,28 +449,135 @@ select cs-uri-stem`;
 
     if (e.target && e.target.files) {
 
-      let readers = [];
+      let readers: Promise<unknown>[] = [];
 
       for (let i = 0; i < e.target.files.length; i++) {
 
         readers.push(readFileAsText(e.target.files[i]));
       }
 
-      let lines: string[] = [];
+      let wordScores: any = {};
       
-      Promise.all(readers).then((values) => {
+      Promise.all(readers).then(values => {
 
         for (let i = 0; i < values.length; i++) {
           
-          const l = this.services.text.TextToLines(values[i] as string);
+          const lines = this.services.text.TextToLines(values[i] as string);
 
-          for (let j = 0; j < l.length; j++) {
+          for (let j = 0; j < lines.length; j++) {
 
-            lines.push(l[j]);
+            const words = lines[j].split(new RegExp("[\t \|,]+", "g"));
+
+            for (let w = 0; w < words.length; w++) {
+              
+              const word = words[w];
+
+              if (!wordScores[word]) {
+
+                wordScores[word] = 2;
+              }
+              else {
+
+                wordScores[word] += 2 - word.length;
+              }
+            }
           }
         }
 
-        this.setInputPane(lines);
+        // Sort the words by their scores, which represents how many characters
+        // will be added (positive score) or removed (negative score) if the
+        // word is included in the index.
+
+        // Exclude any with a non-negative score, and take the first
+        // 65536 only.
+
+        let sortedWordScores = [];
+
+        for (let entry in wordScores) {
+
+          if (wordScores[entry] < -32) {
+
+            sortedWordScores.push([entry, wordScores[entry]]);
+          }
+        }
+        
+        sortedWordScores.sort(function(a, b) {
+            return a[1] - b[1];
+        });
+
+        const length = Math.min(65536, sortedWordScores.length);
+
+        let dictionary: string[] = [];
+
+        for (let i = 0; i < length; i++) {
+
+          dictionary.push(sortedWordScores[i][0]);
+        }
+
+        dictionary.sort();
+
+        let compressedLines: string[] = [];
+
+        Promise.all(readers).then(values => {
+
+          for (let i = 0; i < values.length; i++) {
+          
+            const lines = this.services.text.TextToLines(values[i] as string);
+
+            for (let j = 0; j < lines.length; j++) {
+
+              let line = lines[j];
+
+              let compressedLine = "";
+              
+              let pos = 0;
+
+              while (pos < line.length) {
+
+                let ch = line[pos];
+
+                if (ch === "\t" || ch === " " || ch === "|" || ch === ",") {
+
+                  compressedLine += ch;
+                  pos++;
+                }
+                else {
+                
+                  let wordEnd = pos;
+
+                  while (wordEnd < line.length && 
+                    line[wordEnd] !== "\t" && 
+                    line[wordEnd] !== " " && 
+                    line[wordEnd] !== "|" && 
+                    line[wordEnd] !== ",") {
+
+                    wordEnd++;
+                  }
+                  
+                  const word = line.slice(pos, wordEnd);
+
+                  pos = wordEnd;
+
+                  const dictionaryIndex = this.services.array.BinarySearchStringArray(dictionary, word);
+
+                  if (dictionaryIndex >= 0) {
+
+                    compressedLine += word;
+                  }
+                  else {
+                    
+                    compressedLine += String.fromCharCode(1);
+                    compressedLine += String.fromCharCode(dictionaryIndex);
+                  }
+                }
+              }
+
+              compressedLines.push(line);
+            }
+
+            this.setInputPane(compressedLines);
+          }
+        });
       });
     }
   }

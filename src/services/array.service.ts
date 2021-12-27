@@ -58,4 +58,28 @@ export class ArrayService {
 
         return result;
     }
+
+    BinarySearchStringArray = (array: string[], stringToFind: string) => {
+
+        let m = 0;
+        let n = array.length - 1;
+
+        while (m <= n) {
+
+            const k = (n + m) >> 1;
+            
+            if (array[k] < stringToFind) {
+
+                m = k + 1;
+            } else if (array[k] > stringToFind) {
+
+                n = k - 1;
+            } else {
+
+                return k;
+            }
+        }
+        
+        return -m - 1;
+    }
 }

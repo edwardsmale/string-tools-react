@@ -64,7 +64,7 @@ export class SortService {
                 .sort(function(a, b) { return a - b; })
                 .map(function (num) { return [num.toString()]; });
         }
-    }
+    } 
 
     /**
      * Warning: this mutates the original array.
