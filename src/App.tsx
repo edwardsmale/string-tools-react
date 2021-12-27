@@ -84,7 +84,6 @@ interface AppState {
 
 class App extends React.Component<AppProps, AppState> {
 
-  inputPaneValue :string[];
   codeWindowValue :string;
   textUtilsService: TextUtilsService;
   codeCompressionService: CodeCompressionService;
@@ -160,7 +159,6 @@ class App extends React.Component<AppProps, AppState> {
     Processed 2 pages for database 'OfflineReporting', file 'Paperstone_Log' on file 1.
     RESTORE DATABASE successfully processed 464986 pages in 21.161 seconds (171.669 MB/sec).`;
 
-    this.inputPaneValue = this.textUtilsService.TextToLines(input);
     this.codeWindowValue = `regex 12:01:
 match`;
 
@@ -169,7 +167,7 @@ match`;
       code: this.codeWindowValue,
       compressedCode: this.codeCompressionService.CompressCode(this.codeWindowValue),
       explanation: [],
-      input: this.inputPaneValue,
+      input: this.textUtilsService.TextToLines(input),
       inputHash: 0,
       inputFiles: [],
       output: [[]],
@@ -307,8 +305,6 @@ match`;
 
   setInputPane(lines: string[]) : void {
 
-    this.inputPaneValue = lines;
-
     this.setState({
       input: lines,
       inputHash: this.state.inputHash + 1
@@ -396,8 +392,8 @@ match`;
     
     var doExecute = () => {
 
-      const result = that.executeCommands(that.inputPaneValue, code);
-      const explanation = that.explainCommands(that.inputPaneValue, code);
+      const result = that.executeCommands(that.state.input, code);
+      const explanation = that.explainCommands(that.state.input, code);
 
       that.setState({ 
         output: result,
@@ -406,7 +402,7 @@ match`;
       });
     };
 
-    if (this.inputPaneValue.length < 1000) {
+    if (this.state.input.length < 1000) {
       doExecute();
     }
     else {
