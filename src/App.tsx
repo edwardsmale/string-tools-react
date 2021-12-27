@@ -541,8 +541,6 @@ match`;
       });
     }
 
-    let contents = "";
-
     if (e.target && e.target.files) {
 
       let readers = [];
@@ -551,15 +549,20 @@ match`;
 
         readers.push(readFileAsText(e.target.files[i]));
       }
+
+      let lines: string[] = [];
       
       Promise.all(readers).then((values) => {
 
         for (let i = 0; i < values.length; i++) {
           
-          contents += values[i] + "\n";
-        }
+          const l = this.textUtilsService.TextToLines(values[i] as string);
 
-        const lines = this.textUtilsService.TextToLines(contents);
+          for (let j = 0; j < l.length; j++) {
+
+            lines.push(l[j]);
+          }
+        }
 
         this.setInputPane(lines);
       });
