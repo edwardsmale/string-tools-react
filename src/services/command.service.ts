@@ -25,7 +25,7 @@ export class CommandService {
         this.sortService = sortService;
     }
 
-    explainCommands(codeValue: string, lines: string[], context: Context): Explanation[] {
+    explainCommands(codeValue: string, context: Context): Explanation[] {
 
         const codeLines = this.textUtilsService.TextToLines(codeValue);
 

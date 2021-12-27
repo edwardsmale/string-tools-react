@@ -393,7 +393,7 @@ match`;
     var doExecute = () => {
 
       const result = that.executeCommands(that.state.input, code);
-      const explanation = that.explainCommands(that.state.input, code);
+      const explanation = that.explainCommands(code);
 
       that.setState({ 
         output: result,
@@ -431,14 +431,14 @@ match`;
   private lastExplanation: Explanation[] = [];
   private lastExplainCode: string = "";
 
-  private explainCommands(input: string[], code: string): Explanation[] {
+  private explainCommands(code: string): Explanation[] {
 
     if (code !== this.lastExplainCode) {
 
       const context = this.contextService.CreateContext();
 
       this.lastExplainCode = code;
-      this.lastExplanation = this.commandService.explainCommands(code, input, context);
+      this.lastExplanation = this.commandService.explainCommands(code, context);
     }
 
     return this.lastExplanation;
