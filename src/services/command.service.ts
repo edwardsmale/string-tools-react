@@ -49,7 +49,7 @@ export class CommandService {
 
     processCommands(codeValue: string, lines: string[][], context: Context): string[][] {
 
-        //try {
+        try {
 
             let updatedLines = lines;
 
@@ -93,26 +93,29 @@ export class CommandService {
 
             return updatedLines;
             
-        // } catch (ex) {
+        } catch (ex) {
 
-        //     let output:string[][] = [];
-        //     output.push([ex.toString()]);
+            let output:string[][] = [];
+            output.push([ex.toString()]);
 
-        //     return output;
-        // }
+            return output;
+        }
     }
+
+    public firstLineContext: Context = this.contextService.CreateContext();
 
     private processIndividualLineCommands(parsedCommands: ParsedCommand[], lines: string[][], context: Context): string[][] {
 
         let updatedLines: string[][] = [];
-        
+
+        let firstLine = true;
+
         for (let l = 0; l < lines.length; l++) {
 
             const originalLine = lines[l];
             let line = originalLine;
 
-            context.withIndices = [0];
-            context.columnInfo.numberOfColumns = 1;
+            context = this.contextService.CreateContext();
 
             for (let c = 0; c < parsedCommands.length; c++) {
 
@@ -144,6 +147,13 @@ export class CommandService {
             if (line && line.length) {
                 
                 updatedLines.push(line);
+
+                if (firstLine) {
+
+                    this.firstLineContext = this.contextService.CloneContext(context);
+
+                    firstLine = false;
+                }
             }
         }
 

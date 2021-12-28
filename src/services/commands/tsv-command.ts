@@ -22,18 +22,24 @@ export class TsvCommand extends IndividualLineCommand {
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         context.columnInfo.headers = [];
-
         context.isArrayOfArrays = false;
 
         let values: string[] = [];
 
-        for (let i = 0; i < context.withIndices.length; i++) {
+        if (context.withIndices.length) {
 
-            const index = context.withIndices[i];
+            for (let i = 0; i < context.withIndices.length; i++) {
 
-            values.push(value[index]);
+                const index = context.withIndices[i];
+
+                values.push(value[index]);
+            }
+
+            return [values.join("\t")];
         }
+        else {
 
-        return [values.join("\t")];
+            return [value.join("\t")];
+        }
     }
 }

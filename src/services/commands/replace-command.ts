@@ -44,7 +44,7 @@ export class ReplaceCommand extends IndividualLineCommand {
 
             for (let i = 0; i < length; i++) {
 
-                if (context.withIndices.includes(i)) {
+                if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                     newValue.push(globalRegexReplace(value[i], context.regex, para));
                 }
@@ -62,7 +62,7 @@ export class ReplaceCommand extends IndividualLineCommand {
             
             for (let i = 0; i < length; i++) {
                 
-                if (context.withIndices.includes(i)) {
+                if (!context.withIndices.length || context.withIndices.includes(i)) {
                     
                     newValue.push(globalStringReplace(value[i], context.searchString, para));
                 }

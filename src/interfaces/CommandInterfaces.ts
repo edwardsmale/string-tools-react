@@ -39,7 +39,7 @@ export abstract class IndividualLineCommand implements Command
     abstract Help: CommandHelp;
     abstract Explain(para: string, negated: boolean, context: Context): Explanation;
     abstract Execute(value: string[], para: string, negated: boolean, context: Context): string[];
-    UpdateContext?(para: string, negated: boolean, context: Context): void { };
+    UpdateContext?(para: string, negated: boolean, context: Context): void { context.withIndices = []; };
     IsWholeInputCommand = false;
 }
 

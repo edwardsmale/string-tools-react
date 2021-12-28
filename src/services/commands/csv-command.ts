@@ -101,7 +101,7 @@ export class CsvCommand extends IndividualLineCommand {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (context.withIndices.includes(i)) {
+            if (!context.withIndices.length || context.withIndices.includes(i)) {
                 
                 var val = value[i];
 

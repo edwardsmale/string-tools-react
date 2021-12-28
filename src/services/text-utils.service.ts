@@ -378,22 +378,32 @@ export class TextUtilsService {
 
     ReplaceHeadersWithIndexes = (codeLine: string, headers: string[] | null) => {
 
-        let result = codeLine;
+        const indexStrings = this.SplitOnText(codeLine, ",");
 
+        let indices: string[] = [];
+        
         if (headers) {
 
-            let headersOrderedByLength = this.GetHeadersOrderedByLength(headers);
+            for (let i = 0; i < indexStrings.length; i++) {
 
-            for (let i = 0; i < headersOrderedByLength.length; i++) {
+                if (headers.includes(indexStrings[i])) {
 
-                let header = headersOrderedByLength[i].header;
-                let index = headersOrderedByLength[i].index;
+                    for (let j = 0; j < headers.length; j++) {
 
-                result = this.GlobalStringReplace(result, header, index.toString());
+                        if (headers[j] === indexStrings[i]) {
+
+                            indices.push(j.toString());
+                        }
+                    }
+                }
+                else {
+
+                    indices.push(indexStrings[i]);
+                }
             }
         }
 
-        return result;
+        return indices.join(",");
     };
 
     IsTabDelimited = (lines: string[]) => {

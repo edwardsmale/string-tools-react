@@ -57,7 +57,7 @@ export class SelectCommand extends IndividualLineCommand {
 
         for (let i = 0; i < indices.length; i++) {
 
-            var index = indices[i];
+            const index = indices[i];
 
             result.push(value[index]);
         }
@@ -66,6 +66,8 @@ export class SelectCommand extends IndividualLineCommand {
     }
 
     UpdateContext(para: string, negated: boolean, context: Context): void {
+
+        debugger;
 
         const indices = this.ParseIndices(para, context);
 
@@ -82,12 +84,8 @@ export class SelectCommand extends IndividualLineCommand {
         }
 
         context.columnInfo.headers = newHeaders;
-        context.columnInfo.numberOfColumns = indices.length;
 
-        context.withIndices = this.services.arrayService.CreateRange(
-            0,
-            context.columnInfo.numberOfColumns - 1
-        )
+        context.withIndices = this.services.arrayService.CreateRange(0, indices.length - 1);
     }
 
     private ParseIndices(para: string, context: Context) {
@@ -97,16 +95,6 @@ export class SelectCommand extends IndividualLineCommand {
             context.columnInfo.headers
         );
 
-        let indices = this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
-
-        for (let i = 0; i < indices.length; i++) {
-
-            while (indices[i] < 0) {
-
-                indices[i] += context.columnInfo.numberOfColumns;
-            }
-        }
-
-        return indices.filter(i => i >= 0 && i < context.columnInfo.numberOfColumns);
+        return this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
     }
 }

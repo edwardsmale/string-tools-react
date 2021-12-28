@@ -21,7 +21,7 @@ export class CamelCommand extends IndividualLineCommand {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (context.withIndices.includes(i)) {
+            if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                 result.push(this.ToCamelCase(value[i]));
             }

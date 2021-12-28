@@ -25,7 +25,7 @@ export class EncloseCommand extends IndividualLineCommand {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (context.withIndices.includes(i)) {
+            if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                 result.push(enclosingChars.leftChar + value[i] + enclosingChars.rightChar);
             }

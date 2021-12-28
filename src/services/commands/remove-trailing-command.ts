@@ -25,7 +25,7 @@ export class RemoveTrailingCommand extends IndividualLineCommand {
 
             for (let i = 0; i < value.length; i++) {
 
-                if (context.withIndices.includes(i)) {
+                if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                     result.push(this.services.textUtilsService.EnsureTrailing(value[i], para));
                 }
@@ -39,7 +39,7 @@ export class RemoveTrailingCommand extends IndividualLineCommand {
 
             for (let i = 0; i < value.length; i++) {
 
-                if (context.withIndices.includes(i)) {
+                if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                     result.push(this.services.textUtilsService.RemoveTrailing(value[i], para));
                 }

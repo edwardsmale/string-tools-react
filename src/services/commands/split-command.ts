@@ -38,31 +38,74 @@ export class SplitCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        let result = [];
+        if (context.isArrayOfArrays) {
 
-        for (let i = 0; i < value.length; i++) {
+            if (context.withIndices.length) {
 
-            if (context.withIndices.includes(i)) {
+                let newWithIndices: number[] = [];
+                let newHeaders: string[] = [];
+                let columnCount: number = 0;
 
-                const split = this.splitScalar(value[i], para, negated, context);
+                let result = [];
 
-                result.push(...split);
+                for (let i = 0; i < value.length; i++) {
+        
+                    if (context.withIndices.includes(i)) {
+        
+                        const split = this.splitScalar(value[i], para, negated, context);
+        
+                        for (let j = 0; j < split.length; j++) {
+
+                            result.push(split[j]);
+                            newWithIndices.push(columnCount);
+                            
+                            if (context.columnInfo.headers) {
+                                newHeaders.push(context.columnInfo.headers[i])
+                            }
+
+                            columnCount++;
+                        }                        
+                    }
+                    else {
+        
+                        result.push(value[i]);
+                            
+                        if (context.columnInfo.headers) {
+                            newHeaders.push(context.columnInfo.headers[i])
+                        }                        
+
+                        columnCount++;
+                    }
+                }
+
+                context.columnInfo.headers = newHeaders;
+                context.withIndices = newWithIndices;
+
+                return result;
             }
             else {
 
-                result.push(value[i]);
+                return value; // TODO
             }
         }
+        else {
 
-        context.isArrayOfArrays = true;
-        context.columnInfo.headers = null;
+            let result = [];
 
-        context.withIndices = this.services.arrayService.CreateRange(
-            0,
-            context.columnInfo.numberOfColumns
-        );
+            for (let i = 0; i < value.length; i++) {
+      
+                const split = this.splitScalar(value[i], para, negated, context);
+        
+                result.push(...split);
+            }
 
-        return result;
+            context.isArrayOfArrays = true;
+            context.columnInfo.headers = null;
+    
+            context.withIndices = this.services.arrayService.CreateRange(0, result.length);
+    
+            return result;
+        }
     }
 
     private splitScalar(value: string, para: string, negated: boolean, context: Context): string[] {
@@ -76,19 +119,16 @@ export class SplitCommand extends IndividualLineCommand {
             return value.split(context.searchString);
         }
         else {
-            var defaultDelimiter = ",";
+
+            const defaultDelimiter = ",";
             para = para === "\\t" ? "\t" : para;
-            var delimiter = para || defaultDelimiter;
+            let delimiter = para || defaultDelimiter;
 
             if (delimiter.length === 1 && "|^$*()\\/[].+".includes(delimiter)) {
                 delimiter = "\\" + delimiter;
             }
 
-            var splitValues = this.services.textUtilsService.Split(value as string, delimiter);
-
-            context.columnInfo.numberOfColumns = Math.max(context.columnInfo.numberOfColumns, splitValues.length);
-
-            return splitValues;
+            return this.services.textUtilsService.Split(value as string, delimiter);
         }
     }
 }

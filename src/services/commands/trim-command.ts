@@ -21,7 +21,7 @@ export class TrimCommand extends IndividualLineCommand {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (context.withIndices.includes(i)) {
+            if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                 result.push(value[i].trim());
             }
@@ -55,7 +55,7 @@ export class TrimStartCommand extends IndividualLineCommand {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (context.withIndices.includes(i)) {
+            if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                 result.push(value[i].trimStart());
             }
@@ -89,7 +89,7 @@ export class TrimEndCommand extends IndividualLineCommand {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (context.withIndices.includes(i)) {
+            if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                 result.push(value[i].trimEnd());
             }

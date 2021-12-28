@@ -35,7 +35,7 @@ interface AppState {
   inputFiles: string[];
   output: string[][];
   outputHash: number;
-  context: Context;
+  firstLineContext: Context;
   topSectionHeight: number;
   bottomButtonBarHeight: number;
   bottomSectionHeight: number;
@@ -141,7 +141,7 @@ match`;
       inputFiles: [],
       output: [[]],
       outputHash: 0,
-      context: this.contextService.CreateContext(),
+      firstLineContext: this.contextService.CreateContext(),
       topSectionHeight: 12,
       bottomButtonBarHeight: 2.5,
       bottomSectionHeight: 30,
@@ -392,7 +392,7 @@ match`;
 
     const result = this.commandService.processCommands(code, inputAOA, context);
 
-    this.setState({ context: context });
+    this.setState({ firstLineContext: this.commandService.firstLineContext });
 
     return result;
   }
@@ -559,7 +559,7 @@ match`;
             init_top={2}
             init_right={-23}
             init_bottom={18}>
-              <ContextPopupContent context={this.state.context} />
+              <ContextPopupContent firstLineContext={this.state.firstLineContext} />
           </Popup>
         </div>
         <div className="string-tools" 

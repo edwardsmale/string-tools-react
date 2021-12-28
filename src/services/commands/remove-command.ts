@@ -25,7 +25,7 @@ export class RemoveCommand extends IndividualLineCommand {
 
         for (let i = 0; i < value.length; i++) {
 
-            if (context.withIndices.includes(i)) {
+            if (!context.withIndices.length || context.withIndices.includes(i)) {
 
                 result.push(value[i].replace(regExp, ""));
             }

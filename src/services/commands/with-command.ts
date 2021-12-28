@@ -58,26 +58,14 @@ export class WithCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
+        return value;
+    }
+
+    UpdateContext(para: string, negated: boolean, context: Context): void {
+
         if (context.isArrayOfArrays) {
 
-            if (para === "*") {
-
-                context.withIndices = this.services.arrayService.CreateRange(
-                    0,
-                    context.columnInfo.numberOfColumns
-                );
-            }
-            else {
-
-                const indices = this.services.textUtilsService.ParseIntegers(para);
-
-                context.withIndices = this.services.arrayService.ResolveNegativeIndices(
-                    indices,
-                    context.columnInfo.numberOfColumns
-                );
-            }
+            context.withIndices = this.services.textUtilsService.ParseIntegers(para);
         }
-        
-        return value;
     }
 }
