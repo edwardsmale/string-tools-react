@@ -67,8 +67,6 @@ export class SelectCommand extends IndividualLineCommand {
 
     UpdateContext(para: string, negated: boolean, context: Context): void {
 
-        debugger;
-
         const indices = this.ParseIndices(para, context);
 
         let newHeaders: string[] = [];

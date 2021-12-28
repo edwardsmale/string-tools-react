@@ -61,8 +61,6 @@ export class SortCommand extends WholeInputCommand {
 
     Execute(value: string[][], para: string, negated: boolean, context: Context): string[][] {
 
-        debugger;
-        
         let indices = this.services.textUtilsService.ParseSortOrderIndices(
             para,
             context.columnInfo.headers

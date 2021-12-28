@@ -23,22 +23,55 @@ export class JoinCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        context.columnInfo.headers = [];
         const delimiter = this.GetDelimiter(para);
 
-        context.isArrayOfArrays = false;
+        if (context.withIndices.length) {
 
-        let result: string[] = [];
+            let result: string[] = [];
 
-        for (let i = 0; i < value.length; i++) {
+            let joinees: string = "";
 
-            if (!context.withIndices.length || context.withIndices.includes(i)) {
+            let newHeaders: string[] = [];
 
-                result.push(value[i]);
+            for (let i = 0; i < value.length; i++) {
+    
+                joinees += value[i];
+
+                if (context.withIndices.includes(i) && context.withIndices.includes(i + 1)) {
+
+                    joinees += delimiter;
+                }
+                else {
+
+                    if (joinees) {
+
+                        result.push(joinees);
+
+                        joinees = "";
+
+                        if (context.columnInfo.headers) {
+                            
+                            newHeaders.push(context.columnInfo.headers[i]);
+                        }
+                    }
+                    else {
+
+                        result.push(value[i]);
+                    }
+                }
             }
-        }
 
-        return [result.join(delimiter)];
+            context.columnInfo.headers = newHeaders;
+    
+            return result;
+        }
+        else {
+
+            context.isArrayOfArrays = false;
+            context.columnInfo.headers = [];
+
+            return [value.join(delimiter)];
+        }
     }
 
     private GetFormattedDelimiter(para: string) {

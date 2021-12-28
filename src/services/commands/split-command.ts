@@ -108,6 +108,10 @@ export class SplitCommand extends IndividualLineCommand {
         }
     }
 
+    UpdateContext(para: string, negated: boolean, context: Context): void {
+        
+    }
+
     private splitScalar(value: string, para: string, negated: boolean, context: Context): string[] {
 
         if (!para && context.regex) {

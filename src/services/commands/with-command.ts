@@ -65,7 +65,12 @@ export class WithCommand extends IndividualLineCommand {
 
         if (context.isArrayOfArrays) {
 
-            context.withIndices = this.services.textUtilsService.ParseIntegers(para);
+            const indicesWithHeadersReplaced  = this.services.textUtilsService.ReplaceHeadersWithIndexes(
+                para,
+                context.columnInfo.headers
+            );
+
+            context.withIndices = this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
         }
     }
 }
