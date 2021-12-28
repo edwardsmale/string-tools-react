@@ -313,13 +313,11 @@ export class TextUtilsService {
                 continue;
             }
 
-            const lower = val.toLowerCase();
-
-            if (lower === "asc" || lower === "ascending" || lower === "desc" || lower === "descending") {
-                continue;
-            }
+            let lower = val.toLowerCase();
 
             const descending = lower.endsWith("desc") || lower.endsWith("descending");
+
+            lower = lower.replace(/ (a|de)sc(ending)?/, "");
 
             const int = parseInt(split[i], 10);
 
@@ -331,19 +329,19 @@ export class TextUtilsService {
                     description: this.FormatIndex(int, descending)
                 });
             } 
-            else if (Array.isArray(headers) && headers.includes(val)) {
+            else if (Array.isArray(headers) && headers.includes(lower)) {
 
                 result.push({
                     index: headers.indexOf(val),
                     descending: descending,
-                    description: val + (descending ? "" : " descending")
+                    description: lower + (descending ? "" : " descending")
                 });
             }
             else {
                 result.push({
                     index: -1,
                     descending: descending,
-                    description: val + (descending ? "" : " descending")
+                    description: lower + (descending ? "" : " descending")
                 });
             }
         }

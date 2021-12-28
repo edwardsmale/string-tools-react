@@ -69,6 +69,8 @@ export class SortCommand extends WholeInputCommand {
 
         const descending = this.services.textUtilsService.ParseSortOrderIsDescending(para);
 
+        debugger;
+
         if (!indices.length) {
 
             if (context.isArrayOfArrays) {
@@ -83,7 +85,7 @@ export class SortCommand extends WholeInputCommand {
                     description: "the item at index 0"
                 }];
 
-                value = this.services.sortService.SortArrays(
+                value = this.services.sortService.SortArrayOfArrays(
                     value, 
                     indices,
                     context
@@ -105,12 +107,12 @@ export class SortCommand extends WholeInputCommand {
 
                 for (let i = 0; i < indices.length; i++) {
 
-                    if (indices[i].index < 0) {
+                    if (indices[i].index < 0 && value.length) {
                         indices[i].index += value[0].length;
                     }
                 }
 
-                value = this.services.sortService.SortArrays(
+                value = this.services.sortService.SortArrayOfArrays(
                     value, 
                     indices,
                     context
