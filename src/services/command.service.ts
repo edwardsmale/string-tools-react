@@ -5,7 +5,7 @@ import { Context } from "../interfaces/Context";
 import { ContextService } from './context.service';
 import { ArrayService } from './array.service';
 import { SortService } from './sort.service';
-import { Command, IndividualLineCommand, WholeInputCommand, Explanation, ParsedCommand } from "../interfaces/CommandInterfaces";
+import { IndividualLineCommand, WholeInputCommand, Explanation, ParsedCommand } from "../interfaces/CommandInterfaces";
 
 export class CommandService {
 

@@ -1,6 +1,5 @@
 import { Explanation, WholeInputCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { Services } from '../services';
 
 export class SortCommand extends WholeInputCommand {
 
@@ -61,6 +60,8 @@ export class SortCommand extends WholeInputCommand {
     }
 
     Execute(value: string[][], para: string, negated: boolean, context: Context): string[][] {
+
+        debugger;
         
         let indices = this.services.textUtilsService.ParseSortOrderIndices(
             para,
@@ -68,8 +69,6 @@ export class SortCommand extends WholeInputCommand {
         );
 
         const descending = this.services.textUtilsService.ParseSortOrderIsDescending(para);
-
-        debugger;
 
         if (!indices.length) {
 
