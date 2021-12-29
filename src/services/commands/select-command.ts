@@ -83,7 +83,7 @@ export class SelectCommand extends IndividualLineCommand {
 
         context.headers = newHeaders;
 
-        context.withIndices = this.services.arrayService.CreateRange(0, indices.length - 1);
+        context.withIndices = [];
     }
 
     private ParseIndices(para: string, context: Context) {

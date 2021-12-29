@@ -8,7 +8,7 @@ export class SplitCommand extends IndividualLineCommand {
     Help = {
         Desc: "Splits the text up",
         Para: [
-            { name: "Separator", desc: "The string upon which to split" }
+            { name: "Separator", desc: "The string on which to split" }
         ]
     }
 
@@ -85,7 +85,33 @@ export class SplitCommand extends IndividualLineCommand {
             }
             else {
 
-                return value; // TODO
+                let newWithIndices: number[] = [];
+                let newHeaders: string[] = [];
+                let columnCount: number = 0;
+
+                let result = [];
+
+                for (let i = 0; i < value.length; i++) {
+        
+                    const split = this.splitScalar(value[i], para, negated, context);
+    
+                    for (let j = 0; j < split.length; j++) {
+
+                        result.push(split[j]);
+                        newWithIndices.push(columnCount);
+                        
+                        if (context.headers) {
+                            newHeaders.push(context.headers[i])
+                        }
+
+                        columnCount++;
+                    }                   
+                }
+
+                context.headers = newHeaders;
+                context.withIndices = newWithIndices;
+
+                return result;
             }
         }
         else {
@@ -101,8 +127,7 @@ export class SplitCommand extends IndividualLineCommand {
 
             context.isArrayOfArrays = true;
             context.headers = null;
-    
-            context.withIndices = this.services.arrayService.CreateRange(0, result.length);
+            context.withIndices = [];
     
             return result;
         }
