@@ -224,9 +224,12 @@ export class TextUtilsService {
     }
 
     ParseIntegers = (para: string): number[] => {
+
         var split = para.trim().split(",");
 
-        return split.map(function (val) { return parseInt(val.trim(), 10); })
+        return split
+            .map(function (val) { return parseInt(val.trim(), 10); })
+            .filter(f => !isNaN(f));
     };
 
     ToOrdinal = (n: number): string => {
