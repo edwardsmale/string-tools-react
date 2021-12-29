@@ -59,7 +59,10 @@ export class SelectCommand extends IndividualLineCommand {
 
             const index = indices[i];
 
-            result.push(value[index]);
+            if (index >= 0 && index < value.length) {
+
+                result.push(value[index]);
+            }
         }
 
         return result;
