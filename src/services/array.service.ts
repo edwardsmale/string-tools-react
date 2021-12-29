@@ -26,6 +26,35 @@ export class ArrayService {
 
         return result;
     }
+    
+    Batch(value: string[][], batchSize: number) : string[][] {
+
+        let result: string[][] = [];
+
+        let current: string[] = [];
+
+        for (let j = 0; j < value.length; j++) {
+
+            for (let k = 0; k < value[j].length; k++) {
+
+                current.push(value[j][k]);
+
+                if (current.length === batchSize) {
+
+                    result.push(current);
+
+                    current = [];
+                }
+            }
+        }
+
+        if (current.length) {
+
+            result.push(current);
+        }
+
+        return result;
+    }
 
     UnflattenIfNecessary(value: (string | string[])[]): string[][] {
 

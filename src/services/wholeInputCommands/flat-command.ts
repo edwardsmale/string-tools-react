@@ -33,7 +33,20 @@ export class FlatCommand extends WholeInputCommand {
 
     Execute(value: string[][], para: string, negated: boolean, context: Context): string[][] {
         
-        // TODO: Implement flat command
+        const batchSize = this.services.textUtilsService.ParsePositiveInteger(para);
+
+        if (!batchSize) {
+
+            context.isArrayOfArrays = false;
+
+            return [this.services.arrayService.Flatten(value)];            
+
+        } else {
+            
+            context.isArrayOfArrays = true;
+
+            return this.services.arrayService.Batch(value, batchSize);
+        }
 
         return value;
     }
