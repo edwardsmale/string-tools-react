@@ -47,7 +47,5 @@ export class FlatCommand extends WholeInputCommand {
 
             return this.services.arrayService.Batch(value, batchSize);
         }
-
-        return value;
     }
 }
