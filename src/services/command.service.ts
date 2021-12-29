@@ -80,6 +80,8 @@ export class CommandService {
                     context
                 );
 
+                context = this.contextService.CloneContext(this.firstLineContext);
+
                 if (indexOfNextWholeInputCommand === parsedCommands.length) {
                     break;
                 }
@@ -87,8 +89,10 @@ export class CommandService {
                 updatedLines = this.processWholeInputCommand(
                     parsedCommands[indexOfNextWholeInputCommand],
                     updatedLines,
-                    context
+                    this.firstLineContext
                 );
+
+                context = this.contextService.CloneContext(this.firstLineContext);
 
                 startCommandIndex = indexOfNextWholeInputCommand + 1;
             }
@@ -106,7 +110,7 @@ export class CommandService {
 
     public firstLineContext: Context = this.contextService.CreateContext();
 
-    private processIndividualLineCommands(parsedCommands: ParsedCommand[], lines: string[][], context: Context): string[][] {
+    private processIndividualLineCommands(parsedCommands: ParsedCommand[], lines: string[][], originalContext: Context): string[][] {
 
         let updatedLines: string[][] = [];
 
@@ -117,7 +121,7 @@ export class CommandService {
             const originalLine = lines[l];
             let line = originalLine;
 
-            context = this.contextService.CreateContext();
+            let context = this.contextService.CloneContext(originalContext);
 
             for (let c = 0; c < parsedCommands.length; c++) {
 
