@@ -108,6 +108,14 @@ export class SplitCommand extends IndividualLineCommand {
                 return result;
             }
         }
+        else if (value.length === 1 && para.length === 1 && !"|^$*()\\/[].+".includes(para)) {
+
+            context.isArrayOfArrays = true;
+            context.headers = null;
+            context.withIndices = [];
+    
+            return value[0].split(para);
+        }
         else {
 
             let result = [];
