@@ -32,7 +32,7 @@ export class HeaderCommand extends IndividualLineCommand {
                 }
             }
             
-            context.columnInfo.headers = this.headers;
+            context.headers = this.headers;
 
             this.headersAcquired = true;
 
@@ -40,7 +40,7 @@ export class HeaderCommand extends IndividualLineCommand {
         }
         else {
 
-            context.columnInfo.headers = this.headers;
+            context.headers = this.headers;
 
             return value;
         }

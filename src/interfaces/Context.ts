@@ -1,9 +1,7 @@
-import { ColumnInfo } from "./ColumnInfo";
-
 export interface Context {
     regex: string | null;
     searchString: string | null;
-    columnInfo: ColumnInfo;
+    headers: string[] | null;
     withIndices: number[];
     isArrayOfArrays: boolean;
 }

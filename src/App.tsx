@@ -381,8 +381,6 @@ match`;
 
   private executeCommands(input: string[], code: string): string[][] {
 
-    const context = this.contextService.CreateContext();
-
     const inputAOA: string[][] = [];
 
     for (let i = 0; i < input.length; i++) {
@@ -390,6 +388,8 @@ match`;
       inputAOA.push([input[i]]);
     }
 
+    const context = this.contextService.CreateContext();
+    
     const result = this.commandService.processCommands(code, inputAOA, context);
 
     this.setState({ firstLineContext: this.commandService.firstLineContext });

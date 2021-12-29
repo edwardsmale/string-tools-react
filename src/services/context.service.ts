@@ -15,9 +15,7 @@ export class ContextService {
         return {
             regex: null,
             searchString: null,
-            columnInfo: {
-                headers: null
-            },
+            headers: null,
             withIndices: [],
             isArrayOfArrays: false
         };
@@ -29,7 +27,7 @@ export class ContextService {
 
             regex: context.regex,
             searchString: context.searchString,
-            columnInfo: {...context.columnInfo },
+            headers: context.headers && [...context.headers],
             withIndices: [...context.withIndices],
             isArrayOfArrays: context.isArrayOfArrays
         };

@@ -59,8 +59,8 @@ export class SplitCommand extends IndividualLineCommand {
                             result.push(split[j]);
                             newWithIndices.push(columnCount);
                             
-                            if (context.columnInfo.headers) {
-                                newHeaders.push(context.columnInfo.headers[i])
+                            if (context.headers) {
+                                newHeaders.push(context.headers[i])
                             }
 
                             columnCount++;
@@ -70,15 +70,15 @@ export class SplitCommand extends IndividualLineCommand {
         
                         result.push(value[i]);
                             
-                        if (context.columnInfo.headers) {
-                            newHeaders.push(context.columnInfo.headers[i])
+                        if (context.headers) {
+                            newHeaders.push(context.headers[i])
                         }                        
 
                         columnCount++;
                     }
                 }
 
-                context.columnInfo.headers = newHeaders;
+                context.headers = newHeaders;
                 context.withIndices = newWithIndices;
 
                 return result;
@@ -100,7 +100,7 @@ export class SplitCommand extends IndividualLineCommand {
             }
 
             context.isArrayOfArrays = true;
-            context.columnInfo.headers = null;
+            context.headers = null;
     
             context.withIndices = this.services.arrayService.CreateRange(0, result.length);
     

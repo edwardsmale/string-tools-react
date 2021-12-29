@@ -12,7 +12,7 @@ export class SelectCommand extends IndividualLineCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
+        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.headers);
 
         const indices = this.services.textUtilsService.ParseIntegers(para);
 
@@ -75,13 +75,13 @@ export class SelectCommand extends IndividualLineCommand {
 
             var index = indices[i];
 
-            if (context.columnInfo.headers) {
+            if (context.headers) {
 
-                newHeaders.push(context.columnInfo.headers[index]);
+                newHeaders.push(context.headers[index]);
             }
         }
 
-        context.columnInfo.headers = newHeaders;
+        context.headers = newHeaders;
 
         context.withIndices = this.services.arrayService.CreateRange(0, indices.length - 1);
     }
@@ -90,7 +90,7 @@ export class SelectCommand extends IndividualLineCommand {
 
         const indicesWithHeadersReplaced  = this.services.textUtilsService.ReplaceHeadersWithIndexes(
             para,
-            context.columnInfo.headers
+            context.headers
         );
 
         return this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);

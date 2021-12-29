@@ -12,7 +12,7 @@ export class TsvCommand extends IndividualLineCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
         
-        context.columnInfo.headers = [];
+        context.headers = [];
 
         context.isArrayOfArrays = false;
 
@@ -21,7 +21,7 @@ export class TsvCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        context.columnInfo.headers = [];
+        context.headers = [];
         context.isArrayOfArrays = false;
 
         let values: string[] = [];

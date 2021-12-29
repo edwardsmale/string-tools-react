@@ -71,7 +71,7 @@ export class CsvCommand extends IndividualLineCommand {
         
         const options = this.parseOptions(para);
 
-        context.columnInfo.headers = [];
+        context.headers = [];
 
         context.isArrayOfArrays = false;
 

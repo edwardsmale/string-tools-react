@@ -16,7 +16,7 @@ export class SortCommand extends WholeInputCommand {
 
         const indices = this.services.textUtilsService.ParseSortOrderIndices(
             para,
-            context.columnInfo.headers
+            context.headers
         );
 
         const descending = para.toLowerCase().indexOf("desc") !== -1;
@@ -63,7 +63,7 @@ export class SortCommand extends WholeInputCommand {
 
         let indices = this.services.textUtilsService.ParseSortOrderIndices(
             para,
-            context.columnInfo.headers
+            context.headers
         );
 
         const descending = this.services.textUtilsService.ParseSortOrderIsDescending(para);

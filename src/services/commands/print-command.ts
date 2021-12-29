@@ -23,10 +23,10 @@ export class PrintCommand extends IndividualLineCommand {
 
         // Replace $header
 
-        if (Array.isArray(context.columnInfo.headers)) {
+        if (Array.isArray(context.headers)) {
 
             const headersOrderedByLength = this.services.textUtilsService.GetHeadersOrderedByLength(
-                context.columnInfo.headers
+                context.headers
             );
 
             for (let i = 0; i < headersOrderedByLength.length; i++) {
@@ -43,7 +43,7 @@ export class PrintCommand extends IndividualLineCommand {
 
         result = this.ReplacePositionals(result, value);
         
-        context.columnInfo.headers = [];
+        context.headers = [];
 
         return [result];
     }

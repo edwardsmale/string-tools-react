@@ -49,9 +49,9 @@ export class JoinCommand extends IndividualLineCommand {
 
                         joinees = "";
 
-                        if (context.columnInfo.headers) {
+                        if (context.headers) {
                             
-                            newHeaders.push(context.columnInfo.headers[i]);
+                            newHeaders.push(context.headers[i]);
                         }
                     }
                     else {
@@ -61,14 +61,14 @@ export class JoinCommand extends IndividualLineCommand {
                 }
             }
 
-            context.columnInfo.headers = newHeaders;
+            context.headers = newHeaders;
     
             return result;
         }
         else {
 
             context.isArrayOfArrays = false;
-            context.columnInfo.headers = [];
+            context.headers = [];
 
             return [value.join(delimiter)];
         }

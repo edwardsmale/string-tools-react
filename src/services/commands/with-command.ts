@@ -14,7 +14,7 @@ export class WithCommand extends IndividualLineCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.columnInfo.headers);
+        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.headers);
 
         if (para === "*") {
 
@@ -67,7 +67,7 @@ export class WithCommand extends IndividualLineCommand {
 
             const indicesWithHeadersReplaced  = this.services.textUtilsService.ReplaceHeadersWithIndexes(
                 para,
-                context.columnInfo.headers
+                context.headers
             );
 
             context.withIndices = this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
