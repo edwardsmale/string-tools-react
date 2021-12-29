@@ -388,9 +388,7 @@ match`;
       inputAOA.push([input[i]]);
     }
 
-    const context = this.contextService.CreateContext();
-    
-    const result = this.commandService.processCommands(code, inputAOA, context);
+    const result = this.commandService.processCommands(code, inputAOA);
 
     this.setState({ firstLineContext: this.commandService.firstLineContext });
 

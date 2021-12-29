@@ -47,9 +47,11 @@ export class CommandService {
         return output;    
     }
 
-    processCommands(codeValue: string, lines: string[][], context: Context): string[][] {
+    processCommands(codeValue: string, lines: string[][]): string[][] {
 
         try {
+
+            let context = this.contextService.CreateContext();
 
             let updatedLines = lines;
 
