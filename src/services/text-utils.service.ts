@@ -379,34 +379,32 @@ export class TextUtilsService {
         });
     };
 
-    ReplaceHeadersWithIndexes = (codeLine: string, headers: string[] | null) => {
+    ParseIndices = (para: string, headers: string[] | null): number[] => {
 
-        const indexStrings = this.SplitOnText(codeLine, ",");
+        let indices: number[] = [];
 
-        let indices: string[] = [];
-        
-        if (headers) {
+        const indexStrings = this.SplitOnText(para, ",");
 
-            for (let i = 0; i < indexStrings.length; i++) {
+        for (let i = 0; i < indexStrings.length; i++) {
 
-                if (headers.includes(indexStrings[i])) {
+            const index = parseInt(indexStrings[i], 10);
 
-                    for (let j = 0; j < headers.length; j++) {
+            if (!isNaN(index)) {
 
-                        if (headers[j] === indexStrings[i]) {
+                indices.push(index);
+            }
+            else if (headers) {
 
-                            indices.push(j.toString());
-                        }
-                    }
-                }
-                else {
+                const headerIndex = headers.indexOf(indexStrings[i]);
 
-                    indices.push(indexStrings[i]);
+                if (headerIndex !== -1) {
+
+                    indices.push(headerIndex);
                 }
             }
         }
 
-        return indices.join(",");
+        return indices;
     };
 
     IsTabDelimited = (lines: string[]) => {

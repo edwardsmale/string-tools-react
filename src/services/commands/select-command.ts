@@ -12,9 +12,7 @@ export class SelectCommand extends IndividualLineCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.headers);
-
-        const indices = this.services.textUtilsService.ParseIntegers(para);
+        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
 
         if (indices.some((i) => isNaN(i))) {
 
@@ -51,7 +49,7 @@ export class SelectCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        const indices = this.ParseIndices(para, context);
+        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
 
         let result: string[] = [];
 
@@ -70,7 +68,7 @@ export class SelectCommand extends IndividualLineCommand {
 
     UpdateContext(para: string, negated: boolean, context: Context): void {
 
-        const indices = this.ParseIndices(para, context);
+        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
 
         let newHeaders: string[] = [];
 
@@ -87,15 +85,5 @@ export class SelectCommand extends IndividualLineCommand {
         context.headers = newHeaders;
 
         context.withIndices = [];
-    }
-
-    private ParseIndices(para: string, context: Context) {
-
-        const indicesWithHeadersReplaced  = this.services.textUtilsService.ReplaceHeadersWithIndexes(
-            para,
-            context.headers
-        );
-
-        return this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
     }
 }

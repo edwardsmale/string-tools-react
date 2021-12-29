@@ -14,14 +14,12 @@ export class WithCommand extends IndividualLineCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        para = this.services.textUtilsService.ReplaceHeadersWithIndexes(para, context.headers);
-
         if (para === "*") {
 
             return { segments: ["With all the columns..."] };
         }
 
-        const indices = this.services.textUtilsService.ParseIntegers(para);
+        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
 
         if (indices.some((i) => isNaN(i))) {
 
@@ -65,12 +63,7 @@ export class WithCommand extends IndividualLineCommand {
 
         if (context.isArrayOfArrays) {
 
-            const indicesWithHeadersReplaced  = this.services.textUtilsService.ReplaceHeadersWithIndexes(
-                para,
-                context.headers
-            );
-
-            context.withIndices = this.services.textUtilsService.ParseIntegers(indicesWithHeadersReplaced);
+            context.withIndices = this.services.textUtilsService.ParseIndices(para, context.headers);
         }
     }
 }
