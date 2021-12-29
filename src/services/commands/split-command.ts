@@ -85,9 +85,7 @@ export class SplitCommand extends IndividualLineCommand {
             }
             else {
 
-                let newWithIndices: number[] = [];
                 let newHeaders: string[] = [];
-                let columnCount: number = 0;
 
                 let result = [];
 
@@ -98,18 +96,14 @@ export class SplitCommand extends IndividualLineCommand {
                     for (let j = 0; j < split.length; j++) {
 
                         result.push(split[j]);
-                        newWithIndices.push(columnCount);
                         
                         if (context.headers) {
                             newHeaders.push(context.headers[i])
                         }
-
-                        columnCount++;
                     }                   
                 }
 
                 context.headers = newHeaders;
-                context.withIndices = newWithIndices;
 
                 return result;
             }

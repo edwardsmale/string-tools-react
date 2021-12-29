@@ -37,7 +37,9 @@ export class JoinCommand extends IndividualLineCommand {
     
                 joinees += value[i];
 
-                if (context.withIndices.includes(i) && context.withIndices.includes(i + 1)) {
+                if (i < value.length - 1 &&
+                    context.withIndices.includes(i) && 
+                    context.withIndices.includes(i + 1)) {
 
                     joinees += delimiter;
                 }
@@ -59,6 +61,11 @@ export class JoinCommand extends IndividualLineCommand {
                         result.push(value[i]);
                     }
                 }
+            }
+
+            if (joinees) {
+
+                result.push(joinees);
             }
 
             context.headers = newHeaders;
