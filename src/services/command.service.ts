@@ -144,13 +144,13 @@ export class CommandService {
                     );
                 }
                 
-                if (!line || !line.length) {
+                if (!line.length) {
 
                     break;
                 }
             }
 
-            if (line && line.length) {
+            if (line.length) {
 
                 if (delCount) {
 
