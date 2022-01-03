@@ -52,7 +52,7 @@ export class TextUtilsService {
     }
 
     TextToLines = (value: string) => {
-        return this.GlobalStringReplace(value, "\r", "").split("\n");
+        return value.split(/\r?\n/);
     }
 
     LinesToText = (lines: string[]): string => {
