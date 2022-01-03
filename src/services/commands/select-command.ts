@@ -12,7 +12,7 @@ export class SelectCommand extends IndividualLineCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
+        const indices = this.services.text.ParseIndices(para, context.headers);
 
         if (indices.some((i) => isNaN(i))) {
 
@@ -24,18 +24,18 @@ export class SelectCommand extends IndividualLineCommand {
 
             for (let i = 0; i < indices.length; i++) {
 
-                var formattedIndex = this.services.textUtilsService.FormatIndex(indices[i], true);
+                var formattedIndex = this.services.text.FormatIndex(indices[i], true);
 
                 formattedIndices.push(formattedIndex);
             }
 
-            const positions = this.services.textUtilsService.FormatList(formattedIndices);
+            const positions = this.services.text.FormatList(formattedIndices);
 
             return { segments: ["Get", positions] };
         }
         else {
 
-            const positions = this.services.textUtilsService.FormatList(indices);
+            const positions = this.services.text.FormatList(indices);
 
             if (indices.length > 1) {
 
@@ -49,7 +49,7 @@ export class SelectCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
+        const indices = this.services.text.ParseIndices(para, context.headers);
 
         let result: string[] = [];
 
@@ -68,7 +68,7 @@ export class SelectCommand extends IndividualLineCommand {
 
     UpdateContext(para: string, negated: boolean, context: Context): void {
 
-        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
+        const indices = this.services.text.ParseIndices(para, context.headers);
 
         let newHeaders: string[] = [];
 

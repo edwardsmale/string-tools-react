@@ -27,7 +27,7 @@ export class EnsureLeadingCommand extends IndividualLineCommand {
 
                 if (!context.withIndices.length || context.withIndices.includes(i)) {
 
-                    result.push(this.services.textUtilsService.EnsureLeading(value[i], para));
+                    result.push(this.services.text.EnsureLeading(value[i], para));
                 }
                 else {
                     result.push(value[i]);
@@ -40,7 +40,7 @@ export class EnsureLeadingCommand extends IndividualLineCommand {
 
                 if (!context.withIndices.length || context.withIndices.includes(i)) {
                     
-                    result.push(this.services.textUtilsService.RemoveLeading(value[i], para));
+                    result.push(this.services.text.RemoveLeading(value[i], para));
                 }
                 else {
                     result.push(value[i]);

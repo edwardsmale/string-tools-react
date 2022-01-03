@@ -1,10 +1,9 @@
 import React from 'react';
-import { TextUtilsService } from '../../services/text-utils.service';
 import Scrollbar from '../Scrollbar/Scrollbar';
 import './InputPane.scss';
 import {TextRange} from '../../interfaces/TextRange';
 import {TextPosition} from '../../interfaces/TextPosition';
-import {TextPosService} from '../../services/text-pos-service';
+import { Services } from '../../services/services';
 
 interface InputPaneProps {
   onFocus: () => void;
@@ -23,8 +22,7 @@ interface InputPaneProps {
   isMouseDown: boolean;
   mouseX: number;
   mouseY: number;
-  textUtilsService: TextUtilsService;
-  textPosService: TextPosService;
+  services: Services;
 }
 
 interface InputPaneState {
@@ -139,7 +137,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
     if (this.state.textSelection !== null) {
 
-      scrolledSelection = this.props.textPosService.Subtract(this.state.textSelection, scrollX, scrollY);
+      scrolledSelection = this.props.services.textPos.Subtract(this.state.textSelection, scrollX, scrollY);
     }
 
     const scrolledCaretPosition = {
@@ -523,7 +521,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       charIndex = this.state.textSelection.startChar;
       lineIndex = this.state.textSelection.startLine;
 
-      linesWithSelectedTextRemoved = this.props.textUtilsService.RemoveSubText(
+      linesWithSelectedTextRemoved = this.props.services.text.RemoveSubText(
         this.props.lines,
         this.state.textSelection
       );
@@ -579,8 +577,8 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
           navigator.clipboard.readText().then((pasteText) => {
 
-            pasteText = this.props.textUtilsService.RemoveTrailing(pasteText, "\n");
-            pasteText = this.props.textUtilsService.RemoveTrailing(pasteText, "\r");
+            pasteText = this.props.services.text.RemoveTrailing(pasteText, "\n");
+            pasteText = this.props.services.text.RemoveTrailing(pasteText, "\r");
 
             this.props.insertInputPaneText(
               linesWithSelectedTextRemoved,
@@ -589,7 +587,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
               pasteText
             );
 
-            const lines = this.props.textUtilsService.TextToLines(pasteText);
+            const lines = this.props.services.text.TextToLines(pasteText);
             const lastLine = lines[lines.length - 1];
 
             charIndex = lines.length === 1 ? charIndex + lastLine.length : lastLine.length;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextUtilsService } from '../../services/text-utils.service';
+import { Services } from '../../services/services';
 import './CodeWindow.scss';
 
 interface CodeWindowProps {
@@ -8,7 +8,7 @@ interface CodeWindowProps {
   onSelect(event: any): any;
   onFocus: () => void;
   hasFocus: boolean;
-  textUtilsService: TextUtilsService;
+  services: Services;
 }
 
 interface CodeWindowState {
@@ -19,7 +19,7 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
   constructor(props: CodeWindowProps) {
     super(props)
 
-    this.textUtilsService = props.textUtilsService;
+    this.textUtilsService = this.props.services.text;
 
     this.handleChange = this.handleChange.bind(this);
     this.getOverlayValue = this.getOverlayValue.bind(this);
@@ -27,8 +27,6 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
 
     this.handleMouseDown = this.handleMouseDown.bind(this);
   }
-
-  private textUtilsService: TextUtilsService;
 
   handleChange(event: any) {
     this.props.onInput(
@@ -44,7 +42,7 @@ class CodeWindow extends React.Component<CodeWindowProps, CodeWindowState> {
 
   getOverlayValue(codeValue: string) {
 
-    let codeLines = this.textUtilsService.TextToLines(codeValue);
+    let codeLines = this.props.services.text.TextToLines(codeValue);
 
     let overlayLines = [];
 

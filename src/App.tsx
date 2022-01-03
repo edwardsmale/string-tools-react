@@ -10,16 +10,10 @@ import Popup from './components/Popup/Popup';
 import { Explanation } from './interfaces/CommandInterfaces';
 import { Context } from './interfaces/Context';
 import { TextRange } from './interfaces/TextRange';
-import { ArrayService } from './services/array.service';
-import { CodeCompressionService } from './services/code-compression.service';
 import { CommandParsingService } from './services/command-parsing.service';
 import { CommandTypesService } from './services/command-types.service';
 import { CommandService } from './services/command.service';
-import { ContextService } from './services/context.service';
 import { Services } from './services/services';
-import { SortService } from './services/sort.service';
-import { TextPosService } from './services/text-pos-service';
-import { TextUtilsService } from './services/text-utils.service';
 import './textarea.scss';
 
 interface AppProps {
@@ -54,35 +48,24 @@ interface AppState {
 class App extends React.Component<AppProps, AppState> {
 
   codeWindowValue :string;
-  textUtilsService: TextUtilsService;
-  codeCompressionService: CodeCompressionService;
-  contextService: ContextService;
+
+  services: Services;
   commandTypesService: CommandTypesService;
   commandParsingService: CommandParsingService;
   commandService: CommandService;
-  sortService: SortService;
-  arrayService: ArrayService;
-  textPosService: TextPosService;
 
   constructor(props: AppProps) {
     super(props)
 
-    this.textUtilsService = new TextUtilsService();
-    this.textPosService = new TextPosService(this.textUtilsService);
-    this.codeCompressionService = new CodeCompressionService();
-    this.arrayService = new ArrayService();
-    this.contextService = new ContextService(this.textUtilsService, this.arrayService);
-    this.sortService = new SortService(this.textUtilsService);
-    this.commandTypesService = new CommandTypesService(new Services());
+    this.services = new Services();
+
+    this.commandTypesService = new CommandTypesService(this.services);
     this.commandParsingService = new CommandParsingService(this.commandTypesService);
 
     this.commandService = new CommandService(
-      this.textUtilsService,
+      this.services,
       this.commandParsingService, 
-      this.commandTypesService, 
-      this.contextService,
-      this.arrayService,
-      this.sortService
+      this.commandTypesService
     );
 
     const input = `ReportConsole
@@ -134,14 +117,14 @@ match`;
     this.state = {
       focus: "InputPane",
       code: this.codeWindowValue,
-      compressedCode: this.codeCompressionService.CompressCode(this.codeWindowValue),
+      compressedCode: this.services.codeCompression.CompressCode(this.codeWindowValue),
       explanation: [],
-      input: this.textUtilsService.TextToLines(input),
+      input: this.services.text.TextToLines(input),
       inputHash: 0,
       inputFiles: [],
       output: [[]],
       outputHash: 0,
-      firstLineContext: this.contextService.CreateContext(),
+      firstLineContext: this.services.context.CreateContext(),
       topSectionHeight: 12,
       bottomButtonBarHeight: 2.5,
       bottomSectionHeight: 30,
@@ -217,7 +200,7 @@ match`;
 
     const compressedCode = window.location.hash.substr(1);
 
-    const code = this.codeCompressionService.DecompressCode(compressedCode);
+    const code = this.services.codeCompression.DecompressCode(compressedCode);
 
     this.codeWindowValue = code;
     
@@ -269,7 +252,7 @@ match`;
 
   getInputPaneText(lines: string[], textSelection: TextRange) : string {
 
-    return this.textUtilsService.GetSubText(lines, textSelection);
+    return this.services.text.GetSubText(lines, textSelection);
   }
 
   setInputPane(lines: string[]) : void {
@@ -284,14 +267,14 @@ match`;
 
   removeInputPaneText(lines: string[], textSelection: TextRange) : void {
 
-    const result = this.textUtilsService.RemoveSubText(lines, textSelection);
+    const result = this.services.text.RemoveSubText(lines, textSelection);
 
     this.setInputPane(result);
   }
 
   insertInputPaneText(lines: string[], charIndex: number, lineIndex: number, textToInsert: string) : void {
 
-    const result = this.textUtilsService.InsertSubText(
+    const result = this.services.text.InsertSubText(
       lines,
       charIndex,
       lineIndex,
@@ -317,7 +300,7 @@ match`;
 
     window.setTimeout(function () {
 
-      const compressedCode = that.codeCompressionService.CompressCode(code);
+      const compressedCode = that.services.codeCompression.CompressCode(code);
     
       window.location.hash = "#" + compressedCode;
     }, 500);
@@ -402,7 +385,7 @@ match`;
 
     if (code !== this.lastExplainCode) {
 
-      const context = this.contextService.CreateContext();
+      const context = this.services.context.CreateContext();
 
       this.lastExplainCode = code;
       this.lastExplanation = this.commandService.explainCommands(code, context);
@@ -519,7 +502,7 @@ match`;
 
         for (let i = 0; i < values.length; i++) {
           
-          const l = this.textUtilsService.TextToLines(values[i] as string);
+          const l = this.services.text.TextToLines(values[i] as string);
 
           for (let j = 0; j < l.length; j++) {
 
@@ -576,7 +559,7 @@ match`;
                           onSelect={this.handleCodeWindowSelect}
                           onFocus={() => { this.setState({ focus: "CodeWindow" }); }}
                           hasFocus={this.state.focus === "CodeWindow"}
-                          textUtilsService={this.textUtilsService} value={this.state.code} />
+                          services={this.services} value={this.state.code} />
             </div>
             <div className={"string-tools__code-window-border " + (this.state.draggedBorder === "code-window-border" ? "string-tools__code-window-border--dragged" : "")} draggable onDragStart={this.onDragStart} data-border-id="code-window-border"></div>
             <div className="string-tools__explain-window-container">
@@ -618,8 +601,7 @@ match`;
                 charWidth={0.45}
                 height={this.state.bottomSectionHeight}
                 lineHeight={1.25} 
-                textUtilsService={this.textUtilsService}
-                textPosService={this.textPosService}
+                services={this.services}
                 isMouseDown={this.state.isMouseDown}
                 mouseX={this.state.mouseX}
                 mouseY={this.state.mouseY} />
@@ -642,7 +624,7 @@ match`;
                 isMouseDown={this.state.isMouseDown}
                 mouseX={this.state.mouseX}
                 mouseY={this.state.mouseY}
-                textUtilsService={this.textUtilsService} />
+                services={this.services} />
             </div>
           </div>
         </div>

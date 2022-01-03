@@ -19,13 +19,13 @@ export class PrintCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        var result = this.services.textUtilsService.ReplaceBackslashTWithTab(para);
+        var result = this.services.text.ReplaceBackslashTWithTab(para);
 
         // Replace $header
 
         if (Array.isArray(context.headers)) {
 
-            const headersOrderedByLength = this.services.textUtilsService.GetHeadersOrderedByLength(
+            const headersOrderedByLength = this.services.text.GetHeadersOrderedByLength(
                 context.headers
             );
 

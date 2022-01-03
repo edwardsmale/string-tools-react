@@ -1,33 +1,21 @@
-import { TextUtilsService } from './text-utils.service';
-import { CommandParsingService } from './command-parsing.service';
-import { CommandTypesService } from './command-types.service';
+import { Explanation, IndividualLineCommand, ParsedCommand, WholeInputCommand } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
-import { ContextService } from './context.service';
-import { ArrayService } from './array.service';
-import { SortService } from './sort.service';
-import { IndividualLineCommand, WholeInputCommand, Explanation, ParsedCommand } from "../interfaces/CommandInterfaces";
+import { CommandParsingService } from './command-parsing.service';
+import { Services } from './services';
 
 export class CommandService {
 
     constructor(
-        private textUtilsService: TextUtilsService,
-        private commandParsingService: CommandParsingService,
-        private commandTypesService: CommandTypesService,
-        private contextService: ContextService,
-        private arrayService: ArrayService,
-        private sortService: SortService
+        private services: Services,
+        private commandParsingService: CommandParsingService
     ) {
-        this.textUtilsService = textUtilsService;
+        this.services = services;
         this.commandParsingService = commandParsingService;
-        this.commandTypesService = commandTypesService;
-        this.contextService = contextService;
-        this.arrayService = arrayService;
-        this.sortService = sortService;
     }
 
     explainCommands(codeValue: string, context: Context): Explanation[] {
 
-        const codeLines = this.textUtilsService.TextToLines(codeValue);
+        const codeLines = this.services.text.TextToLines(codeValue);
 
         let output: Explanation[] = []; 
 
@@ -51,11 +39,11 @@ export class CommandService {
 
         try {
 
-            let context = this.contextService.CreateContext();
+            let context = this.services.context.CreateContext();
 
             let updatedLines = [...lines];
 
-            const codeLines = this.textUtilsService.TextToLines(codeValue);
+            const codeLines = this.services.text.TextToLines(codeValue);
 
             const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines);
 
@@ -80,7 +68,7 @@ export class CommandService {
                     context
                 );
 
-                context = this.contextService.CloneContext(this.firstLineContext);
+                context = this.services.context.CloneContext(this.firstLineContext);
 
                 if (indexOfNextWholeInputCommand === parsedCommands.length) {
                     break;
@@ -92,7 +80,7 @@ export class CommandService {
                     this.firstLineContext
                 );
 
-                context = this.contextService.CloneContext(this.firstLineContext);
+                context = this.services.context.CloneContext(this.firstLineContext);
 
                 startCommandIndex = indexOfNextWholeInputCommand + 1;
             }
@@ -108,7 +96,7 @@ export class CommandService {
         }
     }
 
-    public firstLineContext: Context = this.contextService.CreateContext();
+    public firstLineContext: Context = this.services.context.CreateContext();
 
     private processIndividualLineCommands(parsedCommands: ParsedCommand[], lines: string[][], originalContext: Context): string[][] {
 
@@ -121,7 +109,7 @@ export class CommandService {
 
             let line = lines[l];
 
-            let context = this.contextService.CloneContext(originalContext);
+            let context = this.services.context.CloneContext(originalContext);
 
             for (let c = 0; c < parsedCommands.length && line.length; c++) {
 
@@ -160,7 +148,7 @@ export class CommandService {
 
                 if (firstLine) {
 
-                    this.firstLineContext = this.contextService.CloneContext(context);
+                    this.firstLineContext = this.services.context.CloneContext(context);
 
                     firstLine = false;
                 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { TextUtilsService } from '../../services/text-utils.service';
+import { Services } from '../../services/services';
 import Scrollbar from '../Scrollbar/Scrollbar';
 import './OutputPane.scss';
 
@@ -16,7 +16,7 @@ interface OutputPaneProps {
   isMouseDown: boolean;
   mouseX: number;
   mouseY: number;
-  textUtilsService: TextUtilsService;
+  services: Services;
 }
 
 interface OutputPaneState {
@@ -202,7 +202,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
 
     let rowAlt = 0;
     
-    const replaceTrailing = this.props.textUtilsService.ReplaceTrailing;
+    const replaceTrailing = this.props.services.text.ReplaceTrailing;
 
     for (let i = 0; i < value.length; i++) {
 
@@ -467,7 +467,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
           this.mouseDownCharIndex = 0;
           this.mouseDownLineIndex = 0;
 
-          this.updateSelectionState(999999, this.props.textUtilsService.CountLines2(this.props.output));
+          this.updateSelectionState(999999, this.props.services.text.CountLines2(this.props.output));
         }
         else if (event.key === "c") {
 

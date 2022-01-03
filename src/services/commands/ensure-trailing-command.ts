@@ -27,7 +27,7 @@ export class EnsureTrailingCommand extends IndividualLineCommand {
 
                 if (!context.withIndices.length || context.withIndices.includes(i)) {
 
-                    result.push(this.services.textUtilsService.EnsureTrailing(value[i], para));
+                    result.push(this.services.text.EnsureTrailing(value[i], para));
                 }
                 else {
 
@@ -41,7 +41,7 @@ export class EnsureTrailingCommand extends IndividualLineCommand {
 
                 if (!context.withIndices.length || context.withIndices.includes(i)) {
                     
-                    result.push(this.services.textUtilsService.RemoveTrailing(value[i], para));
+                    result.push(this.services.text.RemoveTrailing(value[i], para));
                 }
                 else {
 

@@ -15,7 +15,7 @@ export class FlatCommand extends WholeInputCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        const batchSize = this.services.textUtilsService.ParsePositiveInteger(para);
+        const batchSize = this.services.text.ParsePositiveInteger(para);
 
         if (!batchSize) {
 
@@ -33,7 +33,7 @@ export class FlatCommand extends WholeInputCommand {
 
     Execute(value: string[][], para: string, negated: boolean, context: Context): string[][] {
         
-        const batchSize = this.services.textUtilsService.ParsePositiveInteger(para);
+        const batchSize = this.services.text.ParsePositiveInteger(para);
 
         if (!batchSize) {
 
@@ -45,7 +45,7 @@ export class FlatCommand extends WholeInputCommand {
             
             context.isSplit = true;
 
-            return this.services.arrayService.Batch(value, batchSize);
+            return this.services.array.Batch(value, batchSize);
         }
     }
 }

@@ -30,7 +30,7 @@ export class SplitCommand extends IndividualLineCommand {
             para = para === "\\t" ? "\t" : para;
             var delimiter = para || defaultDelimiter;
 
-            var formattedDelimiter = this.services.textUtilsService.FormatDelimiter(delimiter, false, true);
+            var formattedDelimiter = this.services.text.FormatDelimiter(delimiter, false, true);
 
             return { segments: ["Split the text on every", formattedDelimiter] };
         }
@@ -159,7 +159,7 @@ export class SplitCommand extends IndividualLineCommand {
                 delimiter = "\\" + delimiter;
             }
 
-            return this.services.textUtilsService.Split(value as string, delimiter);
+            return this.services.text.Split(value as string, delimiter);
         }
     }
 }

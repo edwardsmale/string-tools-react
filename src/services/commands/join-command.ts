@@ -85,14 +85,14 @@ export class JoinCommand extends IndividualLineCommand {
         
         const delimiter = this.GetDelimiter(para);
 
-        return this.services.textUtilsService.FormatDelimiter(delimiter, true, false);
+        return this.services.text.FormatDelimiter(delimiter, true, false);
     }
 
     private GetDelimiter(para: string) {
 
         const defaultDelimiter = "";
 
-        para = this.services.textUtilsService.ReplaceBackslashTWithTab(para);
+        para = this.services.text.ReplaceBackslashTWithTab(para);
         
         return para || defaultDelimiter;
     }

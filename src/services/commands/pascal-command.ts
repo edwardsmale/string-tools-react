@@ -36,8 +36,8 @@ export class PascalCommand extends IndividualLineCommand {
 
     private ToPascalCase(value: string): string {
 
-        const leadingWhitespace = this.services.textUtilsService.GetLeadingWhitespace(value);
-        const trailingWhitespace = this.services.textUtilsService.GetTrailingWhitespace(value);
+        const leadingWhitespace = this.services.text.GetLeadingWhitespace(value);
+        const trailingWhitespace = this.services.text.GetTrailingWhitespace(value);
 
         let newValue = leadingWhitespace;
 

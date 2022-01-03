@@ -28,7 +28,7 @@ export class CsvCommand extends IndividualLineCommand {
 
         } else {
 
-            var formattedDelimiter = this.services.textUtilsService.FormatDelimiter(options.delimiter, true, false);
+            var formattedDelimiter = this.services.text.FormatDelimiter(options.delimiter, true, false);
             explanation += " separated with " + formattedDelimiter;
         }
 

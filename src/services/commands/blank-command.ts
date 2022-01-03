@@ -28,7 +28,7 @@ export class BlankCommand extends IndividualLineCommand {
 
             if (!context.withIndices.length || context.withIndices.includes(i)) {
 
-                const isBlank = this.services.textUtilsService.IsNullOrWhitespace(value[i]);
+                const isBlank = this.services.text.IsNullOrWhitespace(value[i]);
 
                 if (isBlank === !negated) {
     

@@ -19,7 +19,7 @@ export class WithCommand extends IndividualLineCommand {
             return { segments: ["With all the columns..."] };
         }
 
-        const indices = this.services.textUtilsService.ParseIndices(para, context.headers);
+        const indices = this.services.text.ParseIndices(para, context.headers);
 
         if (indices.some((i) => isNaN(i))) {
 
@@ -31,18 +31,18 @@ export class WithCommand extends IndividualLineCommand {
 
             for (let i = 0; i < indices.length; i++) {
 
-                var formattedIndex = this.services.textUtilsService.FormatIndex(indices[i], true);
+                var formattedIndex = this.services.text.FormatIndex(indices[i], true);
 
                 formattedIndices.push(formattedIndex);
             }
 
-            let positions = this.services.textUtilsService.FormatList(formattedIndices);
+            let positions = this.services.text.FormatList(formattedIndices);
 
             return { segments: ["With the columns", positions, "..."] };
         }
         else {
 
-            const positions = this.services.textUtilsService.FormatList(indices);
+            const positions = this.services.text.FormatList(indices);
 
             if (indices.length > 1) {
 
@@ -63,7 +63,7 @@ export class WithCommand extends IndividualLineCommand {
 
         if (context.isSplit) {
 
-            context.withIndices = this.services.textUtilsService.ParseIndices(para, context.headers);
+            context.withIndices = this.services.text.ParseIndices(para, context.headers);
         }
     }
 }

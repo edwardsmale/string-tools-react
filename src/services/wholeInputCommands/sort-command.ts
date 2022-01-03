@@ -14,7 +14,7 @@ export class SortCommand extends WholeInputCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        const indices = this.services.textUtilsService.ParseSortOrderIndices(
+        const indices = this.services.text.ParseSortOrderIndices(
             para,
             context.headers
         );
@@ -61,12 +61,12 @@ export class SortCommand extends WholeInputCommand {
 
     Execute(value: string[][], para: string, negated: boolean, context: Context): string[][] {
 
-        let indices = this.services.textUtilsService.ParseSortOrderIndices(
+        let indices = this.services.text.ParseSortOrderIndices(
             para,
             context.headers
         );
 
-        const descending = this.services.textUtilsService.ParseSortOrderIsDescending(para);
+        const descending = this.services.text.ParseSortOrderIsDescending(para);
 
         if (!indices.length) {
 
@@ -82,7 +82,7 @@ export class SortCommand extends WholeInputCommand {
                     description: "the item at index 0"
                 }];
 
-                value = this.services.sortService.SortArrayOfArrays(
+                value = this.services.sort.SortArrayOfArrays(
                     value, 
                     indices,
                     context
@@ -90,7 +90,7 @@ export class SortCommand extends WholeInputCommand {
             }                   
             else {
 
-                value = this.services.sortService.SortArray(
+                value = this.services.sort.SortArray(
                     value,
                     descending
                 );
@@ -109,7 +109,7 @@ export class SortCommand extends WholeInputCommand {
                     }
                 }
 
-                value = this.services.sortService.SortArrayOfArrays(
+                value = this.services.sort.SortArrayOfArrays(
                     value, 
                     indices,
                     context
@@ -117,7 +117,7 @@ export class SortCommand extends WholeInputCommand {
             }
             else {
 
-                value = this.services.sortService.SortArray(
+                value = this.services.sort.SortArray(
                     value,
                     descending
                 );

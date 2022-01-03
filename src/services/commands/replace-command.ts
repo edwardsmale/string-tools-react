@@ -40,7 +40,7 @@ export class ReplaceCommand extends IndividualLineCommand {
 
         if (context.regex) {
 
-            const globalRegexReplace = this.services.textUtilsService.GlobalRegexReplace;
+            const globalRegexReplace = this.services.text.GlobalRegexReplace;
 
             for (let i = 0; i < length; i++) {
 
@@ -58,7 +58,7 @@ export class ReplaceCommand extends IndividualLineCommand {
         }
         else if (context.searchString) {
 
-            const globalStringReplace = this.services.textUtilsService.GlobalStringReplace;
+            const globalStringReplace = this.services.text.GlobalStringReplace;
             
             for (let i = 0; i < length; i++) {
                 
@@ -82,6 +82,6 @@ export class ReplaceCommand extends IndividualLineCommand {
 
     private FormatPara(para: string) {
 
-        return this.services.textUtilsService.ReplaceBackslashTWithTab(para);
+        return this.services.text.ReplaceBackslashTWithTab(para);
     }
 }

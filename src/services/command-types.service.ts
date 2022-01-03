@@ -59,7 +59,7 @@ export class CommandTypesService {
     CreateCommand = (name: string): Command =>  {
 
         const commandName = 
-            this.services.textUtilsService.CapitaliseFirstLetter(name) +
+            this.services.text.CapitaliseFirstLetter(name) +
             "Command";
 
         if (this.registry[commandName]) {
