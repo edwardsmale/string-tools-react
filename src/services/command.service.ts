@@ -53,7 +53,7 @@ export class CommandService {
 
             let context = this.contextService.CreateContext();
 
-            let updatedLines = lines;
+            let updatedLines = [...lines];
 
             const codeLines = this.textUtilsService.TextToLines(codeValue);
 
@@ -112,14 +112,14 @@ export class CommandService {
 
     private processIndividualLineCommands(parsedCommands: ParsedCommand[], lines: string[][], originalContext: Context): string[][] {
 
-        let updatedLines: string[][] = [];
-
         let firstLine = true;
+
+        let delStart = -1;
+        let delCount = 0;
 
         for (let l = 0; l < lines.length; l++) {
 
-            const originalLine = lines[l];
-            let line = originalLine;
+            let line = lines[l];;
 
             let context = this.contextService.CloneContext(originalContext);
 
@@ -151,8 +151,17 @@ export class CommandService {
             }
 
             if (line && line.length) {
+
+                if (delCount) {
+
+                    lines.splice(delStart, delCount);
+
+                    l -= delCount;
+
+                    delCount = 0;
+                }
                 
-                updatedLines.push(line);
+                lines[l] = line;
 
                 if (firstLine) {
 
@@ -161,9 +170,23 @@ export class CommandService {
                     firstLine = false;
                 }
             }
+            else {
+
+                if (delCount === 0) {
+
+                    delStart = l;
+                }
+
+                delCount++;
+            }
         }
 
-        return updatedLines;
+        if (delCount) {
+
+            lines.splice(delStart, delCount);
+        }
+
+        return lines;
     }
 
     private processWholeInputCommand(parsedCommand: ParsedCommand, lines: string[][], context: Context): string[][] {
