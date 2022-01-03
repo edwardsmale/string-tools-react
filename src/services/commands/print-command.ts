@@ -34,7 +34,7 @@ export class PrintCommand extends IndividualLineCommand {
                 let header = headersOrderedByLength[i].header;
                 let index = headersOrderedByLength[i].index;
 
-                const regex = new RegExp("\\$" + header, "g");
+                const regex = this.services.regex.GetRegex("\\$" + header, "g");
                 const replacement = value[index];
 
                 result = result.replace(regex, replacement);
@@ -53,13 +53,13 @@ export class PrintCommand extends IndividualLineCommand {
         // Replace $[n]
         
         for (let i = 0; i < arrayValue.length; i++) {
-            result = result.replace(new RegExp("\\$\\[" + i + "\\]", "g"), arrayValue[i]);
+            result = result.replace(this.services.regex.GetRegex("\\$\\[" + i + "\\]", "g"), arrayValue[i]);
         }
 
         // Replace $[-n]
 
         for (let i = 0; i < arrayValue.length; i++) {
-            result = result.replace(new RegExp("\\$\\[-" + i + "\\]", "g"), arrayValue[arrayValue.length - i]);
+            result = result.replace(this.services.regex.GetRegex("\\$\\[-" + i + "\\]", "g"), arrayValue[arrayValue.length - i]);
         }
 
         return result;

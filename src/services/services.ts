@@ -10,22 +10,24 @@ export class Services {
 
     constructor() {
         
-        this.text = new TextUtilsService();
         this.array = new ArrayService();
-        this.regex = new RegexService();
         this.codeCompression = new CodeCompressionService();
+        this.context = new ContextService();
+        this.regex = new RegexService();
+
+        this.text = new TextUtilsService(this.regex);
 
         this.sort = new SortService(this.text);
         this.textPos = new TextPosService(this.text);
-        this.context = new ContextService(this.text, this.array);
     }
 
-    public text: TextUtilsService;
     public array: ArrayService;
-    public regex: RegexService;
     public codeCompression: CodeCompressionService;
+    public context: ContextService;
+    public regex: RegexService;
+    
+    public text: TextUtilsService;
 
     public sort: SortService;
     public textPos: TextPosService;
-    public context: ContextService;
 }

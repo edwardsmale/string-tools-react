@@ -143,7 +143,7 @@ export class SplitCommand extends IndividualLineCommand {
 
         if (!para && context.regex) {
 
-            return value.split(new RegExp(context.regex));
+            return value.split(this.services.regex.GetRegex(context.regex));
         }
         else if (!para && context.searchString) {
 

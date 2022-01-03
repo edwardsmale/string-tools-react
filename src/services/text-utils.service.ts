@@ -1,7 +1,11 @@
 import { SortOrderIndex } from "../interfaces/SortOrderIndex";
 import { TextRange } from "../interfaces/TextRange";
+import { RegexService } from "./regex.service";
 
 export class TextUtilsService {
+
+    constructor (private regexService: RegexService) {
+    }
 
     // Global string replacement, which avoids:
     // - Using a regex, and having to escape certain characters
@@ -12,7 +16,7 @@ export class TextUtilsService {
     
     // Global string replacement with a regex.
     GlobalRegexReplace = (value: string, regex: string, replacement: string) => {
-        return value.replace(new RegExp(regex, "g"), replacement);
+        return value.replace(this.regexService.GetRegex(regex, "g"), replacement);
     }
 
     ReplaceBackslashTWithTab = (value: string) => {
@@ -68,7 +72,7 @@ export class TextUtilsService {
         }
         else {
 
-            return value.split(new RegExp(pattern));
+            return value.split(this.regexService.GetRegex(pattern));
         }
     }
 

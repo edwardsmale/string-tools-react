@@ -2,7 +2,7 @@ export class RegexService {
     
     private regexes: any = {};
 
-    GetRegex(regex: string): RegExp {
+    GetRegex(regex: string, flags?: string): RegExp {
 
         const existing = this.regexes[regex];
 
@@ -12,7 +12,7 @@ export class RegexService {
         }
         else {
 
-            const re = new RegExp(regex);
+            const re = new RegExp(regex, flags);
 
             this.regexes[regex] = re;
 

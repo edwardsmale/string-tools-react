@@ -1,14 +1,6 @@
-import { TextUtilsService } from './text-utils.service';
 import { Context } from "../interfaces/Context";
-import { ArrayService } from './array.service';
 
 export class ContextService {
-
-    constructor(private textUtilsService: TextUtilsService, private arrayService: ArrayService) {
-        
-        this.textUtilsService = textUtilsService;
-        this.arrayService = arrayService;
-    }
 
     CreateContext(): Context {
 

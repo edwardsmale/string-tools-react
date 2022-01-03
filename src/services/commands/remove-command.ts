@@ -21,7 +21,7 @@ export class RemoveCommand extends IndividualLineCommand {
         
         let result: string[] = [];
 
-        const regExp = new RegExp(para);
+        const regExp = this.services.regex.GetRegex(para);
 
         for (let i = 0; i < value.length; i++) {
 

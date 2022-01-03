@@ -55,7 +55,7 @@ export class MatchCommand extends IndividualLineCommand {
 
             if (!searchString && context.regex) {
 
-                const regexp = new RegExp(context.regex);
+                const regexp = this.services.regex.GetRegex(context.regex);
 
                 for (let i = 0; i < context.withIndices.length; i++) {
 
@@ -91,7 +91,7 @@ export class MatchCommand extends IndividualLineCommand {
 
             if (!searchString && context.regex) {
 
-                const regexp = new RegExp(context.regex);
+                const regexp = this.services.regex.GetRegex(context.regex);
 
                 return value.filter(function (val: string) { 
                     return regexp.test(val) === includeSuccesses; 
