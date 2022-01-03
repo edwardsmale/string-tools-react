@@ -119,7 +119,7 @@ export class CommandService {
 
         for (let l = 0; l < lines.length; l++) {
 
-            let line = lines[l];;
+            let line = lines[l];
 
             let context = this.contextService.CloneContext(originalContext);
 
