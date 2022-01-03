@@ -233,13 +233,16 @@ export class TextUtilsService {
         let suffix = "th";
 
         if (n !== 11 && n !== 12 && n !== 13) {
-            if (n % 10 === 1) {
+
+            const mod = n % 10;
+
+            if (mod === 1) {
                 suffix = "st";
             }
-            else if (n % 10 === 2) {
+            else if (mod === 2) {
                 suffix = "nd";
             }
-            else if (n % 10 === 3) {
+            else if (mod === 3) {
                 suffix = "rd";
             }
         }
