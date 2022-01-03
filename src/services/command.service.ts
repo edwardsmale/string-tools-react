@@ -123,7 +123,7 @@ export class CommandService {
 
             let context = this.contextService.CloneContext(originalContext);
 
-            for (let c = 0; c < parsedCommands.length; c++) {
+            for (let c = 0; c < parsedCommands.length && line.length; c++) {
 
                 const parsedCommand = parsedCommands[c];
                 const command = parsedCommand.command as IndividualLineCommand;
@@ -142,11 +142,6 @@ export class CommandService {
                         parsedCommand.negated,
                         context
                     );
-                }
-                
-                if (!line.length) {
-
-                    break;
                 }
             }
 
