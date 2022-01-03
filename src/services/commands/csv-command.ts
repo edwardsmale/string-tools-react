@@ -62,7 +62,7 @@ export class CsvCommand extends IndividualLineCommand {
             }
         }
 
-        context.isArrayOfArrays = false;
+        context.isSplit = false;
 
         return { segments: [explanation] };    
     }
@@ -73,7 +73,7 @@ export class CsvCommand extends IndividualLineCommand {
 
         context.headers = [];
 
-        context.isArrayOfArrays = false;
+        context.isSplit = false;
 
         return [this.toDelimitedString(value, options, context)];
     }

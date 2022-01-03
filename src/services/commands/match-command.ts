@@ -49,7 +49,7 @@ export class MatchCommand extends IndividualLineCommand {
 
         const includeSuccesses = !negated;
 
-        if (context.isArrayOfArrays) {
+        if (context.isSplit) {
 
             let match = true;
 

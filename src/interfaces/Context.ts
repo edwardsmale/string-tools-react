@@ -3,5 +3,5 @@ export interface Context {
     searchString: string | null;
     headers: string[] | null;
     withIndices: number[];
-    isArrayOfArrays: boolean;
+    isSplit: boolean;
 }

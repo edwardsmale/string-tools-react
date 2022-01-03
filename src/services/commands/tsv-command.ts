@@ -14,7 +14,7 @@ export class TsvCommand extends IndividualLineCommand {
         
         context.headers = [];
 
-        context.isArrayOfArrays = false;
+        context.isSplit = false;
 
         return { segments: ["Output the items in tab-separated format"] };
     }
@@ -22,7 +22,7 @@ export class TsvCommand extends IndividualLineCommand {
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
         context.headers = [];
-        context.isArrayOfArrays = false;
+        context.isSplit = false;
 
         let values: string[] = [];
 

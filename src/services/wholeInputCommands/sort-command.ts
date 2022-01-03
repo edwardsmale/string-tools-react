@@ -23,7 +23,7 @@ export class SortCommand extends WholeInputCommand {
 
         if (!indices.length) {
 
-            if (context.isArrayOfArrays) {
+            if (context.isSplit) {
                 
                 if (descending) {
 
@@ -70,7 +70,7 @@ export class SortCommand extends WholeInputCommand {
 
         if (!indices.length) {
 
-            if (context.isArrayOfArrays) {
+            if (context.isSplit) {
 
                 // TODO: Decide how to sort an array of arrays when no indices are specified.
 
@@ -98,7 +98,7 @@ export class SortCommand extends WholeInputCommand {
         } 
         else {
 
-            if (context.isArrayOfArrays) {
+            if (context.isSplit) {
 
                 // Negative indices count back from the end.
 

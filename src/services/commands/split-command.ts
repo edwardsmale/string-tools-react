@@ -14,7 +14,7 @@ export class SplitCommand extends IndividualLineCommand {
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
-        context.isArrayOfArrays = true;
+        context.isSplit = true;
 
         if (!para && context.regex) {
 
@@ -38,7 +38,7 @@ export class SplitCommand extends IndividualLineCommand {
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {
         
-        if (context.isArrayOfArrays) {
+        if (context.isSplit) {
 
             if (context.withIndices.length) {
 
@@ -110,7 +110,7 @@ export class SplitCommand extends IndividualLineCommand {
         }
         else if (value.length === 1 && para.length === 1 && !"|^$*()\\/[].+".includes(para)) {
 
-            context.isArrayOfArrays = true;
+            context.isSplit = true;
             context.headers = null;
             context.withIndices = [];
     
@@ -127,7 +127,7 @@ export class SplitCommand extends IndividualLineCommand {
                 result.push(...split);
             }
 
-            context.isArrayOfArrays = true;
+            context.isSplit = true;
             context.headers = null;
             context.withIndices = [];
     

@@ -61,7 +61,7 @@ export class WithCommand extends IndividualLineCommand {
 
     UpdateContext(para: string, negated: boolean, context: Context): void {
 
-        if (context.isArrayOfArrays) {
+        if (context.isSplit) {
 
             context.withIndices = this.services.textUtilsService.ParseIndices(para, context.headers);
         }

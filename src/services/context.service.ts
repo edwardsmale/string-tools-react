@@ -17,7 +17,7 @@ export class ContextService {
             searchString: null,
             headers: null,
             withIndices: [],
-            isArrayOfArrays: false
+            isSplit: false
         };
     }
 
@@ -29,7 +29,7 @@ export class ContextService {
             searchString: context.searchString,
             headers: context.headers && [...context.headers],
             withIndices: [...context.withIndices],
-            isArrayOfArrays: context.isArrayOfArrays
+            isSplit: context.isSplit
         };
     }
 }

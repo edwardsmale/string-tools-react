@@ -16,7 +16,7 @@ export class JoinCommand extends IndividualLineCommand {
 
         const formattedDelimiter = this.GetFormattedDelimiter(para);
 
-        context.isArrayOfArrays = false;
+        context.isSplit = false;
 
         return { segments: ["Output items separated with", formattedDelimiter] };
     }
@@ -74,7 +74,7 @@ export class JoinCommand extends IndividualLineCommand {
         }
         else {
 
-            context.isArrayOfArrays = false;
+            context.isSplit = false;
             context.headers = [];
 
             return [value.join(delimiter)];

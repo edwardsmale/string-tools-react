@@ -33,7 +33,7 @@ export class SkipCommand extends IndividualLineCommand {
 
             return value;
         }
-        else if (context.isArrayOfArrays) {
+        else if (context.isSplit) {
 
             return value.slice(n);
         } 

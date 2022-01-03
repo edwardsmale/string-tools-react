@@ -33,7 +33,7 @@ export class TakeCommand extends IndividualLineCommand {
 
             return value;
         }
-        else if (context.isArrayOfArrays) {
+        else if (context.isSplit) {
 
             return value.slice(0, n);
         }

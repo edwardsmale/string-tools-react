@@ -19,13 +19,13 @@ export class FlatCommand extends WholeInputCommand {
 
         if (!batchSize) {
 
-            context.isArrayOfArrays = false;
+            context.isSplit = false;
 
             return { segments: ["Flatten into one array"] };
 
         } else {
             
-            context.isArrayOfArrays = true;
+            context.isSplit = true;
 
             return { segments: ["Flatten into batches of", batchSize.toString()] }
         }
@@ -37,13 +37,13 @@ export class FlatCommand extends WholeInputCommand {
 
         if (!batchSize) {
 
-            context.isArrayOfArrays = false;
+            context.isSplit = false;
 
             return [value.flat()];            
 
         } else {
             
-            context.isArrayOfArrays = true;
+            context.isSplit = true;
 
             return this.services.arrayService.Batch(value, batchSize);
         }
