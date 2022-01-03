@@ -42,10 +42,7 @@ export class TextUtilsService {
   
       for (let i = 0; i < value.length; i++) {
   
-        for (let j = 0; j < value[i].length; j++) {
-  
-            lineCount++;
-        }
+        lineCount += value[i].length;
       }
   
       return lineCount;
