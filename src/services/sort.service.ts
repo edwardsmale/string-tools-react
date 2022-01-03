@@ -15,51 +15,55 @@ export class SortService {
         });
     }
 
+    /**
+     * Warning: this mutates the original array.
+     */
     SortArray = (values: string[][], descending: boolean): string[][] => {
 
-        let sortedValues = [...values].sort();
+        values.sort();
 
         // If the last item is numeric, then all the values must be numeric (because
         // numbers come before letters in ASCII).
 
-        let isNumericData = this.textUtilsService.IsNumeric(sortedValues[sortedValues.length - 1][0]);
+        let isNumericData = this.textUtilsService.IsNumeric(values[values.length - 1][0]);
 
         // If the first item begins with a zero, don't treat as numeric, otherwise
         // we'll be stripping off the leading zeroes.  In many cases, a leading
         // zero indicates the data will sort properly via an alphabetic sort anyway.
 
-        isNumericData = isNumericData && sortedValues[0][0][0] !== "0";
+        isNumericData = isNumericData && values[0][0][0] !== "0";
 
         if (!isNumericData) {
 
             if (descending) {
 
-                sortedValues = sortedValues.reverse();
+                values.reverse();
             }
 
-            return sortedValues;
+            return values;
         }
 
         // Sort numerically.
         
-        const numbers = (values.map(v => v[0]) as string[]).map(parseFloat);
+        const numbers = values.map(v => v[0]).map(parseFloat);
 
         if (descending) {
 
             return numbers
                 .sort(function(a, b) { return b - a; })
-                .map(function (num) { return num.toString(); })
-                .map(n => [n]);
+                .map(function (num) { return [num.toString()]; });
         }
         else {
             
             return numbers
                 .sort(function(a, b) { return a - b; })
-                .map(function (num) { return num.toString(); })
-                .map(n => [n]);
+                .map(function (num) { return [num.toString()]; });
         }
     }
 
+    /**
+     * Warning: this mutates the original array.
+     */
     SortArrayOfArrays = (values: string[][], indices: SortOrderIndex[], context: Context) => {
 
         // Negative indices signify descending order.
