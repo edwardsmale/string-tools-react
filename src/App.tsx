@@ -354,7 +354,7 @@ match`;
       });
     };
 
-    if (this.state.input.length < 1000) {
+    if (this.state.input.length < 1000 || isSelect) {
       doExecute();
     }
     else {
@@ -364,12 +364,7 @@ match`;
 
   private executeCommands(input: string[], code: string): string[][] {
 
-    const inputAOA: string[][] = [];
-
-    for (let i = 0; i < input.length; i++) {
-      
-      inputAOA.push([input[i]]);
-    }
+    const inputAOA: string[][] = input.map(function (val) { return [val]; });
 
     const result = this.commandService.processCommands(code, inputAOA);
 

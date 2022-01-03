@@ -41,7 +41,7 @@ export class CommandService {
 
             let context = this.services.context.CreateContext();
 
-            let updatedLines = [...lines];
+            let updatedLines = lines.slice(0);
 
             const codeLines = this.services.text.TextToLines(codeValue);
 

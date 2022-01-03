@@ -383,7 +383,18 @@ export class TextUtilsService {
         });
     };
 
+    private parseIndicesCache: any = {};
+
     ParseIndices = (para: string, headers: string[] | null): number[] => {
+
+        const cacheKey = para + (headers && headers.join(","));
+
+        const cachedEntry = this.parseIndicesCache[cacheKey];
+
+        if (cachedEntry) {
+
+            return cachedEntry;
+        }
 
         let indices: number[] = [];
 
@@ -407,6 +418,8 @@ export class TextUtilsService {
                 }
             }
         }
+
+        this.parseIndicesCache[cacheKey] = indices;
 
         return indices;
     };

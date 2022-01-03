@@ -20,7 +20,7 @@ export class ContextService {
             regex: context.regex,
             searchString: context.searchString,
             headers: context.headers && [...context.headers],
-            withIndices: [...context.withIndices],
+            withIndices: context.withIndices.slice(0),
             isSplit: context.isSplit
         };
     }
