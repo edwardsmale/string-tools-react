@@ -39,7 +39,7 @@ export class FlatCommand extends WholeInputCommand {
 
             context.isArrayOfArrays = false;
 
-            return [this.services.arrayService.Flatten(value)];            
+            return [value.flat()];            
 
         } else {
             
