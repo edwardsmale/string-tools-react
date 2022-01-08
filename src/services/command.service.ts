@@ -35,13 +35,15 @@ export class CommandService {
         return output;    
     }
 
-    processCommands(codeValue: string, lines: string[][]): string[][] {
+    processCommands(codeValue: string, input: string[]): string[][] {
+
+        const lines: string[][] = input.map(function (val) { return [val]; });
+
+        let updatedLines = lines;
 
         try {
 
             let context = this.services.context.CreateContext();
-
-            let updatedLines = lines.slice(0);
 
             const codeLines = this.services.text.TextToLines(codeValue);
 
@@ -89,10 +91,7 @@ export class CommandService {
             
         } catch (ex) {
 
-            let output:string[][] = [];
-            output.push([ex.toString()]);
-
-            return output;
+            return [[ex.toString()]];
         }
     }
 

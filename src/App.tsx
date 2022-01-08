@@ -364,9 +364,7 @@ match`;
 
   private executeCommands(input: string[], code: string): string[][] {
 
-    const inputAOA: string[][] = input.map(function (val) { return [val]; });
-
-    const result = this.commandService.processCommands(code, inputAOA);
+    const result = this.commandService.processCommands(code, input);
 
     this.setState({ firstLineContext: this.commandService.firstLineContext });
 
