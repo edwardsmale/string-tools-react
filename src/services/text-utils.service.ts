@@ -584,6 +584,26 @@ export class TextUtilsService {
         return hash;
     }
 
+    GenerateHashOfLines = (lines: string[]): number => {
+
+        let hash = 0;
+
+        for (let l = 0; l < lines.length; l++) {
+
+            for (let i = 0; i < lines[l].length; i++) {
+
+                const char = lines[l].charCodeAt(i);
+                hash = ((hash<<5)-hash) + char;
+                hash = hash & hash; // Convert to 32bit integer
+            }
+
+            hash = ((hash<<5)-hash) + 10; // Newline
+            hash = hash & hash; // Convert to 32bit integer
+        }
+
+        return hash;
+    }
+
     GetSubText(lines: string[], textSelection: TextRange) : string {
 
     if (textSelection.startLine !== textSelection.stopLine) {

@@ -60,12 +60,11 @@ class App extends React.Component<AppProps, AppState> {
     this.services = new Services();
 
     this.commandTypesService = new CommandTypesService(this.services);
-    this.commandParsingService = new CommandParsingService(this.commandTypesService);
+    this.commandParsingService = new CommandParsingService(this.services, this.commandTypesService);
 
     this.commandService = new CommandService(
       this.services,
-      this.commandParsingService, 
-      this.commandTypesService
+      this.commandParsingService
     );
 
     const input = `ReportConsole
@@ -259,7 +258,7 @@ match`;
 
     this.setState({
       input: lines,
-      inputHash: this.state.inputHash + 1
+      inputHash: this.services.text.GenerateHashOfLines(lines)
     });
 
     this.executeCode(this.codeWindowValue, false);
@@ -344,7 +343,7 @@ match`;
     
     var doExecute = () => {
 
-      const result = that.executeCommands(that.state.input, code);
+      const result = that.executeCommands(that.state.input, this.state.inputHash, code);
       const explanation = that.explainCommands(code);
 
       that.setState({ 
@@ -362,9 +361,9 @@ match`;
     }
   }
 
-  private executeCommands(input: string[], code: string): string[][] {
+  private executeCommands(input: string[], inputHash: number, code: string): string[][] {
 
-    const result = this.commandService.processCommands(code, input);
+    const result = this.commandService.processCommands(code, input, inputHash);
 
     this.setState({ firstLineContext: this.commandService.firstLineContext });
 

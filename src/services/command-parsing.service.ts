@@ -1,10 +1,12 @@
 import { CommandTypesService } from './command-types.service';
 import { ParsedCommand } from "../interfaces/CommandInterfaces";
+import { Services } from "../services/services";
 
 export class CommandParsingService {
 
-  constructor(private commandTypesService : CommandTypesService) {
+  constructor(private services: Services, private commandTypesService: CommandTypesService) {
 
+    this.services = services;
     this.commandTypesService = commandTypesService;
   }
 
@@ -15,15 +17,16 @@ export class CommandParsingService {
       return {
         command: this.commandTypesService.CreateCommand("noop"),
         para: "",
-        negated: false
+        negated: false,
+        cumulativeHash: 0
       };
 
     } else {
       
       const indexOfSpace = codeLine.indexOf(" ");
 
-      const commandString = indexOfSpace !== -1 ? codeLine.substr(0, indexOfSpace) : codeLine;
-      const para = indexOfSpace !== -1 ? codeLine.substr(indexOfSpace + 1) : "";
+      const commandString = indexOfSpace !== -1 ? codeLine.substring(0, indexOfSpace) : codeLine;
+      const para = indexOfSpace !== -1 ? codeLine.substring(indexOfSpace + 1) : "";
 
       const negated = commandString.includes("!");
       const commandName = commandString.replace("!", "");
@@ -32,7 +35,8 @@ export class CommandParsingService {
       return {
         command: command,
         para: para,
-        negated: negated
+        negated: negated,
+        cumulativeHash: 0
       };
     }
   }

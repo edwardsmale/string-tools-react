@@ -35,11 +35,13 @@ export class CommandService {
         return output;    
     }
 
-    processCommands(codeValue: string, input: string[]): string[][] {
+    private outputCache: any = {};
+
+    processCommands(codeValue: string, input: string[], inputHash: number): string[][] {
 
         const lines: string[][] = input.map(function (val) { return [val]; });
 
-        let updatedLines = lines;
+        let updatedLines = lines.slice(0);
 
         try {
 
@@ -48,6 +50,15 @@ export class CommandService {
             const codeLines = this.services.text.TextToLines(codeValue);
 
             const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines);
+            
+            const cacheKey = inputHash ^ parsedCommands[parsedCommands.length - 1].cumulativeHash;
+
+            const cachedItem = this.outputCache[cacheKey];
+
+            if (cachedItem) {
+
+                return cachedItem.output;
+            }
 
             let startCommandIndex = 0;
 
@@ -86,6 +97,12 @@ export class CommandService {
 
                 startCommandIndex = indexOfNextWholeInputCommand + 1;
             }
+
+            this.outputCache[cacheKey] = {
+
+                context: context,
+                output: updatedLines
+            };
 
             return updatedLines;
             
@@ -186,11 +203,17 @@ export class CommandService {
 
         let parsedCommands: ParsedCommand[] = [];
 
+        let cumulativeHash = 0;
+
         for (let i = 0; i < codeLines.length; i++) {
 
-            const parsedCommand = this.commandParsingService.ParseCodeLine(
-                codeLines[i]
-            );
+            const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
+            
+            const hash = this.services.text.GenerateHash(codeLines[i]);
+
+            cumulativeHash = cumulativeHash ^ hash;
+
+            parsedCommand.cumulativeHash = cumulativeHash;
 
             parsedCommands.push(parsedCommand);
         }
