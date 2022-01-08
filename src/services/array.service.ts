@@ -1,5 +1,5 @@
 export class ArrayService {
-    
+   
     Batch(value: string[][], batchSize: number) : string[][] {
 
         let result: string[][] = [];

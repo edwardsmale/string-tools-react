@@ -18,7 +18,8 @@ export class CommandParsingService {
         command: this.commandTypesService.CreateCommand("noop"),
         para: "",
         negated: false,
-        cumulativeHash: 0
+        cumulativeHash: 0,
+        dataSizeAfterCommand: 0
       };
 
     } else {
@@ -36,7 +37,8 @@ export class CommandParsingService {
         command: command,
         para: para,
         negated: negated,
-        cumulativeHash: 0
+        cumulativeHash: 0,
+        dataSizeAfterCommand: 0
       };
     }
   }

@@ -39,9 +39,7 @@ export class CommandService {
 
     processCommands(codeValue: string, input: string[], inputHash: number): string[][] {
 
-        const lines: string[][] = input.map(function (val) { return [val]; });
-
-        let updatedLines = lines.slice(0);
+        let lines: string[][] = input.map(function (val) { return [val]; });
 
         try {
 
@@ -49,9 +47,9 @@ export class CommandService {
 
             const codeLines = this.services.text.TextToLines(codeValue);
 
-            const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines);
+            const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines, inputHash);
             
-            const cacheKey = inputHash ^ parsedCommands[parsedCommands.length - 1].cumulativeHash;
+            const cacheKey = parsedCommands[parsedCommands.length - 1].cumulativeHash;
 
             const cachedItem = this.outputCache[cacheKey];
 
@@ -59,57 +57,71 @@ export class CommandService {
 
                 return cachedItem.output;
             }
+            else {
 
-            let startCommandIndex = 0;
+                lines = this.processParsedCommands(parsedCommands, lines, context, 0, parsedCommands.length);
 
-            while (true) {
+                this.outputCache[cacheKey] = {
 
-                let indexOfNextWholeInputCommand = parsedCommands.length;
+                    context: context,
+                    output: lines
+                };
 
-                for (let c = startCommandIndex; c < parsedCommands.length; c++) {
-        
-                    if (parsedCommands[c].command.IsWholeInputCommand) {
-        
-                        indexOfNextWholeInputCommand = c;
-                        break;
-                    }
-                }
+                return lines;
+            }
+            
+        } catch (ex) {
 
-                updatedLines = this.processIndividualLineCommands(
-                    parsedCommands.slice(startCommandIndex, indexOfNextWholeInputCommand),
-                    updatedLines,
-                    context
-                );
+            return [[ex.toString()]];
+        }
+    }
 
-                context = this.services.context.CloneContext(this.firstLineContext);
+    private processParsedCommands(parsedCommands: ParsedCommand[], lines: string[][], originalContext: Context, desiredStartIndex: number, desiredStopIndex: number) {
 
-                if (indexOfNextWholeInputCommand === parsedCommands.length) {
-                    break;
-                }
+        let updatedLines = lines.slice(0);
+
+        let context = this.services.context.CloneContext(originalContext);
+
+        let commandIndex = desiredStartIndex;
+
+        while (commandIndex < desiredStopIndex) {
+
+            let stopIndex = this.getIndexOfNextWholeInputCommand(parsedCommands, commandIndex);
+
+            stopIndex = Math.min(stopIndex, desiredStopIndex);
+
+            updatedLines = this.processIndividualLineCommands(
+                parsedCommands.slice(desiredStartIndex, stopIndex),
+                updatedLines,
+                context
+            );
+
+            context = this.services.context.CloneContext(this.firstLineContext);
+
+            commandIndex = stopIndex;
+
+            while (commandIndex < desiredStopIndex && parsedCommands[commandIndex].command.IsWholeInputCommand) {
 
                 updatedLines = this.processWholeInputCommand(
-                    parsedCommands[indexOfNextWholeInputCommand],
+                    parsedCommands[commandIndex],
                     updatedLines,
                     this.firstLineContext
                 );
 
                 context = this.services.context.CloneContext(this.firstLineContext);
 
-                startCommandIndex = indexOfNextWholeInputCommand + 1;
+                commandIndex++;
             }
-
-            this.outputCache[cacheKey] = {
-
-                context: context,
-                output: updatedLines
-            };
-
-            return updatedLines;
-            
-        } catch (ex) {
-
-            return [[ex.toString()]];
         }
+
+        return updatedLines;
+    }
+
+    getIndexOfNextWholeInputCommand(parsedCommands: ParsedCommand[], start: number) {
+
+        const index = parsedCommands.slice(start).findIndex(pc => { return pc.command.IsWholeInputCommand; });
+
+        return index === -1 ? parsedCommands.length : index;
     }
 
     public firstLineContext: Context = this.services.context.CreateContext();
@@ -120,6 +132,11 @@ export class CommandService {
 
         let delStart = -1;
         let delCount = 0;
+
+        for (let c = 0; c < parsedCommands.length; c++) {
+
+            parsedCommands[c].dataSizeAfterCommand = 0;
+        }
 
         for (let l = 0; l < lines.length; l++) {
 
@@ -138,6 +155,11 @@ export class CommandService {
                     parsedCommand.negated,
                     context
                 );
+
+                for (let i = 0; i < line.length; i++) {
+
+                    parsedCommands[c].dataSizeAfterCommand += line[i].length;
+                }
 
                 if (command.UpdateContext) {
 
@@ -190,20 +212,22 @@ export class CommandService {
 
     private processWholeInputCommand(parsedCommand: ParsedCommand, lines: string[][], context: Context): string[][] {
 
-        return (parsedCommand.command as WholeInputCommand)
+        const updatedLines = (parsedCommand.command as WholeInputCommand)
             .Execute(
                 lines,
                 parsedCommand.para,
                 parsedCommand.negated,
                 context
             );
+
+        parsedCommand.dataSizeAfterCommand = this.services.text.CountLines2(updatedLines);
+
+        return updatedLines;
     }
 
-    private ParseCommands(codeLines: string[]) {
+    private ParseCommands(codeLines: string[], cumulativeHash: number) {
 
         let parsedCommands: ParsedCommand[] = [];
-
-        let cumulativeHash = 0;
 
         for (let i = 0; i < codeLines.length; i++) {
 

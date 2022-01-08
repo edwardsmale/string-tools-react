@@ -7,6 +7,7 @@ export interface ParsedCommand
     para: string;
     negated: boolean;
     cumulativeHash: number;
+    dataSizeAfterCommand: number;
 }
 
 export interface CommandParameter
