@@ -10,6 +10,8 @@ export class NoopCommand extends IndividualLineCommand {
         Para: []
     }
 
+    IsNonUpdatingCommand: boolean = true;
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         return { segments: [""] };

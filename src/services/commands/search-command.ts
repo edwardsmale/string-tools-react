@@ -12,6 +12,8 @@ export class SearchCommand extends IndividualLineCommand {
         ]
     }
 
+    IsNonUpdatingCommand: boolean = true;
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         this.SetSearchString(para, context);

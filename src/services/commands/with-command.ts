@@ -12,6 +12,8 @@ export class WithCommand extends IndividualLineCommand {
         ]
     }
 
+    IsNonUpdatingCommand: boolean = true;
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         if (para === "*") {

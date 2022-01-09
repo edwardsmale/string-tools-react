@@ -26,6 +26,7 @@ export interface Command
     Help: CommandHelp;
     Explain(para: string, negated: boolean, context: Context): Explanation;
     IsWholeInputCommand: boolean;
+    IsNonUpdatingCommand: boolean;
 }
 
 export abstract class IndividualLineCommand implements Command
@@ -41,6 +42,7 @@ export abstract class IndividualLineCommand implements Command
     abstract Execute(value: string[], para: string, negated: boolean, context: Context): string[];
     UpdateContext?(para: string, negated: boolean, context: Context): void { context.withIndices = []; };
     IsWholeInputCommand = false;
+    IsNonUpdatingCommand: boolean = false;
 }
 
 export abstract class WholeInputCommand implements Command
@@ -55,6 +57,7 @@ export abstract class WholeInputCommand implements Command
     abstract Explain(para: string, negated: boolean, context: Context): Explanation;
     abstract Execute(value: string[][], para: string, negated: boolean, context: Context): string[][];
     IsWholeInputCommand = true;
+    IsNonUpdatingCommand: boolean = false;
 }
 
 export interface Explanation

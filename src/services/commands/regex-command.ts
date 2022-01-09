@@ -12,6 +12,8 @@ export class RegexCommand extends IndividualLineCommand {
         ]
     }
 
+    IsNonUpdatingCommand: boolean = true;
+
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         this.SetRegex(para, context);
