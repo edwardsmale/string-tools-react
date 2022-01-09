@@ -20,6 +20,11 @@ export class SortService {
      */
     SortArray = (values: string[][], descending: boolean): string[][] => {
 
+        if (!values.length) {
+
+            return values;
+        }
+
         values.sort();
 
         // If the last item is numeric, then all the values must be numeric (because
@@ -66,6 +71,11 @@ export class SortService {
      */
     SortArrayOfArrays = (values: string[][], indices: SortOrderIndex[], context: Context) => {
 
+        if (!values.length) {
+
+            return values;
+        }
+
         // Negative indices signify descending order.
 
         var sortFunc = function(a: string[], b: string[], ind: SortOrderIndex[]): number {
@@ -73,19 +83,31 @@ export class SortService {
             const index = ind[0].index;
 
             const ret = ind[0].descending ? -1 : 1;
-            const cmp = a[index].localeCompare(b[index]);
-            
-            if (cmp < 0) {
-                return -ret;
+
+            if (index >= a.length && index >= b.length) {
+                return 0;
             }
-            else if (cmp > 0) {
+            else if (index >= a.length) {
+                return -ret; 
+            }
+            else if (index >= b.length) {
                 return ret;
             }
-            else if (ind.length > 1) {
-                return sortFunc(a, b, ind.slice(1));
-            }
             else {
-                return 0;
+                const cmp = a[index].localeCompare(b[index]);
+                
+                if (cmp < 0) {
+                    return -ret;
+                }
+                else if (cmp > 0) {
+                    return ret;
+                }
+                else if (ind.length > 1) {
+                    return sortFunc(a, b, ind.slice(1));
+                }
+                else {
+                    return 0;
+                }
             }
         };
 
