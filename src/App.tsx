@@ -67,51 +67,13 @@ class App extends React.Component<AppProps, AppState> {
       this.commandParsingService
     );
 
-    const input = `ReportConsole
-    -------------
-    [08/22/2019 12:01:19] Up-to-date backup file already exists, skipping download. (Use -Force to download always.)
-    [08/22/2019 12:01:19] Up-to-date backup file already exists, skipping download. (Use -Force to download always.)
-    [08/22/2019 12:01:19] --------------------------------------------------------------------------------
-    [08/22/2019 12:01:19] No FTP host given, skipping download and extraction.
-    [08/22/2019 12:01:19] Restoring Database
-    Changed database context to 'master'.
-    Processed 464984 pages for database 'OfflineReporting', file 'Paperstone_Data' on file 1.
-    Processed 2 pages for database 'OfflineReporting', file 'Paperstone_Log' on file 1.
-    RESTORE DATABASE successfully processed 464986 pages in 22.255 seconds (163.230 MB/sec).
-    [08/22/2019 12:01:42] Running shared patches
-    [08/22/2019 12:01:43] Denormalising columns for report-console
-    [08/22/2019 12:01:43] Adding functions
-    [08/22/2019 12:01:43] Adding misc. indexes
-    [08/22/2019 12:01:44] Patching erroneous cost prices
-    [08/22/2019 12:01:44] Patching high-value uncategorised products
-    [08/22/2019 12:01:44] Adding denormalised columns
-    [08/22/2019 12:01:44]     adding denormalised columns to CreditCardOrderLine
-    [08/22/2019 12:01:51]     adding denormalised columns to CreditCardOrder
-    [08/22/2019 12:02:08] Adding UTM parameters to CreditCardOrder
-    [08/22/2019 12:02:15]     adding denormalised columns to Despatch
-    [08/22/2019 12:02:20]     adding denormalised columns to Account
-    [08/22/2019 12:02:36]     adding denormalised columns to Category
-    [08/22/2019 12:02:36] Adding date tables
-    [08/22/2019 12:02:36]     adding date functions
-    [08/22/2019 12:02:36]     Days table
-    [08/22/2019 12:02:37]     Months table
-    [08/22/2019 12:02:37]     Quarters table
-    [08/22/2019 12:02:37] Adding lifeycle views
-    [08/22/2019 12:02:37] Adding Integers table
-    [08/22/2019 12:02:37] Adding indexes
-    [08/22/2019 12:02:38] Running report console initialisation
-    [08/22/2019 12:03:57] Up-to-date backup file already exists, skipping download. (Use -Force to download always.)
-    [08/22/2019 12:03:57] Up-to-date backup file already exists, skipping download. (Use -Force to download always.)
-    [08/22/2019 12:03:57] --------------------------------------------------------------------------------
-    [08/22/2019 12:03:57] No FTP host given, skipping download and extraction.
-    [08/22/2019 12:03:57] Restoring Database
-    Changed database context to 'master'.
-    Processed 464984 pages for database 'OfflineReporting', file 'Paperstone_Data' on file 1.
-    Processed 2 pages for database 'OfflineReporting', file 'Paperstone_Log' on file 1.
-    RESTORE DATABASE successfully processed 464986 pages in 21.161 seconds (171.669 MB/sec).`;
+    const input = `date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken client-ip
+2021-06-28 23:59:34 188.65.34.28 GET /filing-archiving/manilla-folders-files/document-wallets/5-star-document-wallets-half-flap-250gsm-foolscap-green-pack-of-50/p-20795 - 443 - Mozilla/5.0+(compatible;+bingbot/2.0;++http://www.bing.com/bingbot.htm) - 302 0 0 148 157.55.39.153
+2021-06-28 23:59:34 188.65.34.28 GET /filing-archiving/manilla-folders-files/document-wallets/green-document-wallet-pack-of-50-45914east/p-125232 sp=20795 443 - Mozilla/5.0+(compatible;+bingbot/2.0;++http://www.bing.com/bingbot.htm) - 200 0 0 427 157.55.39.153`;
 
-    this.codeWindowValue = `regex 12:01:
-match`;
+    this.codeWindowValue = `split  
+header
+select cs-uri-stem`;
 
     this.state = {
       focus: "InputPane",
@@ -291,18 +253,18 @@ match`;
         
     this.codeWindowValue = code;
 
-    if (this.updateHashTimeout) {
-      clearTimeout(this.updateHashTimeout);
-    }
+    // if (this.updateHashTimeout) {
+    //   clearTimeout(this.updateHashTimeout);
+    // }
 
-    const that = this;
+    // const that = this;
 
-    window.setTimeout(function () {
+    // window.setTimeout(function () {
 
-      const compressedCode = that.services.codeCompression.CompressCode(code);
+    //   const compressedCode = that.services.codeCompression.CompressCode(code);
     
-      window.location.hash = "#" + compressedCode;
-    }, 500);
+    //   window.location.hash = "#" + compressedCode;
+    // }, 500);
   }
   
   private previousCodeWindowCode: string = "";
@@ -335,25 +297,31 @@ match`;
 
   executeCode(code: string, isSelect: boolean) {
 
-    if (this.executeCodeTimeout) {
-      clearTimeout(this.executeCodeTimeout);
-    }
+    this.setState({ 
+      explanation: this.explainCommands(code) 
+    });
 
     const that = this;
     
     var doExecute = () => {
 
+      const compressedCode = that.services.codeCompression.CompressCode(code);
+    
+      window.location.hash = "#" + compressedCode;      
+
       const result = that.executeCommands(that.state.input, this.state.inputHash, code);
-      const explanation = that.explainCommands(code);
 
       that.setState({ 
         output: result,
-        outputHash: that.state.outputHash + 1,
-        explanation: explanation 
+        outputHash: that.state.outputHash + 1
       });
     };
 
-    if (this.state.input.length < 1000 || isSelect) {
+    if (this.executeCodeTimeout !== null) {
+      clearTimeout(this.executeCodeTimeout);
+    }
+
+    if (this.state.input.length < 1000) {
       doExecute();
     }
     else {

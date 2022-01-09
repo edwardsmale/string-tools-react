@@ -52,6 +52,22 @@ export class TextUtilsService {
       return lineCount;
     }
 
+    // Counts lines in an array of arrays.
+    GetDataSize = (value: string[][]): number => {
+  
+      let charCount = 0;
+  
+      for (let i = 0; i < value.length; i++) {
+  
+        for (let j = 0; j < value[i].length; j++) {
+
+            charCount += value[i][j].length;
+        }
+      }
+  
+      return charCount * 2;
+    }
+
     TextToLines = (value: string) => {
         return value.split(/\r?\n/);
     }

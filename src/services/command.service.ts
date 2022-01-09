@@ -39,41 +39,96 @@ export class CommandService {
 
     processCommands(codeValue: string, input: string[], inputHash: number): string[][] {
 
-        let lines: string[][] = input.map(function (val) { return [val]; });
+        const codeLines = this.services.text.TextToLines(codeValue);
+        const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines, inputHash);
 
-        try {
+        let lines: string[][];
+        let context: Context;
+        
+        const indexOfFurthestCachedCommand = this.getIndexOfFurthestCachedCommand(parsedCommands);
 
-            let context = this.services.context.CreateContext();
+        if (indexOfFurthestCachedCommand >= 0) {
 
-            const codeLines = this.services.text.TextToLines(codeValue);
+            const furthestCachedCommand = parsedCommands[indexOfFurthestCachedCommand];
 
-            const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines, inputHash);
-            
-            const cacheKey = parsedCommands[parsedCommands.length - 1].cumulativeHash;
+            const cachedItem = this.outputCache[furthestCachedCommand.cumulativeHash];
 
-            const cachedItem = this.outputCache[cacheKey];
+            lines = cachedItem.output;
+            context = cachedItem.context;
 
-            if (cachedItem) {
-
-                return cachedItem.output;
-            }
-            else {
-
-                lines = this.processParsedCommands(parsedCommands, lines, context, 0, parsedCommands.length);
-
-                this.outputCache[cacheKey] = {
-
-                    context: context,
-                    output: lines
-                };
-
-                return lines;
-            }
-            
-        } catch (ex) {
-
-            return [[ex.toString()]];
+            lines = this.processParsedCommands(parsedCommands, lines, context, indexOfFurthestCachedCommand + 1, parsedCommands.length);           
         }
+        else {
+
+            lines = input.map(function (val) { return [val]; });
+            context = this.services.context.CreateContext();
+
+            lines = this.processParsedCommands(parsedCommands, lines, context, 0, parsedCommands.length);           
+        }
+
+        const cacheKey = parsedCommands[parsedCommands.length - 1].cumulativeHash;
+
+        if (!this.outputCache[cacheKey]) {
+
+            this.outputCache[cacheKey] = {
+
+                context: this.services.context.CloneContext(this.firstLineContext),
+                parsedCommands: parsedCommands.map(pc => pc.command.Name).join(", "),
+                output: lines
+            };
+        }
+
+        console.log(indexOfFurthestCachedCommand);
+
+        let indexToCache = 0;
+
+        while (
+            indexToCache < parsedCommands.length - 1 &&
+            this.outputCache[parsedCommands[indexToCache].cumulativeHash]) {
+
+            indexToCache++;
+        }
+
+        const parsedCommandToCache = parsedCommands[indexToCache];
+
+        if (parsedCommandToCache.dataSizeAfterCommand < 1024 * 1024 * 256) {
+
+            const tempCacheKey = parsedCommandToCache.cumulativeHash;
+
+            if (!this.outputCache[tempCacheKey]) {
+
+                console.log("Caching index: " + indexToCache);
+
+                let tempLines = input.map(function (val) { return [val]; });
+                let tempContext = this.services.context.CreateContext();
+
+                // Recreate all the ParsedCommands, to reset commands like 'header' and 'distinct' which have properties.
+                const tempParsedCommands: ParsedCommand[] = this.ParseCommands(codeLines, inputHash).slice(0, indexToCache + 1);
+
+                tempLines = this.processParsedCommands(tempParsedCommands, tempLines, tempContext, 0, tempParsedCommands.length);
+
+                this.outputCache[tempCacheKey] = {
+
+                    context: this.services.context.CloneContext(this.firstLineContext),
+                    parsedCommands: tempParsedCommands.map(pc => pc.command.Name).join(", "),
+                    output: tempLines
+                };
+            }
+        }
+
+        return lines;
+    }
+
+    private getIndexOfFurthestCachedCommand(parsedCommands: ParsedCommand[]) {
+
+        for (let c = parsedCommands.length - 1; c > 0; c--) {
+
+            if (this.outputCache[parsedCommands[c].cumulativeHash]) {
+                return c;
+            }
+        }
+
+        return -1;
     }
 
     private processParsedCommands(parsedCommands: ParsedCommand[], lines: string[][], originalContext: Context, desiredStartIndex: number, desiredStopIndex: number) {
@@ -91,7 +146,7 @@ export class CommandService {
             stopIndex = Math.min(stopIndex, desiredStopIndex);
 
             updatedLines = this.processIndividualLineCommands(
-                parsedCommands.slice(desiredStartIndex, stopIndex),
+                parsedCommands.slice(commandIndex, stopIndex),
                 updatedLines,
                 context
             );
@@ -108,8 +163,6 @@ export class CommandService {
                     this.firstLineContext
                 );
 
-                context = this.services.context.CloneContext(this.firstLineContext);
-
                 commandIndex++;
             }
         }
@@ -119,9 +172,19 @@ export class CommandService {
 
     getIndexOfNextWholeInputCommand(parsedCommands: ParsedCommand[], start: number) {
 
-        const index = parsedCommands.slice(start).findIndex(pc => { return pc.command.IsWholeInputCommand; });
+        let index = start;
 
-        return index === -1 ? parsedCommands.length : index;
+        while (index < parsedCommands.length) {
+
+            if (parsedCommands[index].command.IsWholeInputCommand) {
+
+                return index;
+            }
+
+            index++;
+        }
+
+        return parsedCommands.length;
     }
 
     public firstLineContext: Context = this.services.context.CreateContext();
@@ -220,7 +283,7 @@ export class CommandService {
                 context
             );
 
-        parsedCommand.dataSizeAfterCommand = this.services.text.CountLines2(updatedLines);
+        parsedCommand.dataSizeAfterCommand = this.services.text.GetDataSize(updatedLines);
 
         return updatedLines;
     }
@@ -229,13 +292,20 @@ export class CommandService {
 
         let parsedCommands: ParsedCommand[] = [];
 
+        let count = 0;
+
         for (let i = 0; i < codeLines.length; i++) {
 
             const parsedCommand = this.commandParsingService.ParseCodeLine(codeLines[i]);
             
-            const hash = this.services.text.GenerateHash(codeLines[i]);
+            if (parsedCommand.command.Name !== "noop") {
 
-            cumulativeHash = cumulativeHash ^ hash;
+                const hash = this.services.text.GenerateHash(count.toString() + parsedCommand.command.Name + " " + parsedCommand.para);
+
+                cumulativeHash = cumulativeHash ^ hash;
+
+                count++;
+            }
 
             parsedCommand.cumulativeHash = cumulativeHash;
 
