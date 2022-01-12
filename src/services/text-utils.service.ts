@@ -1,6 +1,7 @@
 import { SortOrderIndex } from "../interfaces/SortOrderIndex";
 import { TextRange } from "../interfaces/TextRange";
 import { RegexService } from "./regex.service";
+import { Input } from "../interfaces/Input";
 
 export class TextUtilsService {
 
@@ -600,15 +601,15 @@ export class TextUtilsService {
         return hash;
     }
 
-    GenerateHashOfLines = (lines: string[]): number => {
+    GenerateHashOfLines = (input: Input): number => {
 
         let hash = 0;
 
-        for (let l = 0; l < lines.length; l++) {
+        for (let l = 0; l < input.lines.length; l++) {
 
-            for (let i = 0; i < lines[l].length; i++) {
+            for (let i = 0; i < input.lines[l].length; i++) {
 
-                const char = lines[l].charCodeAt(i);
+                const char = input.lines[l].charCodeAt(i);
                 hash = ((hash<<5)-hash) + char;
                 hash = hash & hash; // Convert to 32bit integer
             }
@@ -620,15 +621,15 @@ export class TextUtilsService {
         return hash;
     }
 
-    GetSubText(lines: string[], textSelection: TextRange) : string {
+    GetSubText(input: Input, textSelection: TextRange) : string {
 
     if (textSelection.startLine !== textSelection.stopLine) {
 
       let result = "";
 
-      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+      for (let lineIndex = 0; lineIndex < input.lines.length; lineIndex++) {
         
-        const line = lines[lineIndex];
+        const line = input.lines[lineIndex];
 
         if (lineIndex === textSelection.startLine) {
 
@@ -648,21 +649,21 @@ export class TextUtilsService {
     }
     else {
 
-      const line = lines[textSelection.startLine];
+      const line = input.lines[textSelection.startLine];
 
       return line.substring(textSelection.startChar, textSelection.stopChar + 1);
     }
   }
 
-  RemoveSubText(lines: string[], textSelection: TextRange) : string[] {
+  RemoveSubText(input: Input, textSelection: TextRange) : Input {
 
     let result = "";
 
     if (textSelection.startLine !== textSelection.stopLine) {
 
-      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+      for (let lineIndex = 0; lineIndex < input.lines.length; lineIndex++) {
         
-        const line = lines[lineIndex];
+        const line = input.lines[lineIndex];
 
         if (lineIndex < textSelection.startLine || lineIndex > textSelection.stopLine) {
 
@@ -680,9 +681,9 @@ export class TextUtilsService {
     }
     else {
 
-      for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
+      for (let lineIndex = 0; lineIndex < input.lines.length; lineIndex++) {
         
-        const line = lines[lineIndex];
+        const line = input.lines[lineIndex];
 
         if (lineIndex === textSelection.startLine) {
 
@@ -695,22 +696,22 @@ export class TextUtilsService {
       }
     }
 
-    return this.TextToLines(result);
+    return { lines: this.TextToLines(result) };
   }
 
-  InsertSubText(lines: string[], charIndex: number, lineIndex: number, textToInsert : string) : string[] {
+  InsertSubText(input: Input, charIndex: number, lineIndex: number, textToInsert : string) : Input {
 
     let result = "";
     
-    if (lines.length === 0) {
+    if (input.lines.length === 0) {
 
         result = textToInsert;
     }
     else {
 
-        for (let i = 0; i < lines.length; i++) {
+        for (let i = 0; i < input.lines.length; i++) {
         
-            const line = lines[i];
+            const line = input.lines[i];
 
             if (i === lineIndex) {
 
@@ -723,6 +724,6 @@ export class TextUtilsService {
         }
     }
 
-    return this.TextToLines(result);
+    return { lines: this.TextToLines(result) };
   }
 }

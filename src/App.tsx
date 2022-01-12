@@ -9,6 +9,7 @@ import OutputPane from './components/OutputPane/OutputPane';
 import Popup from './components/Popup/Popup';
 import { Explanation } from './interfaces/CommandInterfaces';
 import { Context } from './interfaces/Context';
+import { Input } from './interfaces/Input';
 import { TextRange } from './interfaces/TextRange';
 import { CommandParsingService } from './services/command-parsing.service';
 import { CommandTypesService } from './services/command-types.service';
@@ -24,7 +25,7 @@ interface AppState {
   code: string;
   compressedCode: string;
   explanation: Explanation[];
-  input: string[];
+  input: Input;
   inputHash: number;
   inputFiles: string[];
   output: string[][];
@@ -80,7 +81,7 @@ select cs-uri-stem`;
       code: this.codeWindowValue,
       compressedCode: this.services.codeCompression.CompressCode(this.codeWindowValue),
       explanation: [],
-      input: this.services.text.TextToLines(input),
+      input: { lines: this.services.text.TextToLines(input) },
       inputHash: 0,
       inputFiles: [],
       output: [[]],
@@ -159,7 +160,7 @@ select cs-uri-stem`;
 
   UpdateCodeFromLocationHash() {
 
-    const compressedCode = window.location.hash.substr(1);
+    const compressedCode = window.location.hash.substring(1);
 
     const code = this.services.codeCompression.DecompressCode(compressedCode);
 
@@ -211,38 +212,38 @@ select cs-uri-stem`;
     window.removeEventListener('resize', this.UpdateWidthsAndHeights);
   }
 
-  getInputPaneText(lines: string[], textSelection: TextRange) : string {
+  getInputPaneText(input: Input, textSelection: TextRange) : string {
 
-    return this.services.text.GetSubText(lines, textSelection);
+    return this.services.text.GetSubText(input, textSelection);
   }
 
-  setInputPane(lines: string[]) : void {
+  setInputPane(input: Input) : void {
 
     this.setState({
-      input: lines,
-      inputHash: this.services.text.GenerateHashOfLines(lines)
+      input: input,
+      inputHash: this.services.text.GenerateHashOfLines(input)
     });
 
     this.executeCode(this.codeWindowValue, false);
   }
 
-  removeInputPaneText(lines: string[], textSelection: TextRange) : void {
+  removeInputPaneText(input: Input, textSelection: TextRange) : void {
 
-    const result = this.services.text.RemoveSubText(lines, textSelection);
+    const result = this.services.text.RemoveSubText(input, textSelection);
 
-    this.setInputPane(result);
+    this.setInputPane(input);
   }
 
-  insertInputPaneText(lines: string[], charIndex: number, lineIndex: number, textToInsert: string) : void {
+  insertInputPaneText(input: Input, charIndex: number, lineIndex: number, textToInsert: string) : void {
 
     const result = this.services.text.InsertSubText(
-      lines,
+      input,
       charIndex,
       lineIndex,
       textToInsert
     );
 
-    this.setInputPane(result);
+    this.setInputPane(input);
   }
 
   private updateHashTimeout: number | null;
@@ -252,19 +253,6 @@ select cs-uri-stem`;
     this.setState({code: code});
         
     this.codeWindowValue = code;
-
-    // if (this.updateHashTimeout) {
-    //   clearTimeout(this.updateHashTimeout);
-    // }
-
-    // const that = this;
-
-    // window.setTimeout(function () {
-
-    //   const compressedCode = that.services.codeCompression.CompressCode(code);
-    
-    //   window.location.hash = "#" + compressedCode;
-    // }, 500);
   }
   
   private previousCodeWindowCode: string = "";
@@ -321,7 +309,7 @@ select cs-uri-stem`;
       clearTimeout(this.executeCodeTimeout);
     }
 
-    if (this.state.input.length < 1000) {
+    if (this.state.input.lines.length < 1000) {
       doExecute();
     }
     else {
@@ -329,7 +317,7 @@ select cs-uri-stem`;
     }
   }
 
-  private executeCommands(input: string[], inputHash: number, code: string): string[][] {
+  private executeCommands(input: Input, inputHash: number, code: string): string[][] {
 
     const result = this.commandService.processCommands(code, input, inputHash);
 
@@ -572,10 +560,10 @@ select cs-uri-stem`;
                 }
               }
 
-              compressedLines.push(line);
+              compressedLines.push(compressedLine);
             }
 
-            this.setInputPane(compressedLines);
+            this.setInputPane({ lines: compressedLines });
           }
         });
       });
@@ -662,7 +650,7 @@ select cs-uri-stem`;
                 getInputPaneText={this.getInputPaneText}
                 setInputPaneLines={this.setInputPane}
                 insertInputPaneText={this.insertInputPaneText}
-                lines={this.state.input}
+                input={this.state.input}
                 hash={this.state.inputHash}
                 width={this.state.inputPaneWidth} 
                 charWidth={0.45}

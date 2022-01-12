@@ -1,5 +1,6 @@
 import { Explanation, IndividualLineCommand, ParsedCommand, WholeInputCommand } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
+import { Input } from "../interfaces/Input";
 import { CommandParsingService } from './command-parsing.service';
 import { Services } from './services';
 
@@ -37,7 +38,7 @@ export class CommandService {
 
     private outputCache: any = {};
 
-    processCommands(codeValue: string, input: string[], inputHash: number): string[][] {
+    processCommands(codeValue: string, input: Input, inputHash: number): string[][] {
 
         const codeLines = this.services.text.TextToLines(codeValue);
         const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines, inputHash);
@@ -60,7 +61,7 @@ export class CommandService {
         }
         else {
 
-            lines = input.map(function (val) { return [val]; });
+            lines = input.lines.map(function (val) { return [val]; });
             context = this.services.context.CreateContext();
 
             lines = this.processParsedCommands(parsedCommands, lines, context, 0, parsedCommands.length);           
@@ -99,7 +100,7 @@ export class CommandService {
 
                 console.log("Caching index: " + indexToCache);
 
-                let tempLines = input.map(function (val) { return [val]; });
+                let tempLines = input.lines.map(function (val) { return [val]; });
                 let tempContext = this.services.context.CreateContext();
 
                 // Recreate all the ParsedCommands, to reset commands like 'header' and 'distinct' which have properties.
