@@ -61,7 +61,7 @@ export class CommandService {
         }
         else {
 
-            lines = input.lines.map(function (val) { return [val]; });
+            lines = input.lines;
             context = this.services.context.CreateContext();
 
             lines = this.processParsedCommands(parsedCommands, lines, context, 0, parsedCommands.length);           
@@ -100,7 +100,7 @@ export class CommandService {
 
                 console.log("Caching index: " + indexToCache);
 
-                let tempLines = input.lines.map(function (val) { return [val]; });
+                let tempLines = input.lines;
                 let tempContext = this.services.context.CreateContext();
 
                 // Recreate all the ParsedCommands, to reset commands like 'header' and 'distinct' which have properties.

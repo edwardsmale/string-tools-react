@@ -81,7 +81,7 @@ select cs-uri-stem`;
       code: this.codeWindowValue,
       compressedCode: this.services.codeCompression.CompressCode(this.codeWindowValue),
       explanation: [],
-      input: { lines: this.services.text.TextToLines(input) },
+      input: new Input(input),
       inputHash: 0,
       inputFiles: [],
       output: [[]],
@@ -563,7 +563,7 @@ select cs-uri-stem`;
               compressedLines.push(compressedLine);
             }
 
-            this.setInputPane({ lines: compressedLines });
+            this.setInputPane(new Input(compressedLines));
           }
         });
       });
