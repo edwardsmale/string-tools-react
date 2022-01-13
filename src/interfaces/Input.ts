@@ -1,6 +1,6 @@
 export class Input {
 
-    constructor(value: string | string[] | string[][] | null) {
+    constructor(value: string | string[] | string[][] | null, dictionary: string[] | null) {
 
         if (value === null) {
             this.lines = [];
@@ -14,7 +14,10 @@ export class Input {
         else {
             this.lines = (value.split(/\r?\n/)).map(l => [l]);
         }
+
+        this.dictionary = dictionary || [];
     }
 
     lines: string[][];
+    dictionary: string[];
 }

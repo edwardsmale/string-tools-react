@@ -79,9 +79,9 @@ select cs-uri-stem`;
     this.state = {
       focus: "InputPane",
       code: this.codeWindowValue,
-      compressedCode: this.services.codeCompression.CompressCode(this.codeWindowValue),
+      compressedCode: this.services.compression.CompressCode(this.codeWindowValue),
       explanation: [],
-      input: new Input(input),
+      input: new Input(input, []),
       inputHash: 0,
       inputFiles: [],
       output: [[]],
@@ -102,7 +102,6 @@ select cs-uri-stem`;
       darkmode: true
     };
 
-    this.updateHashTimeout = null;
     this.executeCodeTimeout = null;
 
     this.removeInputPaneText = this.removeInputPaneText.bind(this);
@@ -162,7 +161,7 @@ select cs-uri-stem`;
 
     const compressedCode = window.location.hash.substring(1);
 
-    const code = this.services.codeCompression.DecompressCode(compressedCode);
+    const code = this.services.compression.DecompressCode(compressedCode);
 
     this.codeWindowValue = code;
     
@@ -191,14 +190,12 @@ select cs-uri-stem`;
 
     this.UpdateWidthsAndHeights();   
 
-    //window.addEventListener("hashchange", this.LocationHashChanged);
-    
     if (window.location.hash) {
       
       this.UpdateCodeFromLocationHash();
     }
 
-    this.executeCode(this.codeWindowValue, false);
+    this.executeCode(this.codeWindowValue);
 
     window.addEventListener("keydown", this.keyDown);
     window.addEventListener("resize", this.UpdateWidthsAndHeights)
@@ -206,7 +203,6 @@ select cs-uri-stem`;
 
   componentWillUnmount() {
 
-    //window.removeEventListener("hashchange", this.LocationHashChanged);
     window.removeEventListener("keydown", this.keyDown);
     window.removeEventListener("keydown", this.keyDown);
     window.removeEventListener('resize', this.UpdateWidthsAndHeights);
@@ -224,7 +220,7 @@ select cs-uri-stem`;
       inputHash: this.services.text.GenerateHashOfLines(input)
     });
 
-    this.executeCode(this.codeWindowValue, false);
+    this.executeCode(this.codeWindowValue);
   }
 
   removeInputPaneText(input: Input, textSelection: TextRange) : void {
@@ -245,8 +241,6 @@ select cs-uri-stem`;
 
     this.setInputPane(input);
   }
-
-  private updateHashTimeout: number | null;
 
   handleCodeWindowInput(code: string) {
 
@@ -275,7 +269,7 @@ select cs-uri-stem`;
 
     if (code !== this.previousCodeWindowCode) {
 
-      this.executeCode(code, true);
+      this.executeCode(code);
 
       this.previousCodeWindowCode = code;
     }
@@ -283,7 +277,7 @@ select cs-uri-stem`;
 
   private executeCodeTimeout: number | null;
 
-  executeCode(code: string, isSelect: boolean) {
+  executeCode(code: string) {
 
     this.setState({ 
       explanation: this.explainCommands(code) 
@@ -293,7 +287,7 @@ select cs-uri-stem`;
     
     var doExecute = () => {
 
-      const compressedCode = that.services.codeCompression.CompressCode(code);
+      const compressedCode = that.services.compression.CompressCode(code);
     
       window.location.hash = "#" + compressedCode;      
 
@@ -444,129 +438,7 @@ select cs-uri-stem`;
         readers.push(readFileAsText(e.target.files[i]));
       }
 
-      let wordScores: any = {};
-      
-      Promise.all(readers).then(values => {
-
-        for (let i = 0; i < values.length; i++) {
-          
-          const lines = this.services.text.TextToLines(values[i] as string);
-
-          for (let j = 0; j < lines.length; j++) {
-
-            const words = lines[j].split(new RegExp("[\t \|,]+", "g"));
-
-            for (let w = 0; w < words.length; w++) {
-              
-              const word = words[w];
-
-              if (!wordScores[word]) {
-
-                wordScores[word] = 2;
-              }
-              else {
-
-                wordScores[word] += 2 - word.length;
-              }
-            }
-          }
-        }
-
-        // Sort the words by their scores, which represents how many characters
-        // will be added (positive score) or removed (negative score) if the
-        // word is included in the index.
-
-        // Exclude any with a non-negative score, and take the first
-        // 65536 only.
-
-        let sortedWordScores = [];
-
-        for (let entry in wordScores) {
-
-          if (wordScores[entry] < -32) {
-
-            sortedWordScores.push([entry, wordScores[entry]]);
-          }
-        }
-        
-        sortedWordScores.sort(function(a, b) {
-            return a[1] - b[1];
-        });
-
-        const length = Math.min(65536, sortedWordScores.length);
-
-        let dictionary: string[] = [];
-
-        for (let i = 0; i < length; i++) {
-
-          dictionary.push(sortedWordScores[i][0]);
-        }
-
-        dictionary.sort();
-
-        let compressedLines: string[] = [];
-
-        Promise.all(readers).then(values => {
-
-          for (let i = 0; i < values.length; i++) {
-          
-            const lines = this.services.text.TextToLines(values[i] as string);
-
-            for (let j = 0; j < lines.length; j++) {
-
-              let line = lines[j];
-
-              let compressedLine = "";
-              
-              let pos = 0;
-
-              while (pos < line.length) {
-
-                let ch = line[pos];
-
-                if (ch === "\t" || ch === " " || ch === "|" || ch === ",") {
-
-                  compressedLine += ch;
-                  pos++;
-                }
-                else {
-                
-                  let wordEnd = pos;
-
-                  while (wordEnd < line.length && 
-                    line[wordEnd] !== "\t" && 
-                    line[wordEnd] !== " " && 
-                    line[wordEnd] !== "|" && 
-                    line[wordEnd] !== ",") {
-
-                    wordEnd++;
-                  }
-                  
-                  const word = line.slice(pos, wordEnd);
-
-                  pos = wordEnd;
-
-                  const dictionaryIndex = this.services.array.BinarySearchStringArray(dictionary, word);
-
-                  if (dictionaryIndex >= 0) {
-
-                    compressedLine += word;
-                  }
-                  else {
-                    
-                    compressedLine += String.fromCharCode(1);
-                    compressedLine += String.fromCharCode(dictionaryIndex);
-                  }
-                }
-              }
-
-              compressedLines.push(compressedLine);
-            }
-
-            this.setInputPane(new Input(compressedLines));
-          }
-        });
-      });
+      this.services.compression.CompressFiles(readers, (input) => { this.setInputPane(input) });
     }
   }
 

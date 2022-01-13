@@ -69,8 +69,16 @@ export class TextUtilsService {
       return charCount * 2;
     }
 
+    private wordsRegex: RegExp = new RegExp("[\t \|,]+", "g");
+
+    TextToWords = (value: string) => {
+        return value.split(this.wordsRegex);
+    }
+
+    private linesRegex: RegExp = /\r?\n/;
+
     TextToLines = (value: string) => {
-        return value.split(/\r?\n/);
+        return value.split(this.linesRegex);
     }
 
     LinesToText = (lines: string[]): string => {
