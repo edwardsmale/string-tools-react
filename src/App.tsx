@@ -9,7 +9,7 @@ import OutputPane from './components/OutputPane/OutputPane';
 import Popup from './components/Popup/Popup';
 import { Explanation } from './interfaces/CommandInterfaces';
 import { Context } from './interfaces/Context';
-import { Input } from './interfaces/Input';
+import { TextData } from './interfaces/TextData';
 import { TextRange } from './interfaces/TextRange';
 import { CommandParsingService } from './services/command-parsing.service';
 import { CommandTypesService } from './services/command-types.service';
@@ -25,7 +25,7 @@ interface AppState {
   code: string;
   compressedCode: string;
   explanation: Explanation[];
-  input: Input;
+  input: TextData;
   inputHash: number;
   inputFiles: string[];
   output: string[][];
@@ -81,7 +81,7 @@ select cs-uri-stem`;
       code: this.codeWindowValue,
       compressedCode: this.services.compression.CompressCode(this.codeWindowValue),
       explanation: [],
-      input: new Input(input, []),
+      input: new TextData(input, []),
       inputHash: 0,
       inputFiles: [],
       output: [[]],
@@ -208,12 +208,12 @@ select cs-uri-stem`;
     window.removeEventListener('resize', this.UpdateWidthsAndHeights);
   }
 
-  getInputPaneText(input: Input, textSelection: TextRange) : string {
+  getInputPaneText(input: TextData, textSelection: TextRange) : string {
 
     return this.services.text.GetSubText(input, textSelection);
   }
 
-  setInputPane(input: Input) : void {
+  setInputPane(input: TextData) : void {
 
     this.setState({
       input: input,
@@ -223,14 +223,14 @@ select cs-uri-stem`;
     this.executeCode(this.codeWindowValue);
   }
 
-  removeInputPaneText(input: Input, textSelection: TextRange) : void {
+  removeInputPaneText(input: TextData, textSelection: TextRange) : void {
 
     const result = this.services.text.RemoveSubText(input, textSelection);
 
     this.setInputPane(input);
   }
 
-  insertInputPaneText(input: Input, charIndex: number, lineIndex: number, textToInsert: string) : void {
+  insertInputPaneText(input: TextData, charIndex: number, lineIndex: number, textToInsert: string) : void {
 
     const result = this.services.text.InsertSubText(
       input,
@@ -311,7 +311,7 @@ select cs-uri-stem`;
     }
   }
 
-  private executeCommands(input: Input, inputHash: number, code: string): string[][] {
+  private executeCommands(input: TextData, inputHash: number, code: string): string[][] {
 
     const result = this.commandService.processCommands(code, input, inputHash);
 

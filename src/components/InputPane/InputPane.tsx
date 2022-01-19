@@ -1,7 +1,7 @@
 import React from 'react';
 import Scrollbar from '../Scrollbar/Scrollbar';
 import './InputPane.scss';
-import { Input } from '../../interfaces/Input';
+import { TextData } from '../../interfaces/TextData';
 import { TextRange } from '../../interfaces/TextRange';
 import { TextPosition } from '../../interfaces/TextPosition';
 import { Services } from '../../services/services';
@@ -10,11 +10,11 @@ interface InputPaneProps {
   onFocus: () => void;
   hasFocus: boolean;
   keyDownEventHandlers: ((event: KeyboardEvent) => void)[];
-  removeInputPaneText: (input: Input, textSelection: TextRange) => void;
-  getInputPaneText: (input: Input, textSelection: TextRange) => string;
-  setInputPaneLines: (input: Input) => void;
-  insertInputPaneText: (input: Input, charIndex: number, lineIndex: number, textToInsert: string) => void;
-  input: Input;
+  removeInputPaneText: (input: TextData, textSelection: TextRange) => void;
+  getInputPaneText: (input: TextData, textSelection: TextRange) => string;
+  setInputPaneLines: (input: TextData) => void;
+  insertInputPaneText: (input: TextData, charIndex: number, lineIndex: number, textToInsert: string) => void;
+  input: TextData;
   hash: number;
   width: number;
   charWidth: number;

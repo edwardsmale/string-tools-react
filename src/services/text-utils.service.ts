@@ -1,7 +1,7 @@
 import { SortOrderIndex } from "../interfaces/SortOrderIndex";
 import { TextRange } from "../interfaces/TextRange";
 import { RegexService } from "./regex.service";
-import { Input } from "../interfaces/Input";
+import { TextData } from "../interfaces/TextData";
 
 export class TextUtilsService {
 
@@ -609,7 +609,7 @@ export class TextUtilsService {
         return hash;
     }
 
-    GenerateHashOfLines = (input: Input): number => {
+    GenerateHashOfLines = (input: TextData): number => {
 
         let hash = 0;
 
@@ -629,7 +629,7 @@ export class TextUtilsService {
         return hash;
     }
 
-    GetSubText(input: Input, textSelection: TextRange) : string {
+    GetSubText(input: TextData, textSelection: TextRange) : string {
 
     if (textSelection.startLine !== textSelection.stopLine) {
 
@@ -663,7 +663,7 @@ export class TextUtilsService {
     }
   }
 
-  RemoveSubText(input: Input, textSelection: TextRange) : Input {
+  RemoveSubText(input: TextData, textSelection: TextRange) : TextData {
 
     let result = "";
 
@@ -704,10 +704,10 @@ export class TextUtilsService {
       }
     }
 
-    return new Input(result);
+    return new TextData(result);
   }
 
-  InsertSubText(input: Input, charIndex: number, lineIndex: number, textToInsert : string) : Input {
+  InsertSubText(input: TextData, charIndex: number, lineIndex: number, textToInsert : string) : TextData {
 
     let result = "";
     
@@ -732,6 +732,6 @@ export class TextUtilsService {
         }
     }
 
-    return new Input(result);
+    return new TextData(result);
   }
 }

@@ -1,6 +1,6 @@
 import { Explanation, IndividualLineCommand, ParsedCommand, WholeInputCommand } from "../interfaces/CommandInterfaces";
 import { Context } from "../interfaces/Context";
-import { Input } from "../interfaces/Input";
+import { TextData } from "../interfaces/TextData";
 import { CommandParsingService } from './command-parsing.service';
 import { Services } from './services';
 
@@ -38,7 +38,7 @@ export class CommandService {
 
     private outputCache: any = {};
 
-    processCommands(codeValue: string, input: Input, inputHash: number): string[][] {
+    processCommands(codeValue: string, input: TextData, inputHash: number): string[][] {
 
         const codeLines = this.services.text.TextToLines(codeValue);
         const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines, inputHash);

@@ -1,6 +1,6 @@
 import { ArrayService } from "./array.service";
 import { TextUtilsService } from "./text-utils.service";
-import { Input } from "../interfaces/Input";
+import { TextData } from "../interfaces/TextData";
 
 export class CompressionService {
 
@@ -19,7 +19,7 @@ export class CompressionService {
         return decodeURIComponent(escape(atob(compressedCode)));
     }
 
-    CompressFiles = (readers: Promise<any>[], callback: (input: Input) => void): void => {
+    CompressFiles = (readers: Promise<any>[], callback: (input: TextData) => void): void => {
 
         let wordScores: any = {};
       
@@ -140,7 +140,7 @@ export class CompressionService {
                         compressedLines.push(compressedLine);
                     }
 
-                    callback(new Input(compressedLines, dictionary));
+                    callback(new TextData(compressedLines, dictionary));
                 }
             });
         });

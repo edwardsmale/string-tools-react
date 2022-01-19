@@ -1,4 +1,4 @@
-export class Input {
+export class TextData {
 
     constructor(value: string | string[] | string[][] | null, dictionary: string[] | null) {
 
