@@ -100,23 +100,25 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
 
     let widest = 0;
 
-    for (let i = 0; i < Math.min(this.props.input.lines.length, 100000); i++) {
+    for (let i = 0; i < Math.min(this.props.input.flat.length, 100000); i++) {
 
-      if (this.props.input.lines[i].length > widest) {
+      if (this.props.input.flat[i].length > widest) {
 
-        widest = this.props.input.lines[i].length;
+        widest = this.props.input.flat[i].length;
       }
     }
 
     this.lastGeneratedContentWidth = widest;
     this.lastGeneratedContentWidthHash = this.props.hash;
 
+    debugger;
+
     return widest;
   }
 
   getVisibleHeight() { return Math.round(this.props.height / this.props.lineHeight); }
 
-  getContentHeight() { return this.props.input.lines.length; }
+  getContentHeight() { return this.props.input.flat.length; }
   
   getVisibleElements() {
 
@@ -201,7 +203,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
             onMouseDown={(event) => { this.handleMouseDown(event, pos); }}
             onMouseMove={(event) => { this.handleMouseMove(event, pos); }}
             onMouseUp={(event) => { this.handleMouseUp(event, pos); }}
-          >{this.props.input.lines[lineIndex + visibleRange.startLine][charIndex + visibleRange.startChar]}</i>
+          >{this.props.input.flat[lineIndex + visibleRange.startLine][charIndex + visibleRange.startChar]}</i>
         );
 
         // If reached the selection start line and char, start highlighting chars.
@@ -353,7 +355,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         scrollX--;
       } else if (line > 0) {
         line--;
-        char = this.props.input.lines[this.state.scrollY + line].length - 1;
+        char = this.props.input.flat[this.state.scrollY + line].length - 1;
 
         scrollX = 0;
 
@@ -366,10 +368,10 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     }
     else if (event.code === "ArrowRight") {
 
-      if (char < visibleWidth - 1 && char < this.props.input.lines[this.state.scrollY + line].length - 1) {
+      if (char < visibleWidth - 1 && char < this.props.input.flat[this.state.scrollY + line].length - 1) {
         char++;
       }
-      else if (scrollX + visibleWidth < this.props.input.lines[this.state.scrollY + line].length) {
+      else if (scrollX + visibleWidth < this.props.input.flat[this.state.scrollY + line].length) {
         scrollX++;
       }
       else {
@@ -382,23 +384,23 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       
       if (line > 0) {
         line--;
-        if (char >= this.props.input.lines[this.state.scrollY + line].length) {
-          char = this.props.input.lines[this.state.scrollY + line].length - 1;
+        if (char >= this.props.input.flat[this.state.scrollY + line].length) {
+          char = this.props.input.flat[this.state.scrollY + line].length - 1;
         }
       } 
       else if (scrollY > 0) {
         scrollY--;
       }
     }
-    else if (event.code === "ArrowDown" && line < this.props.input.lines.length - 1) {
+    else if (event.code === "ArrowDown" && line < this.props.input.flat.length - 1) {
       
       if (line < visibleHeight - 1) {
         line++;
-        if (char >= this.props.input.lines[this.state.scrollY + line].length) {
-          char = this.props.input.lines[this.state.scrollY + line].length - 1;
+        if (char >= this.props.input.flat[this.state.scrollY + line].length) {
+          char = this.props.input.flat[this.state.scrollY + line].length - 1;
         }
       }
-      else if (scrollY + visibleHeight < this.props.input.lines.length) {
+      else if (scrollY + visibleHeight < this.props.input.flat.length) {
         scrollY++;
       }
     }
@@ -407,7 +409,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
       scrollX = 0;
     }
     else if (event.code === "End") {
-      char = this.props.input.lines[this.state.scrollY + line].length - 1;
+      char = this.props.input.flat[this.state.scrollY + line].length - 1;
 
       while (char >= scrollX + visibleWidth) {
         scrollX++;
@@ -537,8 +539,8 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
         this.setState({ textSelection: {
           startChar: 0,
           startLine: 0,
-          stopChar: this.props.input.lines[this.props.input.lines.length - 1].length,
-          stopLine: this.props.input.lines.length
+          stopChar: this.props.input.flat[this.props.input.flat.length - 1].length,
+          stopLine: this.props.input.flat.length
         }});
       }
       else if (event.key === "c" && this.state.textSelection !== null) {

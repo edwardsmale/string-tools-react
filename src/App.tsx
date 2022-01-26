@@ -438,7 +438,10 @@ select cs-uri-stem`;
         readers.push(readFileAsText(e.target.files[i]));
       }
 
-      this.services.compression.CompressFiles(readers, (input) => { this.setInputPane(input) });
+      this.services.compression.CompressFiles(
+        readers,
+        (input) => { this.setInputPane(this.services.compression.DecompressTextData(input)); 
+      });
     }
   }
 

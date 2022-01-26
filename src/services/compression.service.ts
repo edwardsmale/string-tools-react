@@ -125,7 +125,7 @@ export class CompressionService {
 
                                 const dictionaryIndex = this.arrayService.BinarySearchStringArray(dictionary, word);
 
-                                if (dictionaryIndex >= 0) {
+                                if (dictionaryIndex < 0) {
 
                                     compressedLine += word;
                                 }
@@ -144,5 +144,49 @@ export class CompressionService {
                 }
             });
         });
+    }
+
+    DecompressTextData = (textData: TextData): TextData => {
+
+        let decompressed: string[][] = [];
+
+        for (let i = 0; i < textData.lines.length; i++) {
+
+            let current: string[] = [];
+
+            for (let j = 0; j < textData.lines[i].length; j++) {
+
+                var decompressedLine = this.DecompressString(textData.lines[i][j], textData.dictionary);
+
+                current.push(decompressedLine);
+            }
+
+            decompressed.push(current);
+        }
+
+        return new TextData(decompressed);
+    }
+
+    DecompressString = (str: string, dictionary: string[]): string => {
+
+        let decompressed = "";
+        const marker = String.fromCharCode(1);
+
+        for (var i = 0; i < str.length; i++) {
+
+            if (str[i] !== marker) {
+
+                decompressed += str[i];
+            }
+            else {
+
+                i++;
+                const dictionaryIndex = str[i].charCodeAt(0);
+
+                decompressed += dictionary[dictionaryIndex];
+            }
+        }
+
+        return decompressed;
     }
 }
