@@ -613,7 +613,7 @@ export class TextUtilsService {
 
         let hash = 0;
 
-        for (let l = 0; l < input.lines.length; l++) {
+        for (let l = 0; l < input.lineCount; l++) {
 
             for (let i = 0; i < input.lines[l][0].length; i++) {
 
@@ -635,7 +635,7 @@ export class TextUtilsService {
 
       let result = "";
 
-      for (let lineIndex = 0; lineIndex < input.lines.length; lineIndex++) {
+      for (let lineIndex = 0; lineIndex < input.lineCount; lineIndex++) {
         
         const line = input.lines[lineIndex][0];
 

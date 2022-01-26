@@ -91,7 +91,7 @@ export class CompressionService {
 
                     for (let j = 0; j < lines.length; j++) {
 
-                        let line = lines[j];
+                        const line = lines[j];
 
                         let compressedLine = "";
                         
@@ -99,7 +99,7 @@ export class CompressionService {
 
                         while (pos < line.length) {
 
-                            let ch = line[pos];
+                            const ch = line[pos];
 
                             if (ch === "\t" || ch === " " || ch === "|" || ch === ",") {
 
@@ -108,7 +108,7 @@ export class CompressionService {
                             }
                             else {
                             
-                                let wordEnd = pos;
+                                let wordEnd = pos + 1;
 
                                 while (wordEnd < line.length && 
                                     line[wordEnd] !== "\t" && 
@@ -169,22 +169,17 @@ export class CompressionService {
 
     DecompressString = (str: string, dictionary: string[]): string => {
 
-        let decompressed = "";
-        const marker = String.fromCharCode(1);
+        const split = str.split(String.fromCharCode(1));
 
-        for (var i = 0; i < str.length; i++) {
+        let decompressed = split[0];
 
-            if (str[i] !== marker) {
+        for (let i = 1; i < split.length; i++) {
 
-                decompressed += str[i];
-            }
-            else {
+            const index = split[i].charCodeAt(0);
 
-                i++;
-                const dictionaryIndex = str[i].charCodeAt(0);
+            decompressed += dictionary[index];
 
-                decompressed += dictionary[dictionaryIndex];
-            }
+            decompressed += split[i].slice(1);
         }
 
         return decompressed;

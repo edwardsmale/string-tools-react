@@ -81,7 +81,7 @@ select cs-uri-stem`;
       code: this.codeWindowValue,
       compressedCode: this.services.compression.CompressCode(this.codeWindowValue),
       explanation: [],
-      input: new TextData(input, []),
+      input: new TextData(input),
       inputHash: 0,
       inputFiles: [],
       output: [[]],
@@ -291,7 +291,7 @@ select cs-uri-stem`;
     
       window.location.hash = "#" + compressedCode;      
 
-      const result = that.executeCommands(that.state.input, this.state.inputHash, code);
+      const result = that.executeCommands(this.services.compression.DecompressTextData(that.state.input), this.state.inputHash, code);
 
       that.setState({ 
         output: result,
@@ -303,7 +303,7 @@ select cs-uri-stem`;
       clearTimeout(this.executeCodeTimeout);
     }
 
-    if (this.state.input.lines.length < 1000) {
+    if (this.state.input.lineCount < 1000) {
       doExecute();
     }
     else {
@@ -438,10 +438,7 @@ select cs-uri-stem`;
         readers.push(readFileAsText(e.target.files[i]));
       }
 
-      this.services.compression.CompressFiles(
-        readers,
-        (input) => { this.setInputPane(this.services.compression.DecompressTextData(input)); 
-      });
+      this.services.compression.CompressFiles(readers, (input) => { this.setInputPane(input); });
     }
   }
 
