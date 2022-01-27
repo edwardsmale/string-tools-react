@@ -1,30 +1,39 @@
 export class TextData {
 
-    constructor(value: string | string[] | string[][] | null, dictionary: string[] | null = null) {
-
-        this.maxWidth = 0;
+    constructor(value: string | string[] | string[][] | null, dictionary: string[] | null = null, lineCount: number = -1, maxWidth: number = -1) {
 
         if (value === null) {
 
             this.isFlat = true;
             this.lines = [];
             this.lineCount = 0;
+            this.maxWidth = 0;
         }
         else if (value[0] && Array.isArray(value[0])) {
 
             this.isFlat = false;
-            this.lines = value as string[][];            
-            this.lineCount = 0;
+            this.lines = value as string[][];
 
-            for (let i = 0; i < this.lines.length; i++) {
+            if (lineCount !== -1 && maxWidth !== -1) {
 
-                this.lineCount += this.lines[i].length;
+                this.lineCount = lineCount;
+                this.maxWidth = maxWidth;
+            }
+            else {
 
-                for (let j = 0; j < this.lines[i].length; j++) {
+                this.lineCount = 0;
+                this.maxWidth = 0;
 
-                    if (this.lines[i][j].length > this.maxWidth) {
+                for (let i = 0; i < this.lines.length; i++) {
 
-                        this.maxWidth = this.lines[i][j].length;
+                    this.lineCount += this.lines[i].length;
+
+                    for (let j = 0; j < this.lines[i].length; j++) {
+
+                        if (this.lines[i][j].length > this.maxWidth) {
+
+                            this.maxWidth = this.lines[i][j].length;
+                        }
                     }
                 }
             }
@@ -35,13 +44,23 @@ export class TextData {
 
             const arr = value as string[];
             this.lines = arr.map(l => [l]);
-            this.lineCount = arr.length;
             
-            for (let i = 0; i < arr.length; i++) {
+            if (lineCount !== -1 && maxWidth !== -1) {
 
-                if (arr[i].length > this.maxWidth) {
+                this.lineCount = lineCount;
+                this.maxWidth = maxWidth;
+            }
+            else {
 
-                    this.maxWidth = arr[i].length;
+                this.lineCount = arr.length;
+                this.maxWidth = 0;
+                
+                for (let i = 0; i < arr.length; i++) {
+
+                    if (arr[i].length > this.maxWidth) {
+
+                        this.maxWidth = arr[i].length;
+                    }
                 }
             }
         }
@@ -51,13 +70,23 @@ export class TextData {
 
             const arr = value.split(/\r?\n/);
             this.lines = arr.map(l => [l]);
-            this.lineCount = arr.length;
-            
-            for (let i = 0; i < arr.length; i++) {
 
-                if (arr[i].length > this.maxWidth) {
+            if (lineCount !== -1 && maxWidth !== -1) {
 
-                    this.maxWidth = arr[i].length;
+                this.lineCount = lineCount;
+                this.maxWidth = maxWidth;
+            }
+            else {
+
+                this.lineCount = arr.length;
+                this.maxWidth = 0;
+                
+                for (let i = 0; i < arr.length; i++) {
+
+                    if (arr[i].length > this.maxWidth) {
+
+                        this.maxWidth = arr[i].length;
+                    }
                 }
             }
         }

@@ -25,17 +25,26 @@ export class CompressionService {
       
         Promise.all(readers).then(values => {
 
+            const delimiters = " \t\r\n|,";
+
             for (let i = 0; i < values.length; i++) {
-            
-                const lines = this.textUtilsService.TextToLines(values[i] as string);
 
-                for (let j = 0; j < lines.length; j++) {
+                const value = values[i];
 
-                    const words = this.textUtilsService.TextToWords(lines[j]);
+                let pos = 0;
 
-                    for (let w = 0; w < words.length; w++) {
-                    
-                        const word = words[w];
+                while (pos < value.length) {
+
+                    const wordStart = pos;
+
+                    while (pos < value.length && !delimiters.includes(value[pos])) {
+
+                        pos++;
+                    }
+
+                    if (pos - wordStart >= 3) {
+
+                        const word = value.slice(wordStart, pos);
 
                         if (!wordScores[word]) {
 
@@ -45,6 +54,11 @@ export class CompressionService {
 
                             wordScores[word] += 2 - word.length;
                         }
+                    }
+
+                    while (pos < value.length && delimiters.includes(value[pos])) {
+
+                        pos++;
                     }
                 }
             }
@@ -56,34 +70,31 @@ export class CompressionService {
             // Exclude any with a non-negative score, and take the first
             // 65536 only.
 
-            let sortedWordScores = [];
+            let dictionary: string[] = [];
 
             for (let entry in wordScores) {
 
-                if (wordScores[entry] < -32) {
+                if (wordScores[entry] < -16) {
 
-                    sortedWordScores.push([entry, wordScores[entry]]);
+                    dictionary.push(entry);
+
+                    if (dictionary.length >= 65535) {
+                        break;
+                    }
                 }
-            }
-                
-            sortedWordScores.sort(function(a, b) {
-                return a[1] - b[1];
-            });
-
-            const length = Math.min(65536, sortedWordScores.length);
-
-            let dictionary: string[] = [];
-
-            for (let i = 0; i < length; i++) {
-
-                dictionary.push(sortedWordScores[i][0]);
             }
 
             dictionary.sort();
 
             let compressedLines: string[] = [];
 
+            const token = String.fromCharCode(1);
+
+            let maxWidth = 0;
+
             Promise.all(readers).then(values => {
+
+                const delimiters = " \t|,";
 
                 for (let i = 0; i < values.length; i++) {
                 
@@ -101,7 +112,7 @@ export class CompressionService {
 
                             const ch = line[pos];
 
-                            if (ch === "\t" || ch === " " || ch === "|" || ch === ",") {
+                            if (delimiters.includes(ch)) {
 
                                 compressedLine += ch;
                                 pos++;
@@ -110,11 +121,7 @@ export class CompressionService {
                             
                                 let wordEnd = pos + 1;
 
-                                while (wordEnd < line.length && 
-                                    line[wordEnd] !== "\t" && 
-                                    line[wordEnd] !== " " && 
-                                    line[wordEnd] !== "|" && 
-                                    line[wordEnd] !== ",") {
+                                while (wordEnd < line.length && !delimiters.includes(line[wordEnd])) {
 
                                     wordEnd++;
                                 }
@@ -131,16 +138,19 @@ export class CompressionService {
                                 }
                                 else {
                                     
-                                    compressedLine += String.fromCharCode(1);
-                                    compressedLine += String.fromCharCode(dictionaryIndex);
+                                    compressedLine += token + String.fromCharCode(dictionaryIndex);
                                 }
                             }
                         }
 
                         compressedLines.push(compressedLine);
+
+                        if (compressedLine.length > maxWidth) {
+                            maxWidth = compressedLine.length;
+                        }
                     }
 
-                    callback(new TextData(compressedLines, dictionary));
+                    callback(new TextData(compressedLines, dictionary, compressedLines.length, maxWidth));
                 }
             });
         });
@@ -150,21 +160,44 @@ export class CompressionService {
 
         let decompressed: string[][] = [];
 
+        let lineCount = 0;
+        let maxWidth = 0;
+
         for (let i = 0; i < textData.lines.length; i++) {
 
             let current: string[] = [];
 
             for (let j = 0; j < textData.lines[i].length; j++) {
 
-                var decompressedLine = this.DecompressString(textData.lines[i][j], textData.dictionary);
+                const line = textData.lines[i][j];
 
-                current.push(decompressedLine);
+                if (!line.includes(String.fromCharCode(1))) {
+
+                    current.push(line);
+
+                    if (line.length > maxWidth) {
+
+                        maxWidth = line.length;
+                    }
+                }
+                else {
+                    const decompressedLine = this.DecompressString(line, textData.dictionary);
+
+                    current.push(decompressedLine);
+
+                    lineCount++;
+
+                    if (decompressedLine.length > maxWidth) {
+
+                        maxWidth = decompressedLine.length;
+                    }
+                }
             }
 
             decompressed.push(current);
         }
 
-        return new TextData(decompressed);
+        return new TextData(decompressed, null, lineCount, maxWidth);
     }
 
     DecompressString = (str: string, dictionary: string[]): string => {
