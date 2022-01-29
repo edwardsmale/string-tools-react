@@ -38,7 +38,7 @@ export class CommandService {
 
     private outputCache: any = {};
 
-    processCommands(codeValue: string, input: TextData, inputHash: number): string[][] {
+    processCommands(codeValue: string, input: TextData, inputHash: number): TextData {
 
         const codeLines = this.services.text.TextToLines(codeValue);
         const parsedCommands: ParsedCommand[] = this.ParseCommands(codeLines, inputHash);
@@ -117,7 +117,7 @@ export class CommandService {
             }
         }
 
-        return lines;
+        return new TextData(lines);
     }
 
     private getIndexOfFurthestCachedCommand(parsedCommands: ParsedCommand[]) {

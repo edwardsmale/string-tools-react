@@ -294,7 +294,7 @@ select cs-uri-stem`;
       const result = that.executeCommands(this.services.compression.DecompressTextData(that.state.input), this.state.inputHash, code);
 
       that.setState({ 
-        output: result,
+        output: result.lines,
         outputHash: that.state.outputHash + 1
       });
     };
@@ -311,7 +311,7 @@ select cs-uri-stem`;
     }
   }
 
-  private executeCommands(input: TextData, inputHash: number, code: string): string[][] {
+  private executeCommands(input: TextData, inputHash: number, code: string): TextData {
 
     const result = this.commandService.processCommands(code, input, inputHash);
 
