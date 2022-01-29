@@ -113,7 +113,7 @@ class InputPane extends React.Component<InputPaneProps, InputPaneState> {
     return widest;
   }
 
-  getVisibleHeight() { return Math.round(this.props.height / this.props.lineHeight); }
+  getVisibleHeight() { return Math.round(this.props.height / this.props.lineHeight) - 1; }
 
   getContentHeight() { return this.props.lines.length; }
   
