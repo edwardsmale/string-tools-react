@@ -122,7 +122,7 @@ class OutputPane extends React.Component<OutputPaneProps, OutputPaneState> {
     return widest;
   }  
 
-  getVisibleHeight() { return this.props.height / this.props.lineHeight; }
+  getVisibleHeight() { return this.props.height / this.props.lineHeight - 1; }
 
   getContentHeight(): number {
 
