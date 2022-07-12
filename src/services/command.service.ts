@@ -121,6 +121,8 @@ export class CommandService {
 
     private getIndexOfFurthestCachedCommand(parsedCommands: ParsedCommand[]) {
 
+        return -1; // TODO: Fix caching, it doesn't work.
+
         for (let c = parsedCommands.length - 1; c > 0; c--) {
 
             if (this.outputCache[parsedCommands[c].cumulativeHash]) {
