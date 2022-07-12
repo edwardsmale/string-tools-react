@@ -123,14 +123,14 @@ export class CommandService {
 
         return -1; // TODO: Fix caching, it doesn't work.
 
-        for (let c = parsedCommands.length - 1; c > 0; c--) {
+        // for (let c = parsedCommands.length - 1; c > 0; c--) {
 
-            if (this.outputCache[parsedCommands[c].cumulativeHash]) {
-                return c;
-            }
-        }
+        //     if (this.outputCache[parsedCommands[c].cumulativeHash]) {
+        //         return c;
+        //     }
+        // }
 
-        return -1;
+        // return -1;
     }
 
     private processParsedCommands(parsedCommands: ParsedCommand[], lines: string[][], originalContext: Context, desiredStartIndex: number, desiredStopIndex: number) {
