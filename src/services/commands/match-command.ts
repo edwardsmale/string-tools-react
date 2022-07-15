@@ -47,16 +47,10 @@ export class MatchCommand extends IndividualLineCommand {
         
         const searchString = para || context.searchString;
 
-        const includeSuccesses = !negated;
-
         if (context.isSplit) {
 
-            var include = false;;
-
-            if (includeSuccesses) {
+            if (!negated) {
                 
-                include = false;
-
                 if (!searchString && context.regex) {
 
                     const regexp = this.services.regex.GetRegex(context.regex);
@@ -69,8 +63,7 @@ export class MatchCommand extends IndividualLineCommand {
 
                             if (regexp.test(value[index])) {
 
-                                include = true;
-                                break;
+                                return value;
                             }
                         }
                     }
@@ -80,8 +73,7 @@ export class MatchCommand extends IndividualLineCommand {
 
                             if (regexp.test(value[i])) {
 
-                                include = true;
-                                break;
+                                return value;
                             }
                         }
                     }
@@ -96,8 +88,7 @@ export class MatchCommand extends IndividualLineCommand {
 
                             if (value[index].includes(searchString as string)) {
 
-                                include = true;
-                                break;
+                                return value;
                             }
                         }
                     }
@@ -107,83 +98,75 @@ export class MatchCommand extends IndividualLineCommand {
 
                             if (value[i].includes(searchString as string)) {
 
-                                include = true;
-                                break;
+                                return value;
                             }
                         }
                     }
                 }
-            }
-            else {
 
-                include = true;
-
-                if (!searchString && context.regex) {
-
-                    const regexp = this.services.regex.GetRegex(context.regex);
-
-                    if (context.withIndices.length) {
-
-                        for (let i = 0; i < context.withIndices.length; i++) {
-
-                            const index = context.withIndices[i];
-
-                            if (regexp.test(value[index])) {
-
-                                include = false;
-                                break;
-                            }
-                        }
-                    }
-                    else {
-
-                        for (let i = 0; i < value.length; i++) {
-
-                            if (regexp.test(value[i])) {
-
-                                include = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-                else {
-
-                    if (context.withIndices.length) {
-
-                        for (let i = 0; i < context.withIndices.length; i++) {
-
-                            const index = context.withIndices[i];
-
-                            if (value[index].includes(searchString as string)) {
-
-                                include = false;
-                                break;
-                            }
-                        }
-                    }
-                    else {
-
-                        for (let i = 0; i < value.length; i++) {
-
-                            if (value[i].includes(searchString as string)) {
-
-                                include = false;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (include) {
-                return value;
-            }
-            else {
                 return [];
+            }
+            else {
+
+                if (!searchString && context.regex) {
+
+                    const regexp = this.services.regex.GetRegex(context.regex);
+
+                    if (context.withIndices.length) {
+
+                        for (let i = 0; i < context.withIndices.length; i++) {
+
+                            const index = context.withIndices[i];
+
+                            if (regexp.test(value[index])) {
+
+                                return [];
+                            }
+                        }
+                    }
+                    else {
+
+                        for (let i = 0; i < value.length; i++) {
+
+                            if (regexp.test(value[i])) {
+
+                                return [];
+                            }
+                        }
+                    }
+                }
+                else {
+
+                    if (context.withIndices.length) {
+
+                        for (let i = 0; i < context.withIndices.length; i++) {
+
+                            const index = context.withIndices[i];
+
+                            if (value[index].includes(searchString as string)) {
+
+                                return [];
+                            }
+                        }
+                    }
+                    else {
+
+                        for (let i = 0; i < value.length; i++) {
+
+                            if (value[i].includes(searchString as string)) {
+
+                                return [];
+                            }
+                        }
+                    }
+                }
+
+                return value;
             }
         }
         else {
+
+            const includeSuccesses = !negated;
 
             if (!searchString && context.regex) {
 
