@@ -51,36 +51,132 @@ export class MatchCommand extends IndividualLineCommand {
 
         if (context.isSplit) {
 
-            let match = true;
+            var include = false;;
 
-            if (!searchString && context.regex) {
+            if (includeSuccesses) {
+                
+                include = false;
 
-                const regexp = this.services.regex.GetRegex(context.regex);
+                if (!searchString && context.regex) {
 
-                for (let i = 0; i < context.withIndices.length; i++) {
+                    const regexp = this.services.regex.GetRegex(context.regex);
 
-                    const index = context.withIndices[i];
+                    if (context.withIndices.length) {
 
-                    if (regexp.test(value[index]) !== includeSuccesses) {
+                        for (let i = 0; i < context.withIndices.length; i++) {
 
-                        match = false;
+                            const index = context.withIndices[i];
+
+                            if (regexp.test(value[index])) {
+
+                                include = true;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+
+                        for (let i = 0; i < value.length; i++) {
+
+                            if (regexp.test(value[i])) {
+
+                                include = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+
+                    if (context.withIndices.length) {
+
+                        for (let i = 0; i < context.withIndices.length; i++) {
+
+                            const index = context.withIndices[i];
+
+                            if (value[index].includes(searchString as string)) {
+
+                                include = true;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+
+                        for (let i = 0; i < value.length; i++) {
+
+                            if (value[i].includes(searchString as string)) {
+
+                                include = true;
+                                break;
+                            }
+                        }
                     }
                 }
             }
             else {
 
-                for (let i = 0; i < context.withIndices.length; i++) {
+                include = true;
 
-                    const index = context.withIndices[i];
+                if (!searchString && context.regex) {
 
-                    if (value[index].includes(searchString as string) !== includeSuccesses) {
+                    const regexp = this.services.regex.GetRegex(context.regex);
 
-                        match = false;
+                    if (context.withIndices.length) {
+
+                        for (let i = 0; i < context.withIndices.length; i++) {
+
+                            const index = context.withIndices[i];
+
+                            if (regexp.test(value[index])) {
+
+                                include = false;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+
+                        for (let i = 0; i < value.length; i++) {
+
+                            if (regexp.test(value[i])) {
+
+                                include = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                else {
+
+                    if (context.withIndices.length) {
+
+                        for (let i = 0; i < context.withIndices.length; i++) {
+
+                            const index = context.withIndices[i];
+
+                            if (value[index].includes(searchString as string)) {
+
+                                include = false;
+                                break;
+                            }
+                        }
+                    }
+                    else {
+
+                        for (let i = 0; i < value.length; i++) {
+
+                            if (value[i].includes(searchString as string)) {
+
+                                include = false;
+                                break;
+                            }
+                        }
                     }
                 }
             }
 
-            if (match) {
+            if (include) {
                 return value;
             }
             else {

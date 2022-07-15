@@ -21,7 +21,7 @@ class ContextPopupContent extends React.Component<ContextPopupContentProps, Cont
         </colgroup>
         <tbody>
           <tr>
-            <td className="context-popup-content__key">Is Array Of Arrays</td>
+            <td className="context-popup-content__key">Is Split</td>
             <td className="context-popup-content__value">{this.props.firstLineContext.isSplit ? "True" : "False"}</td>
           </tr>
           <tr>
