@@ -1,6 +1,5 @@
 import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
-import { RegexService } from '../regex.service';
 
 export class RegexCommand extends IndividualLineCommand {
     

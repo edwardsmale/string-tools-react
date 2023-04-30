@@ -27,7 +27,7 @@ export class RegexService {
     IsValidRegex(regex: string): boolean {
        
         try {
-            const re = new RegExp(regex);
+            new RegExp(regex);
             return true;
         }
         catch {
