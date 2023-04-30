@@ -1,5 +1,6 @@
 import { Explanation, IndividualLineCommand } from '../../interfaces/CommandInterfaces';
 import { Context } from '../../interfaces/Context';
+import { RegexService } from '../regex.service';
 
 export class RegexCommand extends IndividualLineCommand {
     
@@ -11,13 +12,19 @@ export class RegexCommand extends IndividualLineCommand {
             { name: "Regex", desc: "A string defining the regex" }
         ]
     }
-
+    
     IsNonUpdatingCommand: boolean = true;
 
     Explain(para: string, negated: boolean, context: Context): Explanation {
 
         this.SetRegex(para, context);
-        return { segments: ["Set the current regex to", para] };
+
+        if (this.services.regex.IsValidRegex(para)) {
+            return { segments: ["Set the current regex to", para] };
+        }
+        else {
+            return { segments: ["Set the current regex to", para, "!!INVALID REGEX!!"] }; 
+        }
     }
 
     Execute(value: string[], para: string, negated: boolean, context: Context): string[] {

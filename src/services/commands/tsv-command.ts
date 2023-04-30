@@ -24,9 +24,13 @@ export class TsvCommand extends IndividualLineCommand {
         context.headers = [];
         context.isSplit = false;
 
-        let values: string[] = [];
+        if (!context.withIndices.length) {
+            
+            return [value.join("\t")];
+        }
+        else {
 
-        if (context.withIndices.length) {
+            let values: string[] = [];
 
             for (let i = 0; i < context.withIndices.length; i++) {
 
@@ -36,10 +40,6 @@ export class TsvCommand extends IndividualLineCommand {
             }
 
             return [values.join("\t")];
-        }
-        else {
-
-            return [value.join("\t")];
         }
     }
 }

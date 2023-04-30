@@ -4,6 +4,10 @@ export class RegexService {
 
     GetRegex(regex: string, flags?: string): RegExp {
 
+        if (!this.IsValidRegex(regex)) {
+            return /$^/; // matches nothing
+        }
+
         const existing = this.regexes[regex];
 
         if (existing) {
@@ -18,5 +22,16 @@ export class RegexService {
 
             return re;
         }
+    }
+
+    IsValidRegex(regex: string): boolean {
+       
+        try {
+            const re = new RegExp(regex);
+            return true;
+        }
+        catch {
+            return false;
+        } 
     }
 }

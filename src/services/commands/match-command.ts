@@ -53,6 +53,10 @@ export class MatchCommand extends IndividualLineCommand {
                 
                 if (!searchString && context.regex) {
 
+                    if (!this.services.regex.IsValidRegex(context.regex)) {
+                        return [];
+                    }
+
                     const regexp = this.services.regex.GetRegex(context.regex);
 
                     if (context.withIndices.length) {
@@ -109,6 +113,10 @@ export class MatchCommand extends IndividualLineCommand {
             else {
 
                 if (!searchString && context.regex) {
+
+                    if (!this.services.regex.IsValidRegex(context.regex)) {
+                        return [];
+                    }
 
                     const regexp = this.services.regex.GetRegex(context.regex);
 

@@ -223,7 +223,7 @@ export class CommandService {
 
                 for (let i = 0; i < line.length; i++) {
 
-                    parsedCommands[c].dataSizeAfterCommand += line[i].length;
+                    parsedCommand.dataSizeAfterCommand += line[i].length;
                 }
 
                 if (command.UpdateContext) {
