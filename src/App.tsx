@@ -67,13 +67,9 @@ class App extends React.Component<AppProps, AppState> {
       this.commandParsingService
     );
 
-    const input = `date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken client-ip
-2021-06-28 23:59:34 188.65.34.28 GET /filing-archiving/manilla-folders-files/document-wallets/5-star-document-wallets-half-flap-250gsm-foolscap-green-pack-of-50/p-20795 - 443 - Mozilla/5.0+(compatible;+bingbot/2.0;++http://www.bing.com/bingbot.htm) - 302 0 0 148 157.55.39.153
-2021-06-28 23:59:34 188.65.34.28 GET /filing-archiving/manilla-folders-files/document-wallets/green-document-wallet-pack-of-50-45914east/p-125232 sp=20795 443 - Mozilla/5.0+(compatible;+bingbot/2.0;++http://www.bing.com/bingbot.htm) - 200 0 0 427 157.55.39.153`;
+    const input = ``;
 
-    this.codeWindowValue = `split  
-header
-select cs-uri-stem`;
+    this.codeWindowValue = ``;
 
     this.state = {
       focus: "InputPane",
